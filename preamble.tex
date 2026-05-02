@@ -99,6 +99,19 @@
   \par\medskip%
 }
 
+% --- proof <-> theorem cross-links --------------------------------------------
+% Pair: \proofof{key} just after a theorem statement renders a small
+% right-aligned hyperlink jumping to the matching proof; \proofanchor{key}
+% at the start of that proof drops the hyperref target.
+\newcommand{\proofof}[1]{%
+  \par\nopagebreak\smallskip\nopagebreak\noindent\hfill%
+  \hyperref[prf:#1]{%
+    \itshape\small$\hookrightarrow$~\iflanguage{russian}{доказательство}{proof}%
+  }%
+  \par
+}
+\newcommand{\proofanchor}[1]{\phantomsection\label{prf:#1}}
+
 % --- bibliography (GOST 7.0.5/7.1) --------------------------------------------
 \usepackage[
     backend=biber,
