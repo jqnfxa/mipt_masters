@@ -5,7 +5,6 @@
 \documentclass[11pt,a4paper,oneside]{book}
 
 \input{preamble}
-\selectlanguage{english}
 
 \title{%
   Preparation for the MIPT FPMI\\
@@ -16,6 +15,7 @@
 \date{\today}
 
 \begin{document}
+\setupEnglish
 \maketitle
 \tableofcontents
 
@@ -42,6 +42,10 @@
 \subfile{electives/2.5-advanced-ai/chapter-en}
 \subfile{electives/2.6-it-product/chapter-en}
 
+% Most entries in literature.bib have Russian titles / authors. Switch
+% language so babel-russian's T2A cyrillic encoding is active while
+% biblatex renders entries; the title we pass stays English.
+\selectlanguage{russian}
 \printbibliography[title={References},heading=bibintoc]
 
 \end{document}

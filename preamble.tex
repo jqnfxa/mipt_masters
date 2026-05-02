@@ -12,6 +12,11 @@
 % --- encoding & languages -----------------------------------------------------
 \usepackage[utf8]{inputenc}
 \usepackage[T2A,T1]{fontenc}
+% Both languages loaded; babel makes the LAST one the main language
+% (here Russian) so cyrillic fontencoding bindings biblatex-gost relies
+% on are set up at \begin{document}. Each book file then issues
+% \selectlanguage{...} immediately inside \begin{document} to set its
+% own active language for captions, hyphenation, dates, etc.
 \usepackage[english,russian]{babel}
 
 % --- page geometry ------------------------------------------------------------
@@ -81,9 +86,8 @@
 \theoremstyle{remark}
 \newtheorem*{remark}{\iflanguage{russian}{Замечание}{Remark}}
 
-\AtBeginDocument{%
-  \iflanguage{russian}{\renewcommand{\proofname}{Доказательство}}{}%
-}
+% Localized strings (proofname, cleveref names) are bundled into
+% \setupEnglish / \setupRussian below — see end of preamble.
 
 % --- ticket environment -------------------------------------------------------
 % Renders the verbatim formulation from программа.pdf at the top of each topic.
@@ -117,6 +121,42 @@
     urlcolor=blue!70!black,
 }
 \usepackage[capitalize,nameinlink]{cleveref}
+
+% --- Language setup commands -------------------------------------------------
+% Each book file calls one of these immediately inside \begin{document}.
+% They bundle babel's language switch with proof- and cleveref-name
+% localization, so the result is the same regardless of which language
+% babel happened to pick as "main".
+\newcommand{\setupRussian}{%
+  \selectlanguage{russian}%
+  \renewcommand{\proofname}{Доказательство}%
+  \crefname{theorem}{теорема}{теоремы}\Crefname{theorem}{Теорема}{Теоремы}%
+  \crefname{lemma}{лемма}{леммы}\Crefname{lemma}{Лемма}{Леммы}%
+  \crefname{proposition}{утверждение}{утверждения}\Crefname{proposition}{Утверждение}{Утверждения}%
+  \crefname{corollary}{следствие}{следствия}\Crefname{corollary}{Следствие}{Следствия}%
+  \crefname{definition}{определение}{определения}\Crefname{definition}{Определение}{Определения}%
+  \crefname{example}{пример}{примеры}\Crefname{example}{Пример}{Примеры}%
+  \crefname{problem}{задача}{задачи}\Crefname{problem}{Задача}{Задачи}%
+  \crefname{remark}{замечание}{замечания}\Crefname{remark}{Замечание}{Замечания}%
+  \crefname{section}{раздел}{разделы}\Crefname{section}{Раздел}{Разделы}%
+  \crefname{chapter}{глава}{главы}\Crefname{chapter}{Глава}{Главы}%
+  \crefname{equation}{уравнение}{уравнения}\Crefname{equation}{Уравнение}{Уравнения}%
+}
+\newcommand{\setupEnglish}{%
+  \selectlanguage{english}%
+  \renewcommand{\proofname}{Proof}%
+  \crefname{theorem}{theorem}{theorems}\Crefname{theorem}{Theorem}{Theorems}%
+  \crefname{lemma}{lemma}{lemmas}\Crefname{lemma}{Lemma}{Lemmas}%
+  \crefname{proposition}{proposition}{propositions}\Crefname{proposition}{Proposition}{Propositions}%
+  \crefname{corollary}{corollary}{corollaries}\Crefname{corollary}{Corollary}{Corollaries}%
+  \crefname{definition}{definition}{definitions}\Crefname{definition}{Definition}{Definitions}%
+  \crefname{example}{example}{examples}\Crefname{example}{Example}{Examples}%
+  \crefname{problem}{problem}{problems}\Crefname{problem}{Problem}{Problems}%
+  \crefname{remark}{remark}{remarks}\Crefname{remark}{Remark}{Remarks}%
+  \crefname{section}{section}{sections}\Crefname{section}{Section}{Sections}%
+  \crefname{chapter}{chapter}{chapters}\Crefname{chapter}{Chapter}{Chapters}%
+  \crefname{equation}{equation}{equations}\Crefname{equation}{Equation}{Equations}%
+}
 
 % --- subfiles: each chapter compiles as a standalone PDF too ------------------
 \usepackage{subfiles}
