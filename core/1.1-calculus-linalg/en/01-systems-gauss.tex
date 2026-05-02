@@ -76,6 +76,7 @@ Every matrix $\mat{A} \in \F^{m \times n}$ can be transformed into a
 matrix in RREF by a finite sequence of EROs. Moreover, the RREF
 of~$\mat{A}$ is uniquely determined.
 \end{theorem}
+\proofof{gauss-rref}
 
 \begin{theorem}[Invariance of solutions under EROs]
 \label{thm:gauss-invariance}
@@ -83,6 +84,7 @@ If $[\mat{A}' \mid \vect{b}']$ is obtained from $[\mat{A} \mid \vect{b}]$
 by a finite sequence of EROs, then $\mat{A}\vect{x} = \vect{b}$ and
 $\mat{A}'\vect{x} = \vect{b}'$ have the same solution set.
 \end{theorem}
+\proofof{gauss-invariance}
 
 \begin{corollary}[Solving via Gaussian elimination]
 \label{cor:gauss-solving}
@@ -98,6 +100,7 @@ To solve $\mat{A}\vect{x} = \vect{b}$:
         pivot row upward (\emph{back-substitution}).
 \end{enumerate}
 \end{corollary}
+\proofof{gauss-solving}
 
 \begin{remark}
 \label{rem:gauss-complexity}
@@ -113,6 +116,7 @@ fuller treatment of the standard linear-algebra background, see
 \subsection*{Proofs}
 
 \begin{proof}[\Cref{thm:gauss-invariance}]
+\proofanchor{gauss-invariance}
 Write $\vect{r}_i \in \F^n$ for the $i$-th row of~$\mat{A}$, so the
 $i$-th equation of the system reads $\vect{r}_i \cdot \vect{x} = b_i$.
 We check that each ERO sends solutions to solutions; reversibility of
@@ -137,6 +141,7 @@ $\vect{x}$. Composing finitely many EROs preserves the solution set.
 \end{proof}
 
 \begin{proof}[\Cref{thm:gauss-rref}, existence]
+\proofanchor{gauss-rref}
 We give the algorithm and verify termination.
 
 \emph{Phase~1 (forward elimination, REF).} If $\mat{A}$ is the zero
@@ -167,6 +172,7 @@ it follows from the invariance of the row space.
 \end{proof}
 
 \begin{proof}[\Cref{cor:gauss-solving}]
+\proofanchor{gauss-solving}
 By \cref{thm:gauss-invariance}, the reduced augmented matrix
 $[\mat{U} \mid \vect{c}]$ has exactly the same solution set as the
 original system.
