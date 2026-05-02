@@ -11,4 +11,4 @@ Mandatory questions for every candidate at the MIPT FPMI master's entrance exam 
 
 **Recommended order:** 1.1 → 1.2 → 1.3 → 1.4. Linear algebra and calculus are prerequisites for probability and ML.
 
-See [../plan.md](../plan.md) for the full study plan and [../программа.pdf](../программа.pdf) for the official program.
+See [../программа.pdf](../программа.pdf) for the official program.

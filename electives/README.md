@@ -15,5 +15,3 @@ Each candidate picks **two** elective blocks before the exam. Questions are draw
 > Note: the source program ([../программа.pdf](../программа.pdf)) numbers two distinct blocks as «2.3». They are split here as **2.3a** (logic / theoretical CS) and **2.3b** (programming).
 
 **How to choose:** match electives to your target кафедра. Heavy-math kafedras → 2.1, 2.2, 2.4. ML/AI kafedras → 2.4, 2.5. Engineering/Software kafedras → 2.3b. CS theory kafedras → 2.3a.
-
-See [../plan.md](../plan.md) for the full study plan.

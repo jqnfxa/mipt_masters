@@ -25,7 +25,6 @@ send a PR.
 | [`electives/`](electives/) | Elective blocks (2.1–2.6); pick two for the exam. |
 | [`images/`](images/) | Shared figures. |
 | [`scripts/build.py`](scripts/build.py) | Build the books (and per-chapter PDFs). |
-| [`plan.md`](plan.md) | Phased study plan. |
 | [`программа.pdf`](программа.pdf) | Official exam program (canonical, in Russian). |
 
 Each chapter lives under `<core|electives>/<id>-<slug>/`:
