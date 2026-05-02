@@ -8,10 +8,324 @@ Systems of linear equations. Rectangular matrices. Reducing matrices and systems
 \end{ticket}
 
 \subsection*{Theory}
-% TODO
+
+We work over a fixed field~$\F$ (think $\F = \R$ throughout). Letters
+$i, j, k$ denote integer indices and $m, n$ are positive integers.
+
+\begin{definition}
+\label{def:gauss-system}
+A \emph{system of $m$ linear equations in $n$ unknowns} over~$\F$ is a list
+\[
+  \begin{aligned}
+    a_{11} x_1 + a_{12} x_2 + \cdots + a_{1n} x_n &= b_1, \\
+    &\;\;\vdots \\
+    a_{m1} x_1 + a_{m2} x_2 + \cdots + a_{mn} x_n &= b_m,
+  \end{aligned}
+\]
+where the coefficients $a_{ij}$ and right-hand sides $b_i$ lie in~$\F$.
+Collecting them gives the \emph{coefficient matrix}
+$\mat{A} = (a_{ij}) \in \F^{m \times n}$, the column $\vect{x} =
+(x_1, \dots, x_n)\T$ of unknowns, and the column $\vect{b} = (b_1, \dots, b_m)\T$
+of right-hand sides; the system is then $\mat{A}\vect{x} = \vect{b}$. The
+\emph{augmented matrix} $[\mat{A} \mid \vect{b}] \in \F^{m \times (n+1)}$
+records both at once.
+
+A \emph{solution} is a vector $\vect{x} \in \F^n$ that satisfies every
+equation. The system is \emph{consistent} if its solution set is nonempty.
+\end{definition}
+
+\begin{definition}
+\label{def:gauss-ref}
+A matrix is in \emph{row echelon form} (REF) when:
+\begin{enumerate}[label=(\alph*)]
+  \item every all-zero row sits below every nonzero row;
+  \item in any two consecutive nonzero rows, the leading nonzero entry
+        (the \emph{pivot}) of the lower row is strictly to the right of
+        the pivot of the upper one.
+\end{enumerate}
+It is in \emph{reduced row echelon form} (RREF) if additionally:
+\begin{enumerate}[label=(\alph*),resume]
+  \item every pivot equals~$1$;
+  \item each pivot is the only nonzero entry in its column.
+\end{enumerate}
+The columns containing pivots are \emph{pivot columns}; the others are
+\emph{free columns}. Variables corresponding to pivot columns are
+\emph{pivot variables}; those corresponding to free columns are
+\emph{free variables}.
+\end{definition}
+
+\begin{definition}
+\label{def:gauss-ero}
+The three \emph{elementary row operations} (EROs) on a matrix are:
+\begin{enumerate}[label=(\Roman*)]
+  \item swap rows $i$ and~$j$, written $R_i \leftrightarrow R_j$;
+  \item scale row $i$ by a nonzero $c \in \F$, written $R_i \to c\,R_i$;
+  \item add $c$ times row $j$ to row $i$ (with $i \neq j$), written
+        $R_i \to R_i + c\,R_j$.
+\end{enumerate}
+Each ERO is realized as left multiplication by an \emph{elementary matrix}:
+the identity $I_m$ with one row modified by the same operation. Every
+elementary matrix is invertible, and its inverse is again elementary
+(swap is self-inverse; scale by $c$ inverts to scale by $c^{-1}$;
+$R_i \to R_i + c\,R_j$ inverts to $R_i \to R_i - c\,R_j$).
+\end{definition}
+
+\begin{theorem}[Gauss]
+\label{thm:gauss-rref}
+Every matrix $\mat{A} \in \F^{m \times n}$ can be transformed into a
+matrix in RREF by a finite sequence of EROs. Moreover, the RREF
+of~$\mat{A}$ is uniquely determined.
+\end{theorem}
+
+\begin{theorem}[Invariance of solutions under EROs]
+\label{thm:gauss-invariance}
+If $[\mat{A}' \mid \vect{b}']$ is obtained from $[\mat{A} \mid \vect{b}]$
+by a finite sequence of EROs, then $\mat{A}\vect{x} = \vect{b}$ and
+$\mat{A}'\vect{x} = \vect{b}'$ have the same solution set.
+\end{theorem}
+
+\begin{corollary}[Solving via Gaussian elimination]
+\label{cor:gauss-solving}
+To solve $\mat{A}\vect{x} = \vect{b}$:
+\begin{enumerate}
+  \item form the augmented matrix $[\mat{A} \mid \vect{b}]$;
+  \item reduce it to REF (or RREF) by EROs; call the result
+        $[\mat{U} \mid \vect{c}]$;
+  \item the system is \emph{inconsistent} iff some row of $[\mat{U} \mid \vect{c}]$
+        has the form $(0, \dots, 0 \mid c)$ with $c \neq 0$;
+  \item otherwise, treat each free variable as a parameter and recover
+        the pivot variables one by one, working from the bottommost
+        pivot row upward (\emph{back-substitution}).
+\end{enumerate}
+\end{corollary}
+
+\begin{remark}
+\label{rem:gauss-complexity}
+Reducing an $m \times n$ matrix to REF by the algorithm in the proof of
+\cref{thm:gauss-rref} costs $O(mn \cdot \min(m, n))$ field operations;
+in particular, $O(n^3)$ for square systems. The uniqueness clause of
+\cref{thm:gauss-rref} is best handled with the language of rank and
+column spaces and is revisited in \cref{sec:1.1.02-rank}. For a
+fuller treatment of the standard linear-algebra background, see
+\cite{Beklemishev2025}.
+\end{remark}
 
 \subsection*{Proofs}
-% TODO
+
+\begin{proof}[\Cref{thm:gauss-invariance}]
+Write $\vect{r}_i \in \F^n$ for the $i$-th row of~$\mat{A}$, so the
+$i$-th equation of the system reads $\vect{r}_i \cdot \vect{x} = b_i$.
+We check that each ERO sends solutions to solutions; reversibility of
+EROs (\cref{def:gauss-ero}) then gives the converse.
+
+\emph{Type~(I), swap.} Permuting the equations leaves the conjunction
+unchanged.
+
+\emph{Type~(II), scale.} If $\vect{r}_i \cdot \vect{x} = b_i$ and
+$c \neq 0$, multiplying both sides by $c$ gives
+$(c\,\vect{r}_i) \cdot \vect{x} = c\,b_i$. The reverse implication
+follows by multiplying by $c^{-1}$.
+
+\emph{Type~(III), replace.} Suppose $\vect{r}_i \cdot \vect{x} = b_i$
+and $\vect{r}_j \cdot \vect{x} = b_j$. Adding $c$ times the second
+equation to the first gives
+$(\vect{r}_i + c\,\vect{r}_j) \cdot \vect{x} = b_i + c\,b_j$. The
+reverse implication uses $R_i \to R_i - c\,R_j$.
+
+In all three cases the new equation is satisfied by exactly the same
+$\vect{x}$. Composing finitely many EROs preserves the solution set.
+\end{proof}
+
+\begin{proof}[\Cref{thm:gauss-rref}, existence]
+We give the algorithm and verify termination.
+
+\emph{Phase~1 (forward elimination, REF).} If $\mat{A}$ is the zero
+matrix, it is already in REF. Otherwise let $j_1$ be the leftmost
+column containing a nonzero entry, and pick a row $i_1$ with
+$a_{i_1, j_1} \neq 0$. Swap rows $1$ and $i_1$ (operation~I) to bring
+this entry into position $(1, j_1)$ — call it the first \emph{pivot}.
+For each row $i > 1$, apply
+$R_i \to R_i - (a_{i, j_1}/a_{1, j_1})\,R_1$ (operation~III) to zero out
+the entry in column~$j_1$. The submatrix formed by rows $2, \dots, m$
+and columns $j_1 + 1, \dots, n$ is now strictly smaller (one row fewer
+and at least one column fewer), so the same procedure applied
+recursively terminates.
+
+\emph{Phase~2 (back substitution, RREF).} Starting from REF, scale each
+pivot row by the inverse of its pivot (operation~II) so every pivot
+becomes~$1$. Then process the pivot rows from bottom to top: for the
+$k$-th pivot, in column $j_k$, run $R_i \to R_i - a_{i, j_k}\,R_k$
+(operation~III) for each $i < k$ to clear all entries above the pivot.
+Each step preserves the REF shape and strictly reduces the count of
+nonzero entries above pivots, so the process terminates after at most
+$\binom{r}{2}$ steps, where $r$ is the number of pivots.
+
+The result is in RREF, established by a finite sequence of EROs.
+
+Uniqueness of the RREF is deferred to \cref{sec:1.1.02-rank}, where
+it follows from the invariance of the row space.
+\end{proof}
+
+\begin{proof}[\Cref{cor:gauss-solving}]
+By \cref{thm:gauss-invariance}, the reduced augmented matrix
+$[\mat{U} \mid \vect{c}]$ has exactly the same solution set as the
+original system.
+
+A row of the form $(0, \dots, 0 \mid c)$ with $c \neq 0$ encodes the
+equation $0 = c$, which has no solutions; if any such row is present
+the system is inconsistent. Conversely, if no such row is present, then
+every nonzero row of $[\mat{U} \mid \vect{c}]$ has its pivot in some
+column $j_k \le n$ of the coefficient block, and the corresponding
+equation determines the pivot variable $x_{j_k}$ as an affine function
+of the variables in columns $> j_k$ (i.e.\ free variables further to
+the right and pivot variables not yet recovered). Resolving from the
+last pivot row up assigns $x_{j_k}$ for each~$k$ and leaves free
+variables as parameters; the resulting parametric family is the entire
+solution set.
+\end{proof}
 
 \subsection*{Examples}
-% TODO
+
+\begin{example}[Unique solution]
+\label{ex:gauss-unique}
+Solve
+\[
+  \begin{aligned}
+    x + y + z &= 6, \\
+    2x + y - z &= 1, \\
+    3x - y + 2z &= 7.
+  \end{aligned}
+\]
+Apply Gaussian elimination to the augmented matrix:
+\[
+  \left[\begin{array}{rrr|r}
+    1 &  1 &  1 & 6 \\
+    2 &  1 & -1 & 1 \\
+    3 & -1 &  2 & 7
+  \end{array}\right]
+  \xrightarrow{\substack{R_2 \to R_2 - 2R_1 \\ R_3 \to R_3 - 3R_1}}
+  \left[\begin{array}{rrr|r}
+    1 &  1 &  1 &   6 \\
+    0 & -1 & -3 & -11 \\
+    0 & -4 & -1 & -11
+  \end{array}\right]
+  \xrightarrow{R_3 \to R_3 - 4R_2}
+  \left[\begin{array}{rrr|r}
+    1 &  1 &  1 &   6 \\
+    0 & -1 & -3 & -11 \\
+    0 &  0 & 11 &  33
+  \end{array}\right].
+\]
+The matrix is in REF; back-substitution gives $z = 3$, then
+$-y - 9 = -11$, so $y = 2$, and finally $x + 2 + 3 = 6$, so $x = 1$.
+The unique solution is $\vect{x} = (1, 2, 3)\T$.
+\end{example}
+
+\begin{example}[Two-parameter solution family]
+\label{ex:gauss-parametric}
+Solve
+\[
+  \begin{aligned}
+    x + 2y + z + w &= 4, \\
+    2x + 4y + z - w &= 5.
+  \end{aligned}
+\]
+One ERO suffices to reach REF:
+\[
+  \left[\begin{array}{rrrr|r}
+    1 & 2 &  1 &  1 & 4 \\
+    2 & 4 &  1 & -1 & 5
+  \end{array}\right]
+  \xrightarrow{R_2 \to R_2 - 2R_1}
+  \left[\begin{array}{rrrr|r}
+    1 & 2 &  1 &  1 & 4 \\
+    0 & 0 & -1 & -3 & -3
+  \end{array}\right].
+\]
+Pivots are in columns~$1$ and~$3$, so $x$ and $z$ are pivot variables
+and $y, w$ are free. From the second row $z = 3 - 3w$, and from the
+first $x = 4 - 2y - z - w = 1 - 2y + 2w$. The solution set is
+\[
+  \begin{pmatrix} x \\ y \\ z \\ w \end{pmatrix}
+  =
+  \begin{pmatrix} 1 \\ 0 \\ 3 \\ 0 \end{pmatrix}
+  + y \begin{pmatrix} -2 \\ 1 \\ 0 \\ 0 \end{pmatrix}
+  + w \begin{pmatrix} 2 \\ 0 \\ -3 \\ 1 \end{pmatrix},
+  \qquad y, w \in \F.
+\]
+A particular solution plus a two-dimensional family parametrized by the
+two free variables.
+\end{example}
+
+\begin{example}[Inconsistent system]
+\label{ex:gauss-inconsistent}
+The system
+\[
+  \begin{aligned}
+    x + 2y &= 3, \\
+    2x + 4y &= 7
+  \end{aligned}
+\]
+reduces by $R_2 \to R_2 - 2R_1$ to
+\[
+  \left[\begin{array}{rr|r}
+    1 & 2 & 3 \\
+    0 & 0 & 1
+  \end{array}\right],
+\]
+whose second row encodes $0 = 1$. By \cref{cor:gauss-solving} the
+system has no solutions: the second equation contradicts the first.
+\end{example}
+
+\begin{problem}
+\label{prob:gauss-parameter}
+For which values of $k \in \R$ is the system
+\[
+  \begin{aligned}
+    x + y + z &= 1, \\
+    x + 2y + 4z &= k, \\
+    x + 4y + 10z &= k^2
+  \end{aligned}
+\]
+(a)~inconsistent, (b)~uniquely solvable, (c)~consistent with infinitely
+many solutions? Describe the solution set in case~(c).
+\end{problem}
+
+\begin{proof}[Solution]
+Eliminate using the first row:
+\[
+  \left[\begin{array}{rrr|c}
+    1 & 1 &  1 & 1 \\
+    1 & 2 &  4 & k \\
+    1 & 4 & 10 & k^2
+  \end{array}\right]
+  \xrightarrow{\substack{R_2 \to R_2 - R_1 \\ R_3 \to R_3 - R_1}}
+  \left[\begin{array}{rrr|c}
+    1 & 1 & 1 & 1     \\
+    0 & 1 & 3 & k - 1 \\
+    0 & 3 & 9 & k^2 - 1
+  \end{array}\right]
+  \xrightarrow{R_3 \to R_3 - 3R_2}
+  \left[\begin{array}{rrr|c}
+    1 & 1 & 1 & 1     \\
+    0 & 1 & 3 & k - 1 \\
+    0 & 0 & 0 & (k - 1)(k - 2)
+  \end{array}\right],
+\]
+since $k^2 - 1 - 3(k - 1) = k^2 - 3k + 2 = (k - 1)(k - 2)$.
+
+The third row is $0 = (k - 1)(k - 2)$. Hence:
+\begin{itemize}
+  \item if $k \notin \{1, 2\}$, the right-hand side is nonzero and the
+        system is \emph{inconsistent};
+  \item if $k \in \{1, 2\}$, the third row vanishes; the matrix has
+        only two pivots in three columns, so~(b) never occurs and
+        case~(c) applies, with $z$ as the single free variable.
+\end{itemize}
+For $k = 1$: $y + 3z = 0$, so $y = -3z$, and $x + y + z = 1$ gives
+$x = 1 + 2z$; the solution set is
+$(1, 0, 0)\T + z\,(2, -3, 1)\T$ for $z \in \R$.
+
+For $k = 2$: $y + 3z = 1$, so $y = 1 - 3z$, and $x = 1 - y - z = 2z$;
+the solution set is $(0, 1, 0)\T + z\,(2, -3, 1)\T$ for $z \in \R$.
+\end{proof}
