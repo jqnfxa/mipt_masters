@@ -19,6 +19,7 @@ Requirements:
 from __future__ import annotations
 
 import argparse
+import os
 import shutil
 import subprocess
 import sys
@@ -28,6 +29,20 @@ REPO = Path(__file__).resolve().parent.parent
 BUILD = REPO / "build"
 
 BOOKS = ("book-ru", "book-en")
+
+
+def _latex_env() -> dict[str, str]:
+    """Add the repo root to TEX/BIB input search paths so that subfile chapter
+    builds (cwd != repo root) and master book builds both find shared
+    resources like literature.bib and preamble.tex.
+
+    The trailing colon is kpathsea's way of saying "and also the defaults".
+    """
+    env = os.environ.copy()
+    root = f"{REPO}{os.pathsep}"
+    for var in ("BIBINPUTS", "TEXINPUTS", "BSTINPUTS"):
+        env[var] = root + env.get(var, "")
+    return env
 
 
 def latexmk(target: Path, outdir: Path) -> Path:
@@ -41,7 +56,7 @@ def latexmk(target: Path, outdir: Path) -> Path:
         target.name,
     ]
     print(f"$ (cd {target.parent.relative_to(REPO)} && {' '.join(cmd)})")
-    subprocess.run(cmd, cwd=target.parent, check=True)
+    subprocess.run(cmd, cwd=target.parent, env=_latex_env(), check=True)
     return outdir / (target.stem + ".pdf")
 
 

@@ -23,6 +23,19 @@
 \usepackage{bm}           % bold math
 
 % --- math "house style" macros ------------------------------------------------
+% Some of these short names (notably \C from T1 fontenc, and \Prob from
+% other packages) are already defined when the preamble runs, so we clear
+% them first before redefining. If you need the original meaning of \C
+% (caron accent) elsewhere, use \v{c} instead.
+\let\R\undefined
+\let\C\undefined
+\let\N\undefined
+\let\Z\undefined
+\let\Q\undefined
+\let\F\undefined
+\let\E\undefined
+\let\Prob\undefined
+
 % Number sets.
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\C}{\mathbb{C}}
@@ -90,7 +103,10 @@
     language=auto,
     autolang=other,
 ]{biblatex}
-\addbibresource{\subfix{literature.bib}}
+% Resolved relative to the compilation cwd. The build script (scripts/build.py)
+% adds the repo root to BIBINPUTS, so this works for both book-* (cwd = root)
+% and chapter-* (cwd = chapter dir, subfile compilation).
+\addbibresource{literature.bib}
 
 % --- hyperlinks & cross-refs --------------------------------------------------
 \usepackage{hyperref}
@@ -108,5 +124,8 @@
 % --- misc ---------------------------------------------------------------------
 \usepackage{enumitem}
 \usepackage{booktabs}
-\usepackage{microtype}
+% Font expansion needs scalable Cyrillic fonts (the `cm-super` Debian package
+% or `texlive-fonts-extra`). Disable it to stay portable; protrusion still
+% works with the default Computer Modern bitmap fonts.
+\usepackage[expansion=false,protrusion=true,final]{microtype}
 \usepackage{tikz}
