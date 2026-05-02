@@ -1,0 +1,61 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+*.sublime-*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Node (if any tooling lands here later)
+node_modules/
+
+# LaTeX intermediate files (we keep .pdf outputs in build/ only)
+*.aux
+*.log
+*.out
+*.toc
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.nav
+*.snm
+*.vrb
+*.idx
+*.ilg
+*.ind
+*.lof
+*.lot
+*.run.xml
+*-blx.bib
+
+# Build outputs (autodocx → .docx → .pdf intermediates live here)
+build/
+dist/
+out/
+**/_build/
+**/_dist/
+
+# Source PDFs are tracked explicitly; generated PDFs are not
+*.pdf
+!программа.pdf
+
+# Logs and temp
+*.log
+*.tmp
+.cache/
