@@ -55,6 +55,9 @@ out/
 *.pdf
 !программа.pdf
 
+# Local-only working notes, agent handoff playbooks, scratch.
+.private/
+
 # Logs and temp
 *.log
 *.tmp
