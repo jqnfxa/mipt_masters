@@ -8,10 +8,416 @@ Linear dependence and rank. Linear dependence of rows (columns). Main lemma on l
 \end{ticket}
 
 \subsection*{Theory}
-% TODO
+
+We continue to work over a fixed field~$\F$. By a \emph{system of vectors}
+we mean a finite ordered tuple $\vect{v}_1, \dots, \vect{v}_k \in \F^n$;
+the cases of interest are systems of rows or columns of a matrix.
+
+\begin{definition}
+\label{def:lin-dep}
+A \emph{linear combination} of $\vect{v}_1, \dots, \vect{v}_k$ with
+coefficients $\alpha_1, \dots, \alpha_k \in \F$ is the vector
+$\alpha_1 \vect{v}_1 + \dots + \alpha_k \vect{v}_k$. The combination is
+\emph{trivial} if all $\alpha_i = 0$. The system
+$\vect{v}_1, \dots, \vect{v}_k$ is \emph{linearly dependent} if some
+nontrivial linear combination of it equals $\vect{0}$, and
+\emph{linearly independent} otherwise. We say $\vect{u}$ is
+\emph{linearly expressed through} $\vect{v}_1, \dots, \vect{v}_k$
+if $\vect{u}$ is some linear combination of them.
+\end{definition}
+
+\begin{remark}
+\label{rem:basic-dep-facts}
+Two immediate facts: (i)~any system containing $\vect{0}$ is linearly
+dependent; (ii)~appending vectors to a linearly dependent system keeps
+it linearly dependent, and removing vectors from a linearly independent
+system keeps it linearly independent.
+\end{remark}
+
+\begin{theorem}[Main lemma on linear dependence]
+\label{thm:main-lemma}
+If each of $\vect{v}_1, \dots, \vect{v}_k$ is linearly expressed through
+$\vect{u}_1, \dots, \vect{u}_m$ and $k > m$, then
+$\vect{v}_1, \dots, \vect{v}_k$ are linearly dependent.
+\end{theorem}
+\proofof{main-lemma}
+
+\begin{definition}
+\label{def:basis-rank-system}
+A \emph{basis} of a system $\vect{v}_1, \dots, \vect{v}_k$ is a
+linearly independent subsystem $\vect{v}_{i_1}, \dots, \vect{v}_{i_r}$
+through which every $\vect{v}_j$ is linearly expressed. By the main
+lemma, all bases have the same number of vectors; this common number
+is the \emph{rank} of the system, denoted
+$\rank(\vect{v}_1, \dots, \vect{v}_k)$.
+\end{definition}
+
+For a matrix $\mat{A} \in \F^{m \times n}$, the rank of its system of
+rows is the \emph{row rank}, and the rank of its system of columns is
+the \emph{column rank}.
+
+\begin{theorem}[Row rank equals column rank]
+\label{thm:rank-row-col}
+For any matrix $\mat{A} \in \F^{m \times n}$ the row rank and the
+column rank of~$\mat{A}$ coincide. The common value is denoted
+$\rank \mat{A}$.
+\end{theorem}
+\proofof{rank-row-col}
+
+\begin{proposition}[Rank is preserved by EROs]
+\label{prop:rank-ero-invariance}
+If $\mat{A}'$ is obtained from $\mat{A}$ by a finite sequence of
+elementary row operations, then $\rank \mat{A}' = \rank \mat{A}$.
+Consequently, $\rank \mat{A}$ equals the number of pivots in any row
+echelon form of~$\mat{A}$.
+\end{proposition}
+\proofof{rank-ero-invariance}
+
+\begin{theorem}[Kronecker--Capelli]
+\label{thm:kronecker-capelli}
+A system $\mat{A}\vect{x} = \vect{b}$ is consistent if and only if
+$\rank \mat{A} = \rank [\mat{A} \mid \vect{b}]$. When consistent, the
+solution is unique iff $\rank \mat{A} = n$ (where $n$ is the number of
+unknowns); otherwise the solution set has $n - \rank \mat{A}$ degrees
+of freedom.
+\end{theorem}
+\proofof{kronecker-capelli}
+
+\begin{definition}
+\label{def:fsr}
+A system $\mat{A}\vect{x} = \vect{0}$ is called \emph{homogeneous}.
+Its solution set
+\[
+  \ker \mat{A} \;=\; \{\vect{x} \in \F^n : \mat{A}\vect{x} = \vect{0}\}
+\]
+is a linear subspace of~$\F^n$ (closed under addition and scalar
+multiplication). A \emph{fundamental system of solutions} (FSS) of
+$\mat{A}\vect{x} = \vect{0}$ is any basis of~$\ker \mat{A}$ in the
+sense of \cref{def:basis-rank-system}.
+\end{definition}
+
+\begin{theorem}[Structure of solutions]
+\label{thm:solution-structure}
+Let $r = \rank \mat{A}$.
+\begin{enumerate}[label=(\alph*)]
+  \item The kernel $\ker \mat{A}$ has dimension $n - r$, and any FSS
+        consists of $n - r$ vectors.
+  \item If $\mat{A}\vect{x} = \vect{b}$ is consistent and
+        $\vect{x}_*$ is one of its solutions, then the full solution
+        set is
+        \[
+          \{\vect{x}_* + c_1 \vect{f}_1 + \dots + c_{n-r} \vect{f}_{n-r}
+          \;:\; c_1, \dots, c_{n-r} \in \F\},
+        \]
+        where $\vect{f}_1, \dots, \vect{f}_{n-r}$ is any FSS of the
+        associated homogeneous system $\mat{A}\vect{x} = \vect{0}$.
+\end{enumerate}
+\end{theorem}
+\proofof{solution-structure}
+
+\begin{corollary}[Uniqueness of RREF]
+\label{cor:rref-unique}
+The reduced row echelon form of a matrix is uniquely determined; this
+is the uniqueness clause of \cref{thm:gauss-rref}.
+\end{corollary}
+\proofof{rref-unique}
+
+\begin{remark}
+For further reading, including alternative proofs of the main lemma
+and a thorough treatment of rank, see \cite{Beklemishev2025}.
+\end{remark}
 
 \subsection*{Proofs}
-% TODO
+
+\begin{proof}[\Cref{thm:main-lemma}]
+\proofanchor{main-lemma}
+Induction on~$m$.
+
+\emph{Base $m = 0$.} An empty linear combination equals $\vect{0}$, so
+each $\vect{v}_i = \vect{0}$. Then $1 \cdot \vect{v}_1 = \vect{0}$ is
+a nontrivial combination summing to zero, so the $\vect{v}_i$ are
+linearly dependent (the system is nonempty since $k > m = 0$).
+
+\emph{Step $m - 1 \Rightarrow m$.} Write
+$\vect{v}_i = \sum_{j=1}^{m} c_{ij} \vect{u}_j$ for $i = 1, \dots, k$.
+
+If $c_{i1} = 0$ for every~$i$, then each $\vect{v}_i$ lies in the linear
+span of $\vect{u}_2, \dots, \vect{u}_m$ (only $m - 1$ vectors). Since
+$k > m > m - 1$, the inductive hypothesis applies and the $\vect{v}_i$
+are dependent.
+
+Otherwise, after renumbering assume $c_{11} \neq 0$. For $i = 2, \dots, k$
+set
+\[
+  \vect{v}'_i \;=\; \vect{v}_i - \frac{c_{i1}}{c_{11}}\,\vect{v}_1.
+\]
+The coefficient of $\vect{u}_1$ in $\vect{v}'_i$ vanishes, so each
+$\vect{v}'_i$ is a linear combination of $\vect{u}_2, \dots, \vect{u}_m$.
+We have $k - 1$ such vectors expressed through $m - 1$ vectors and
+$k - 1 > m - 1$, so by the inductive hypothesis the $\vect{v}'_i$ are
+linearly dependent: there exist $\lambda_2, \dots, \lambda_k$ not all
+zero with $\sum_{i \ge 2} \lambda_i \vect{v}'_i = \vect{0}$. Substituting
+the definition of $\vect{v}'_i$,
+\[
+  \sum_{i \ge 2} \lambda_i \vect{v}_i
+  \;-\; \Bigl(\sum_{i \ge 2} \lambda_i \frac{c_{i1}}{c_{11}}\Bigr) \vect{v}_1
+  \;=\; \vect{0}.
+\]
+At least one $\lambda_i$ ($i \ge 2$) is nonzero, so this is a
+nontrivial linear combination of $\vect{v}_1, \dots, \vect{v}_k$.
+\end{proof}
+
+\begin{proof}[\Cref{prop:rank-ero-invariance}]
+\proofanchor{rank-ero-invariance}
+An elementary row operation can be realized as multiplication on the
+left by an invertible matrix~$\mat{E}$ (\cref{def:gauss-ero}). The rows
+of $\mat{E}\mat{A}$ are linear combinations of the rows of~$\mat{A}$,
+and conversely the rows of~$\mat{A} = \mat{E}^{-1}(\mat{E}\mat{A})$ are
+linear combinations of the rows of $\mat{E}\mat{A}$. So $\mat{E}\mat{A}$
+and~$\mat{A}$ have the same row span and hence the same row rank.
+
+For columns, the columns of $\mat{E}\mat{A}$ are
+$\mat{E} \vect{c}_j$ where $\vect{c}_j$ is the $j$-th column of~$\mat{A}$.
+Since~$\mat{E}$ is invertible, vectors $\mat{E}\vect{c}_{j_1}, \dots,
+\mat{E}\vect{c}_{j_r}$ are linearly independent iff
+$\vect{c}_{j_1}, \dots, \vect{c}_{j_r}$ are. Thus the column rank is
+also preserved.
+
+Apply Gaussian elimination to bring~$\mat{A}$ into REF~$\mat{U}$ with~$r$
+pivots. The nonzero rows of~$\mat{U}$ are linearly independent (the
+pivot pattern forces every nontrivial combination to be nonzero in some
+pivot column), and they generate the row space of~$\mat{U}$. Hence the
+row rank of~$\mat{U}$ equals~$r$, and so does the row rank of~$\mat{A}$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:rank-row-col}]
+\proofanchor{rank-row-col}
+Reduce~$\mat{A}$ to REF~$\mat{U}$ with $r$ pivots. By
+\cref{prop:rank-ero-invariance} the row rank of~$\mat{A}$ equals~$r$ and
+the column rank of~$\mat{A}$ equals the column rank of~$\mat{U}$, so
+it suffices to compute the column rank of~$\mat{U}$.
+
+The pivot columns of~$\mat{U}$ are linearly independent: any nontrivial
+linear combination of them, considered in the row of the topmost
+involved pivot, has a nonzero entry there (other pivot columns vanish
+in that row by the staircase pattern). Conversely, every non-pivot
+column of~$\mat{U}$ is a linear combination of the pivot columns to
+its left: in REF, only the rows containing pivots in those leftward
+positions can have nonzero entries in that column, so the back-substitution
+of \cref{cor:gauss-solving} expresses the non-pivot column in their
+span. Thus the pivot columns form a basis of the column space, and the
+column rank of~$\mat{U}$ is~$r$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:kronecker-capelli}]
+\proofanchor{kronecker-capelli}
+The system $\mat{A}\vect{x} = \vect{b}$ is consistent iff $\vect{b}$
+lies in the linear span of the columns of~$\mat{A}$. Adding $\vect{b}$
+as a column of $[\mat{A} \mid \vect{b}]$ leaves the column span the
+same iff $\vect{b}$ is already in it; equivalently, iff
+$\rank \mat{A} = \rank [\mat{A} \mid \vect{b}]$.
+
+For uniqueness when consistent: by
+\cref{thm:solution-structure}\,(b) the solution set is a translate of
+$\ker \mat{A}$, hence consists of one point iff
+$\dim \ker \mat{A} = 0$, iff $n - r = 0$, iff $\rank \mat{A} = n$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:solution-structure}]
+\proofanchor{solution-structure}
+\emph{(a)} Reduce~$\mat{A}$ to RREF~$\mat{U}$ (which preserves the
+solution set by \cref{thm:gauss-invariance} and the rank by
+\cref{prop:rank-ero-invariance}). Let $j_1 < \dots < j_r$ be the pivot
+columns and $\ell_1 < \dots < \ell_{n-r}$ the free columns. For each
+$s \in \{1, \dots, n-r\}$ define $\vect{f}_s \in \F^n$ by
+\[
+  (\vect{f}_s)_{\ell_s} = 1, \quad
+  (\vect{f}_s)_{\ell_t} = 0 \text{ for } t \neq s,
+\]
+and the pivot-coordinates $(\vect{f}_s)_{j_k}$ are determined by
+back-substitution from $\mat{U}\vect{f}_s = \vect{0}$.
+
+The vectors $\vect{f}_1, \dots, \vect{f}_{n-r}$ lie in $\ker \mat{A}$
+by construction. They are linearly independent: a relation
+$\sum_s c_s \vect{f}_s = \vect{0}$, restricted to free coordinate
+$\ell_t$, gives $c_t = 0$. They span $\ker \mat{A}$: given any
+$\vect{x} \in \ker \mat{A}$, the difference
+$\vect{x} - \sum_s x_{\ell_s}\vect{f}_s$ has zero in every free
+coordinate, so its pivot coordinates are determined by
+back-substitution to be zero, and the difference is~$\vect{0}$.
+Thus $\vect{f}_1, \dots, \vect{f}_{n-r}$ form a basis of $\ker \mat{A}$
+of size $n - r$.
+
+\emph{(b)} If $\vect{x}_*$ is a particular solution and $\vect{x}$ any
+solution, then $\mat{A}(\vect{x} - \vect{x}_*) = \vect{b} - \vect{b} = \vect{0}$,
+so $\vect{x} - \vect{x}_* \in \ker \mat{A}$. Conversely, $\vect{x}_* + \vect{y}$
+solves the system whenever $\vect{y} \in \ker \mat{A}$. The full solution
+set is therefore $\vect{x}_* + \ker \mat{A}$, which by part~(a) equals
+$\vect{x}_* + \spn(\vect{f}_1, \dots, \vect{f}_{n-r})$.
+\end{proof}
+
+\begin{proof}[\Cref{cor:rref-unique}]
+\proofanchor{rref-unique}
+Suppose $\mat{U}$ and $\mat{U}'$ are both in RREF and both
+row-equivalent to~$\mat{A}$. By \cref{prop:rank-ero-invariance} they
+have the same row span~$V$. We show $\mat{U} = \mat{U}'$.
+
+A column index~$j$ is a pivot column of an RREF iff $V$ contains an
+element whose first nonzero entry is in column~$j$ but does not contain
+an element whose first nonzero entry lies strictly to the left of~$j$
+inside the row space restricted to columns $\ge j$. This characterization
+involves only~$V$, so $\mat{U}$ and $\mat{U}'$ have the same pivot
+columns $j_1 < \dots < j_r$.
+
+Within RREF, the $k$-th nonzero row is the unique element of~$V$ that
+has a~$1$ in position~$j_k$, $0$ in positions $j_1, \dots, j_{k-1},
+j_{k+1}, \dots, j_r$, and is $0$ in positions $1, \dots, j_k - 1$. (The
+last constraint forces the support to lie in columns $\ge j_k$; the
+RREF normalization then determines all entries.) Uniqueness of this
+element in~$V$ gives $\mat{U} = \mat{U}'$.
+\end{proof}
 
 \subsection*{Examples}
-% TODO
+
+\begin{example}[Computing rank by row reduction]
+\label{ex:rank-compute}
+Compute the rank of
+\[
+  \mat{A} = \begin{pmatrix}
+    1 & 2 & 3 \\
+    2 & 4 & 6 \\
+    1 & 1 & 1
+  \end{pmatrix}.
+\]
+Apply $R_2 \to R_2 - 2R_1$ and $R_3 \to R_3 - R_1$:
+\[
+  \mat{A} \;\longrightarrow\;
+  \begin{pmatrix}
+    1 & 2 & 3 \\
+    0 & 0 & 0 \\
+    0 & -1 & -2
+  \end{pmatrix}
+  \;\xrightarrow{R_2 \leftrightarrow R_3}\;
+  \begin{pmatrix}
+    1 & 2 & 3 \\
+    0 & -1 & -2 \\
+    0 & 0 & 0
+  \end{pmatrix}.
+\]
+The REF has two pivots, so $\rank \mat{A} = 2$. The second row of the
+original matrix is twice the first, which explains the missing pivot.
+\end{example}
+
+\begin{example}[Kronecker--Capelli and general solution]
+\label{ex:kc-general-solution}
+For
+\[
+  \begin{aligned}
+    x + y - z &= 1, \\
+    2x + y + z &= 3, \\
+    x + 2y - 4z &= 0,
+  \end{aligned}
+\]
+the augmented matrix reduces by $R_2 \to R_2 - 2R_1$, $R_3 \to R_3 - R_1$,
+$R_3 \to R_3 + R_2$ to
+\[
+  \left[\begin{array}{rrr|r}
+    1 & 1 & -1 & 1 \\
+    0 & -1 & 3 & 1 \\
+    0 & 0 & 0 & 0
+  \end{array}\right].
+\]
+The coefficient block and the augmented block both have two pivots, so
+$\rank \mat{A} = \rank [\mat{A} \mid \vect{b}] = 2$ and the system is
+consistent by \cref{thm:kronecker-capelli}. With $n = 3$ unknowns and
+$r = 2$ pivots, $\dim \ker \mat{A} = 1$, so the solution set is a line.
+
+Take $z$ as the free variable: $y = 3z - 1$ from the second row,
+$x = 2 - 2z$ from the first. Hence
+\[
+  \begin{pmatrix} x \\ y \\ z \end{pmatrix}
+  =
+  \begin{pmatrix} 2 \\ -1 \\ 0 \end{pmatrix}
+  + z \begin{pmatrix} -2 \\ 3 \\ 1 \end{pmatrix},
+  \qquad z \in \F.
+\]
+The vector $(2, -1, 0)\T$ is a particular solution, and
+$(-2, 3, 1)\T$ is the (unique up to scaling) FSS of the associated
+homogeneous system.
+\end{example}
+
+\begin{example}[Fundamental system of solutions]
+\label{ex:fsr}
+Find the FSS of the homogeneous system
+\[
+  \begin{aligned}
+    x + y - z + w &= 0, \\
+    2x + 3y - z + 2w &= 0, \\
+    3x + 5y - z + 3w &= 0.
+  \end{aligned}
+\]
+Row reducing the coefficient matrix:
+\[
+  \begin{pmatrix}
+    1 & 1 & -1 & 1 \\
+    2 & 3 & -1 & 2 \\
+    3 & 5 & -1 & 3
+  \end{pmatrix}
+  \;\longrightarrow\;
+  \begin{pmatrix}
+    1 & 1 & -1 & 1 \\
+    0 & 1 & 1 & 0 \\
+    0 & 0 & 0 & 0
+  \end{pmatrix}.
+\]
+Pivots in columns 1 and 2; $z$ and $w$ are free. From the second row
+$y = -z$, then $x = -y + z - w = 2z - w$. Setting $(z, w) = (1, 0)$
+and $(z, w) = (0, 1)$ in turn yields the FSS
+\[
+  \vect{f}_1 = \begin{pmatrix} 2 \\ -1 \\ 1 \\ 0 \end{pmatrix}, \qquad
+  \vect{f}_2 = \begin{pmatrix} -1 \\ 0 \\ 0 \\ 1 \end{pmatrix}.
+\]
+The general solution is $c_1 \vect{f}_1 + c_2 \vect{f}_2$ with
+$c_1, c_2 \in \F$. If the right-hand side were instead $(1, 3, 5)$,
+back-substitution gives the particular solution $\vect{x}_* = (0, 1, 0, 0)\T$
+and the general solution becomes $\vect{x}_* + c_1 \vect{f}_1 + c_2 \vect{f}_2$,
+illustrating \cref{thm:solution-structure}\,(b).
+\end{example}
+
+\begin{problem}
+\label{prob:rank-parameter}
+For which values of $k \in \R$ does the matrix
+\[
+  \mat{A}(k) = \begin{pmatrix}
+    k & 1 & 0 \\
+    0 & k & 1 \\
+    1 & 0 & k
+  \end{pmatrix}
+\]
+have rank~$3$, and for which does it have rank~$2$?
+\end{problem}
+
+\begin{proof}[Solution]
+Expanding along the first column,
+$\det \mat{A}(k) = k(k^2 - 0) + 1\,(1 \cdot 1 - 0) = k^3 + 1$. Hence
+$\rank \mat{A}(k) = 3$ iff $k^3 + 1 \neq 0$, i.e.\ $k \neq -1$.
+
+It remains to show that $\rank \mat{A}(-1) = 2$ (it cannot drop below~$2$
+without all $2 \times 2$ minors vanishing, which they do not). At
+$k = -1$,
+\[
+  \mat{A}(-1) =
+  \begin{pmatrix}
+    -1 & 1 & 0 \\
+    0 & -1 & 1 \\
+    1 & 0 & -1
+  \end{pmatrix}
+  \;\xrightarrow{R_3 \to R_3 + R_1 + R_2}\;
+  \begin{pmatrix}
+    -1 & 1 & 0 \\
+    0 & -1 & 1 \\
+    0 & 0 & 0
+  \end{pmatrix},
+\]
+so $\rank \mat{A}(-1) = 2$.
+\end{proof}
