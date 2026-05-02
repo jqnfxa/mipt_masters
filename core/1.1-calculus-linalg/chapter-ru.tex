@@ -1,0 +1,30 @@
+% =============================================================================
+% Chapter 1.1 — Mathematical Analysis and Linear Algebra (Russian edition).
+% Compilable standalone (latexmk -pdf chapter-ru.tex) or included from
+% book-ru.tex via \subfile{...}.
+% =============================================================================
+\documentclass[../../book-ru.tex]{subfiles}
+
+\begin{document}
+
+\chapter{Математический анализ и линейная алгебра}
+\label{ch:1.1-calculus-linalg-ru}
+
+% --- Linear algebra ---
+\input{ru/01-systems-gauss}
+\input{ru/02-rank}
+\input{ru/03-matrix-operations}
+\input{ru/04-vector-spaces}
+\input{ru/05-linear-maps}
+\input{ru/06-eigenvalues}
+\input{ru/07-quadratic-forms}
+
+% --- Calculus ---
+\input{ru/08-series}
+\input{ru/09-derivatives-taylor}
+\input{ru/10-multivariable}
+\input{ru/11-conditional-extrema}
+\input{ru/12-fourier-series}
+\input{ru/13-fourier-transform}
+
+\end{document}

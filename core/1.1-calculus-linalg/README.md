@@ -1,42 +1,58 @@
 # 1.1. Mathematical Analysis and Linear Algebra
 
-**RU:** Математический анализ и линейная алгебра
+> Russian version: [README.ru.md](README.ru.md).
 
-The foundational block. Linear algebra (matrices, vector spaces, operators, quadratic forms) and calculus (differentiation in 1D and ND, series, Fourier analysis). Prerequisite for **every** other section, especially probability theory (1.2), ML (1.4), and convex optimization (2.4).
+The foundational block. Linear algebra (matrices, vector spaces, operators,
+quadratic forms) and calculus (differentiation in one and several variables,
+series, Fourier analysis). Prerequisite for **every** other section,
+especially probability theory (1.2), ML (1.4), and convex optimization (2.4).
 
 ## Topics (per program)
 
-**Linear algebra:**
-1. Системы линейных уравнений. Прямоугольные матрицы. Приведение матриц и систем линейных уравнений к ступенчатому виду. Метод Гаусса.
-2. Линейная зависимость и ранг. Линейная зависимость строк (столбцов). Основная лемма о линейной зависимости, базис и ранг системы строк (столбцов). Ранг матрицы. Критерий совместности и определенности системы линейных уравнений в терминах рангов матриц. Фундаментальная система решений однородной системы линейных уравнений.
-3. Операции над матрицами и их свойства. Теорема о ранге произведения двух матриц. Определитель произведения квадратных матриц. Обратная матрица, ее явный вид (формула), способ выражения с помощью элементарных преобразований строк.
-4. Векторное пространство, его базис и размерность. Преобразования координат в векторном пространстве. Подпространства как множества решений систем однородных линейных уравнений. Связь между размерностями суммы и пересечения двух подпространств. Линейная независимость подпространств. Базис и размерность прямой суммы подпространств.
-5. Линейные отображения и линейные операторы. Линейные отображения, их запись в координатах. Образ и ядро линейного отображения, связь между их размерностями. Сопряжённое пространство и сопряжённые базисы. Изменение матрицы линейного оператора при переходе к другому базису.
-6. Собственные векторы и собственные значения линейного оператора. Собственные подпространства линейного оператора, их линейная независимость. Условие диагонализируемости оператора. Самосопряжённое линейное преобразование конечномерного евклидова пространства, свойства его собственных значений и собственных векторов.
-7. Билинейные формы и их матрицы. Преобразование матрицы билинейной формы при замене базиса. Квадратичные формы. Матрица квадратичной формы. Метод Лагранжа приведения квадратичной формы к каноническому виду. Условие положительной (отрицательной) определенности квадратичной формы. Критерий Сильвестра.
+The full ticket descriptions below are translated from
+[программа.pdf](../../программа.pdf). Each ticket is one `.tex` file under
+[`ru/`](ru/) (Russian) and [`en/`](en/) (English); the slug is stable
+across languages.
 
-**Calculus:**
+### Linear algebra
 
-8. Ряды. Числовые и функциональные ряды. Признаки сходимости (Даламбера, Коши, интегральный, Лейбница). Абсолютно и условно сходящиеся ряды.
-9. Дифференцирование функций. Применение производной для нахождения экстремумов функций. Формула Тейлора.
-10. Функции многих переменных. Частные производные. Градиент и его геометрический смысл. Метод градиентного спуска.
-11. Поиск экстремумов функций от многих переменных. Условный экстремум функции нескольких переменных. Метод множителей Лагранжа, необходимые и достаточные условия условного экстремума.
-12. Теорема Римана об осцилляции. Тригонометрический ряд Фурье. Условия сходимости ряда Фурье в точке. Условия равномерной сходимости ряда Фурье.
-13. Преобразование Фурье абсолютно интегрируемой функции и его свойства. Преобразование Фурье производной и производная преобразования Фурье.
+| # | File slug | Topic |
+|---|-----------|-------|
+| 1 | `01-systems-gauss` | Systems of linear equations. Rectangular matrices. Reduction to row echelon form. Gaussian elimination. |
+| 2 | `02-rank` | Linear dependence and rank. Main lemma on linear dependence; basis and rank of a system of rows (columns). Rank of a matrix. Compatibility / definiteness criterion in terms of ranks. Fundamental system of solutions of a homogeneous linear system. |
+| 3 | `03-matrix-operations` | Operations on matrices and their properties. Rank of a product. Determinant of a product of square matrices. Inverse matrix: explicit form and via elementary row operations. |
+| 4 | `04-vector-spaces` | Vector space, basis, dimension. Coordinate transformations. Subspaces as solution sets of homogeneous linear systems. Dimension of sum and intersection. Direct sum: basis and dimension. |
+| 5 | `05-linear-maps` | Linear maps and operators. Image and kernel and the relation between their dimensions. Dual space and dual bases. Change of matrix under a change of basis. |
+| 6 | `06-eigenvalues` | Eigenvectors and eigenvalues. Eigenspaces and their linear independence. Diagonalizability criterion. Self-adjoint operator on a finite-dimensional Euclidean space; properties of eigenvalues / eigenvectors. |
+| 7 | `07-quadratic-forms` | Bilinear forms and their matrices; transformation under a change of basis. Quadratic forms. Lagrange's reduction to canonical form. Positive (negative) definiteness conditions. Sylvester's criterion. |
+
+### Calculus
+
+| # | File slug | Topic |
+|---|-----------|-------|
+| 8 | `08-series` | Numerical and functional series. Convergence tests (d'Alembert, Cauchy, integral, Leibniz). Absolutely / conditionally convergent series. |
+| 9 | `09-derivatives-taylor` | Differentiation of functions. Derivative for finding extrema. Taylor's formula. |
+| 10 | `10-multivariable` | Functions of several variables. Partial derivatives. Gradient and its geometric meaning. Gradient descent. |
+| 11 | `11-conditional-extrema` | Constrained extrema. Method of Lagrange multipliers; necessary and sufficient conditions. |
+| 12 | `12-fourier-series` | Riemann's oscillation theorem. Trigonometric Fourier series. Conditions for pointwise / uniform convergence. |
+| 13 | `13-fourier-transform` | Fourier transform of an absolutely integrable function and its properties. Fourier transform of a derivative; derivative of a Fourier transform. |
 
 ## Suggested study order
 
-- **Week 1–3 (Linear algebra):** topics 1 → 2 → 3 → 4 → 5 → 6 → 7.
-- **Week 4–7 (Calculus):** topics 8 → 9 → 10 → 11 → 12 → 13.
+- **Linear algebra (topics 1–7):** in order — each topic builds on the previous.
+- **Calculus (topics 8–13):** in order; multivariable (10–11) needs
+  single-variable (9) first; Fourier (12–13) closes the chapter.
 
 ## Recommended literature
 
-- Иванов Г.Е. Лекции по математическому анализу, 2 ч., 3-е изд., МФТИ, 2011.
-- Беклемишев Д.В. Курс аналитической геометрии и линейной алгебры, 2025.
-- Винберг Э.Б. Курс алгебры. МЦНМО, 1999/2001/2013/2017/2018.
-- Кострикин А.И. Введение в алгебру, ч. I, II. Физматлит, 2000.
-- Курош А.Г. Курс высшей алгебры. Наука, 1975.
-- Сборник задач по алгебре под ред. Кострикина А.И. — МЦНМО, 2009.
-- Зорич В.А. Математический анализ. Часть I, II. Наука, 1981/1984.
-- Кудрявцев Л.Д. Курс математического анализа (3 тома).
-- Демидович Б.П. Сборник задач и упражнений по математическому анализу. Аст, 2007.
+Cite via the keys in [`../../literature.bib`](../../literature.bib).
+
+- **Иванов Г.Е.** *Лекции по математическому анализу.* МФТИ, 2011.
+- **Беклемишев Д.В.** *Курс аналитической геометрии и линейной алгебры.* 2025.
+- **Винберг Э.Б.** *Курс алгебры.* МЦНМО, 1999/2018.
+- **Кострикин А.И.** *Введение в алгебру, ч. I, II.* Физматлит, 2000.
+- **Курош А.Г.** *Курс высшей алгебры.* Наука, 1975.
+- **Сборник задач по алгебре** под ред. А.И. Кострикина. МЦНМО, 2009.
+- **Зорич В.А.** *Математический анализ I, II.* Наука, 1981/1984.
+- **Кудрявцев Л.Д.** *Курс математического анализа* (3 тома).
+- **Демидович Б.П.** *Сборник задач и упражнений по математическому анализу.* АСТ, 2007.
