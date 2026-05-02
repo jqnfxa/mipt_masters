@@ -8,10 +8,369 @@ Operations on matrices and their properties. Theorem on the rank of a matrix pro
 \end{ticket}
 
 \subsection*{Theory}
-% TODO
+
+We continue to work over a fixed field~$\F$. Recall that
+$\mat{I}_n \in \F^{n \times n}$ denotes the identity matrix and
+$\mat{0}_{m \times n}$ the zero matrix.
+
+\begin{definition}
+\label{def:matrix-ops}
+For matrices $\mat{A} = (a_{ij}), \mat{B} = (b_{ij}) \in \F^{m \times n}$,
+$\mat{C} = (c_{jk}) \in \F^{n \times p}$, and a scalar $\lambda \in \F$:
+\begin{itemize}
+  \item the \emph{sum} $\mat{A} + \mat{B} \in \F^{m \times n}$ is
+        defined entry-wise by $(\mat{A} + \mat{B})_{ij} = a_{ij} + b_{ij}$;
+  \item the \emph{scalar multiple} $\lambda \mat{A} \in \F^{m \times n}$
+        is $(\lambda \mat{A})_{ij} = \lambda \, a_{ij}$;
+  \item the \emph{product} $\mat{A}\mat{C} \in \F^{m \times p}$ is
+        defined by
+        $(\mat{A}\mat{C})_{ik} = \sum_{j=1}^{n} a_{ij}\,c_{jk}$;
+  \item the \emph{transpose} $\mat{A}\T \in \F^{n \times m}$ has
+        $(\mat{A}\T)_{ji} = a_{ij}$.
+\end{itemize}
+\end{definition}
+
+\begin{remark}
+\label{rem:matrix-op-laws}
+The following standard identities hold whenever the dimensions match,
+and follow directly from the definitions:
+\begin{align*}
+  &(\mat{A} + \mat{B}) + \mat{C} = \mat{A} + (\mat{B} + \mat{C}),
+  & &\mat{A} + \mat{B} = \mat{B} + \mat{A}, \\
+  &(\mat{A}\mat{B})\mat{C} = \mat{A}(\mat{B}\mat{C}),
+  & &\mat{A}(\mat{B} + \mat{C}) = \mat{A}\mat{B} + \mat{A}\mat{C}, \\
+  &(\mat{B} + \mat{C})\mat{A} = \mat{B}\mat{A} + \mat{C}\mat{A},
+  & &(\lambda \mat{A})\mat{B} = \lambda(\mat{A}\mat{B}) = \mat{A}(\lambda \mat{B}), \\
+  &(\mat{A} + \mat{B})\T = \mat{A}\T + \mat{B}\T,
+  & &(\mat{A}\mat{B})\T = \mat{B}\T \mat{A}\T.
+\end{align*}
+Matrix multiplication is in general \emph{not} commutative:
+$\mat{A}\mat{B} \neq \mat{B}\mat{A}$ even when both products are
+defined and have the same shape (see \cref{ex:noncomm-mult}).
+\end{remark}
+
+\begin{definition}
+\label{def:invertible}
+A square matrix $\mat{A} \in \F^{n \times n}$ is \emph{invertible}
+(\emph{nonsingular}) if there exists $\mat{B} \in \F^{n \times n}$ with
+$\mat{A}\mat{B} = \mat{B}\mat{A} = \mat{I}_n$. Such a~$\mat{B}$ is
+unique (if $\mat{B}'$ is another inverse, then
+$\mat{B}' = \mat{B}'(\mat{A}\mat{B}) = (\mat{B}'\mat{A})\mat{B} = \mat{B}$);
+it is denoted $\mat{A}^{-1}$.
+\end{definition}
+
+\begin{remark}
+For square matrices over a field, one-sided inverses suffice: if
+$\mat{A}\mat{B} = \mat{I}_n$, then $\mat{B}\mat{A} = \mat{I}_n$ as
+well. This follows from the rank argument in
+\cref{thm:rank-product}: $\rank \mat{A} \ge \rank(\mat{A}\mat{B}) = n$,
+so $\rank \mat{A} = n$ and $\mat{A}$ is invertible; multiplying
+$\mat{A}\mat{B} = \mat{I}_n$ on the left by $\mat{A}^{-1}$ gives
+$\mat{B} = \mat{A}^{-1}$, whence $\mat{B}\mat{A} = \mat{I}_n$.
+\end{remark}
+
+\begin{theorem}[Rank of a product]
+\label{thm:rank-product}
+For any $\mat{A} \in \F^{m \times n}$ and $\mat{B} \in \F^{n \times p}$,
+\[
+  \rank(\mat{A}\mat{B}) \;\le\; \min\bigl(\rank \mat{A},\, \rank \mat{B}\bigr).
+\]
+\end{theorem}
+\proofof{rank-product}
+
+We assume from prior coursework the standard determinant function
+$\det\colon \F^{n \times n} \to \F$, characterized by being $n$-linear
+and alternating in the rows (or columns) with $\det \mat{I}_n = 1$.
+The properties we will use: $\det$ is alternating (swapping two rows
+flips the sign), multilinear (scaling one row by $c$ multiplies $\det$
+by~$c$, adding a multiple of one row to another leaves $\det$
+unchanged), and $\det \mat{I}_n = 1$. Consequently the determinants of
+the three elementary matrices (\cref{def:gauss-ero}) are:
+$\det \mat{E}_{\text{(I)}} = -1$, $\det \mat{E}_{\text{(II)}} = c$,
+$\det \mat{E}_{\text{(III)}} = 1$.
+
+\begin{theorem}[Determinant of a product]
+\label{thm:det-product}
+For square matrices $\mat{A}, \mat{B} \in \F^{n \times n}$,
+\[
+  \det(\mat{A}\mat{B}) \;=\; \det \mat{A} \cdot \det \mat{B}.
+\]
+\end{theorem}
+\proofof{det-product}
+
+\begin{corollary}
+\label{cor:det-inverse}
+If $\mat{A}$ is invertible, then $\det \mat{A} \neq 0$ and
+$\det(\mat{A}^{-1}) = (\det \mat{A})^{-1}$.
+\end{corollary}
+
+\begin{definition}
+\label{def:adjugate}
+For $\mat{A} \in \F^{n \times n}$, the \emph{$(i, j)$-minor} $M_{ij}$
+is the determinant of the $(n-1) \times (n-1)$ matrix obtained by
+deleting row~$i$ and column~$j$ of~$\mat{A}$. The
+\emph{$(i, j)$-cofactor} is $A_{ij} = (-1)^{i+j} M_{ij}$. The
+\emph{adjugate} $\adj \mat{A}$ is the transpose of the cofactor
+matrix:
+\[
+  (\adj \mat{A})_{ij} \;=\; A_{ji}.
+\]
+\end{definition}
+
+\begin{theorem}[Cofactor formula for the inverse]
+\label{thm:cofactor-inverse}
+For any square matrix~$\mat{A}$,
+\[
+  \mat{A} \cdot \adj \mat{A} \;=\; \adj \mat{A} \cdot \mat{A}
+  \;=\; (\det \mat{A}) \cdot \mat{I}_n.
+\]
+Consequently $\mat{A}$ is invertible iff $\det \mat{A} \neq 0$, and in
+that case
+\[
+  \mat{A}^{-1} \;=\; \frac{1}{\det \mat{A}}\,\adj \mat{A}.
+\]
+\end{theorem}
+\proofof{cofactor-inverse}
+
+\begin{theorem}[Inverse via row reduction]
+\label{thm:ero-inverse}
+A square matrix $\mat{A} \in \F^{n \times n}$ is invertible iff its
+RREF is~$\mat{I}_n$. In that case, the sequence of elementary row
+operations that transforms~$\mat{A}$ into~$\mat{I}_n$ transforms
+$\mat{I}_n$ into~$\mat{A}^{-1}$. In particular, applying that sequence
+to the augmented matrix $[\mat{A} \mid \mat{I}_n]$ produces
+$[\mat{I}_n \mid \mat{A}^{-1}]$.
+\end{theorem}
+\proofof{ero-inverse}
+
+\begin{remark}
+The cofactor formula is theoretically clean but computationally
+expensive ($n!$-style cost from cofactor expansion). The row-reduction
+method runs in $O(n^3)$ field operations and is the practical choice
+for $n \ge 4$. For further reading, see \cite{Beklemishev2025}.
+\end{remark}
 
 \subsection*{Proofs}
-% TODO
+
+\begin{proof}[\Cref{thm:rank-product}]
+\proofanchor{rank-product}
+Let $\vect{c}_1, \dots, \vect{c}_p$ be the columns of~$\mat{B}$. The
+$k$-th column of $\mat{A}\mat{B}$ is $\mat{A}\vect{c}_k$, hence lies
+in the column span of~$\mat{A}$. Therefore the column span of
+$\mat{A}\mat{B}$ is contained in the column span of~$\mat{A}$, and
+\[
+  \rank(\mat{A}\mat{B}) \;\le\; \rank \mat{A}.
+\]
+
+Symmetrically, let $\vect{r}_1\T, \dots, \vect{r}_n\T$ be the rows
+of~$\mat{A}$. The $i$-th row of $\mat{A}\mat{B}$ is
+$\sum_{j} a_{ij} \vect{r}_j \cdot \mat{B}^{\text{(rows)}}$ — more
+precisely, the $i$-th row is $\sum_j a_{ij}\,(\mbox{$j$-th row of }\mat{B})$,
+which lies in the row span of~$\mat{B}$. Hence
+$\rank(\mat{A}\mat{B}) \le \rank \mat{B}$. Combining both bounds gives
+the claim.
+\end{proof}
+
+\begin{proof}[\Cref{thm:det-product}]
+\proofanchor{det-product}
+\emph{Step 1: $\det(\mat{E}\mat{B}) = \det \mat{E} \cdot \det \mat{B}$
+for elementary~$\mat{E}$.} Direct from the alternating / multilinear
+properties of~$\det$:
+swap rows multiplies $\det \mat{B}$ by $-1 = \det \mat{E}_{\text{(I)}}$;
+scale a row by~$c$ multiplies $\det \mat{B}$ by $c = \det \mat{E}_{\text{(II)}}$;
+adding a multiple of one row to another leaves $\det \mat{B}$ unchanged
+($= 1 \cdot \det \mat{B} = \det \mat{E}_{\text{(III)}} \cdot \det \mat{B}$).
+
+\emph{Step 2: $\mat{A}$ invertible.} By
+\cref{thm:gauss-rref} and \cref{prop:rank-ero-invariance}, an
+invertible square~$\mat{A}$ has $\rank \mat{A} = n$, so its RREF is
+$\mat{I}_n$. The EROs that reduce~$\mat{A}$ to $\mat{I}_n$ correspond
+to elementary matrices $\mat{E}_1, \dots, \mat{E}_k$ with
+$\mat{E}_k \cdots \mat{E}_1\,\mat{A} = \mat{I}_n$, so
+$\mat{A} = \mat{E}_1^{-1} \cdots \mat{E}_k^{-1}$ is itself a product of
+elementary matrices. Iterating Step~1,
+\[
+  \det(\mat{A}\mat{B})
+  = \det\bigl(\mat{E}_1^{-1} \cdots \mat{E}_k^{-1} \mat{B}\bigr)
+  = \det \mat{E}_1^{-1} \cdots \det \mat{E}_k^{-1} \cdot \det \mat{B}
+  = \det \mat{A} \cdot \det \mat{B}.
+\]
+
+\emph{Step 3: $\mat{A}$ singular.} If $\rank \mat{A} < n$ then by
+\cref{thm:rank-product} also $\rank(\mat{A}\mat{B}) < n$, so both
+$\mat{A}\mat{B}$ and $\mat{A}$ are singular. We will show below
+(\cref{thm:cofactor-inverse}) that a singular matrix has zero
+determinant, so both sides equal zero and the identity holds.
+\end{proof}
+
+\begin{proof}[\Cref{thm:cofactor-inverse}]
+\proofanchor{cofactor-inverse}
+Compute the $(i, j)$ entry of $\mat{A} \cdot \adj \mat{A}$:
+\[
+  (\mat{A} \cdot \adj \mat{A})_{ij}
+  \;=\; \sum_{k=1}^{n} a_{ik}\,(\adj \mat{A})_{kj}
+  \;=\; \sum_{k=1}^{n} a_{ik}\,A_{jk}
+  \;=\; \sum_{k=1}^{n} (-1)^{j+k} a_{ik}\,M_{jk}.
+\]
+
+The right-hand sum is the cofactor expansion along row~$j$ of the
+matrix $\mat{A}^{(i \to j)}$ obtained from~$\mat{A}$ by replacing its
+$j$-th row with a copy of the $i$-th row. Hence
+$(\mat{A} \cdot \adj \mat{A})_{ij} = \det \mat{A}^{(i \to j)}$.
+
+If $i = j$, then $\mat{A}^{(i \to j)} = \mat{A}$ and the sum equals
+$\det \mat{A}$ — this is the standard cofactor expansion. If $i \neq j$,
+then $\mat{A}^{(i \to j)}$ has two equal rows (rows $i$ and~$j$ both
+copies of the $i$-th row of~$\mat{A}$), so its determinant
+vanishes by the alternating property.
+
+Thus $\mat{A} \cdot \adj \mat{A} = (\det \mat{A})\,\mat{I}_n$. The
+analogous calculation for $\adj \mat{A} \cdot \mat{A}$ uses the
+cofactor expansion along columns and yields the same result.
+
+If $\det \mat{A} \neq 0$, dividing by it gives
+$\mat{A} \cdot \bigl((\det \mat{A})^{-1} \adj \mat{A}\bigr) = \mat{I}_n$,
+so $\mat{A}$ is invertible with the stated formula. Conversely, if
+$\mat{A}$ is invertible, $\det \mat{A} \cdot \det \mat{A}^{-1} = \det \mat{I}_n = 1$
+by \cref{thm:det-product} (Steps~1 and~2 of whose proof do not depend
+on this implication), so $\det \mat{A} \neq 0$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:ero-inverse}]
+\proofanchor{ero-inverse}
+By \cref{prop:rank-ero-invariance}, $\rank \mat{A}$ equals the number of
+pivots in any REF of~$\mat{A}$. The RREF of~$\mat{A}$ equals~$\mat{I}_n$
+iff there are $n$ pivots iff $\rank \mat{A} = n$, which by
+\cref{thm:cofactor-inverse} is equivalent to $\mat{A}$ being invertible.
+
+Suppose $\mat{A}$ is invertible. Let $\mat{E}_1, \dots, \mat{E}_k$ be
+the elementary matrices realizing the EROs that reduce~$\mat{A}$ to
+$\mat{I}_n$, so $\mat{E}_k \cdots \mat{E}_1\,\mat{A} = \mat{I}_n$. The
+same EROs applied to $\mat{I}_n$ produce
+$\mat{E}_k \cdots \mat{E}_1\,\mat{I}_n = \mat{E}_k \cdots \mat{E}_1$.
+Multiplying $\mat{E}_k \cdots \mat{E}_1\,\mat{A} = \mat{I}_n$ on the
+right by~$\mat{A}^{-1}$ gives $\mat{E}_k \cdots \mat{E}_1 = \mat{A}^{-1}$.
+Hence applying the EROs to $\mat{I}_n$ produces~$\mat{A}^{-1}$, and
+applying them to the augmented matrix $[\mat{A} \mid \mat{I}_n]$
+produces $[\mat{I}_n \mid \mat{A}^{-1}]$.
+\end{proof}
 
 \subsection*{Examples}
-% TODO
+
+\begin{example}[Multiplication is non-commutative]
+\label{ex:noncomm-mult}
+Take
+\[
+  \mat{A} = \begin{pmatrix} 1 & 2 \\ 3 & 4 \end{pmatrix}, \qquad
+  \mat{B} = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}.
+\]
+Then
+\[
+  \mat{A}\mat{B} = \begin{pmatrix} 2 & 1 \\ 4 & 3 \end{pmatrix}, \qquad
+  \mat{B}\mat{A} = \begin{pmatrix} 3 & 4 \\ 1 & 2 \end{pmatrix},
+\]
+so $\mat{A}\mat{B} \neq \mat{B}\mat{A}$.
+\end{example}
+
+\begin{example}[Strict drop in rank under product]
+\label{ex:rank-product-drop}
+Let
+\[
+  \mat{A} = \begin{pmatrix} 1 & 0 \\ 0 & 0 \end{pmatrix}, \qquad
+  \mat{B} = \begin{pmatrix} 0 & 0 \\ 0 & 1 \end{pmatrix}.
+\]
+Each has rank~$1$, but $\mat{A}\mat{B} = \mat{0}_{2 \times 2}$ has
+rank~$0$, illustrating that the bound in \cref{thm:rank-product} can
+be strict. For comparison, with the same~$\mat{A}$ and
+$\mat{B}' = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix} = \mat{I}_2$
+(rank~$2$), $\mat{A}\mat{B}' = \mat{A}$ has rank~$1$, attaining
+$\min(\rank \mat{A}, \rank \mat{B}') = 1$.
+\end{example}
+
+\begin{example}[Determinant of a product]
+\label{ex:det-product}
+For
+\[
+  \mat{A} = \begin{pmatrix} 1 & 2 \\ 3 & 4 \end{pmatrix}, \qquad
+  \mat{B} = \begin{pmatrix} 2 & 0 \\ 1 & 3 \end{pmatrix},
+\]
+we have $\det \mat{A} = -2$ and $\det \mat{B} = 6$. Direct computation:
+\[
+  \mat{A}\mat{B} = \begin{pmatrix} 4 & 6 \\ 10 & 12 \end{pmatrix},
+  \qquad \det(\mat{A}\mat{B}) = 48 - 60 = -12 = (-2) \cdot 6,
+\]
+in agreement with \cref{thm:det-product}.
+\end{example}
+
+\begin{problem}
+\label{prob:invert-3x3}
+For
+\[
+  \mat{A} = \begin{pmatrix}
+    1 & 1 & 0 \\
+    1 & 1 & 1 \\
+    0 & 1 & 1
+  \end{pmatrix},
+\]
+verify that $\mat{A}$ is invertible and compute $\mat{A}^{-1}$ in two
+ways: (a)~from the cofactor formula, (b)~by row-reducing
+$[\mat{A} \mid \mat{I}_3]$. Check the answers agree.
+\end{problem}
+
+\begin{proof}[Solution]
+Cofactor expansion along the first row gives
+$\det \mat{A} = 1 \cdot (1 - 1) - 1 \cdot (1 - 0) + 0 = -1 \neq 0$, so
+$\mat{A}$ is invertible.
+
+\emph{(a) Cofactor formula.} Direct calculation of the nine cofactors
+(signs alternating from the top-left $+$):
+\[
+  \begin{aligned}
+    A_{11} &= +(1-1) = 0,
+    & A_{12} &= -(1-0) = -1,
+    & A_{13} &= +(1-0) = 1, \\
+    A_{21} &= -(1-0) = -1,
+    & A_{22} &= +(1-0) = 1,
+    & A_{23} &= -(1-0) = -1, \\
+    A_{31} &= +(1-0) = 1,
+    & A_{32} &= -(1-0) = -1,
+    & A_{33} &= +(1-1) = 0.
+  \end{aligned}
+\]
+Transposing the cofactor matrix and dividing by $\det \mat{A} = -1$:
+\[
+  \mat{A}^{-1} \;=\; \frac{1}{-1}
+  \begin{pmatrix} 0 & -1 & 1 \\ -1 & 1 & -1 \\ 1 & -1 & 0 \end{pmatrix}
+  \;=\;
+  \begin{pmatrix} 0 & 1 & -1 \\ 1 & -1 & 1 \\ -1 & 1 & 0 \end{pmatrix}.
+\]
+
+\emph{(b) Row reduction.} Augment with~$\mat{I}_3$ and apply the EROs
+that reduce~$\mat{A}$ to~$\mat{I}_3$:
+\[
+  \left[\begin{array}{rrr|rrr}
+    1 & 1 & 0 & 1 & 0 & 0 \\
+    1 & 1 & 1 & 0 & 1 & 0 \\
+    0 & 1 & 1 & 0 & 0 & 1
+  \end{array}\right]
+  \;\xrightarrow{\substack{R_2 \to R_2 - R_1 \\ R_2 \leftrightarrow R_3}}\;
+  \left[\begin{array}{rrr|rrr}
+    1 & 1 & 0 & 1 & 0 & 0 \\
+    0 & 1 & 1 & 0 & 0 & 1 \\
+    0 & 0 & 1 & -1 & 1 & 0
+  \end{array}\right].
+\]
+Back-substitute by $R_2 \to R_2 - R_3$ then $R_1 \to R_1 - R_2$:
+\[
+  \;\longrightarrow\;
+  \left[\begin{array}{rrr|rrr}
+    1 & 0 & 0 & 0 & 1 & -1 \\
+    0 & 1 & 0 & 1 & -1 & 1 \\
+    0 & 0 & 1 & -1 & 1 & 0
+  \end{array}\right].
+\]
+The right-hand block coincides with~$\mat{A}^{-1}$ from~(a).
+
+A direct multiplication $\mat{A}\mat{A}^{-1}$ confirms the identity
+$\mat{I}_3$.
+\end{proof}

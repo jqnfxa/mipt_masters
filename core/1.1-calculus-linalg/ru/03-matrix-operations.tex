@@ -8,10 +8,384 @@
 \end{ticket}
 
 \subsection*{Теория}
-% TODO
+
+Все рассмотрения по-прежнему ведутся над фиксированным полем~$\F$.
+Через $\mat{I}_n \in \F^{n \times n}$ обозначим единичную матрицу,
+а через $\mat{0}_{m \times n}$~--- нулевую.
+
+\begin{definition}
+\label{def:matrix-ops}
+Для матриц
+$\mat{A} = (a_{ij}), \mat{B} = (b_{ij}) \in \F^{m \times n}$,
+$\mat{C} = (c_{jk}) \in \F^{n \times p}$ и скаляра $\lambda \in \F$:
+\begin{itemize}
+  \item \emph{сумма} $\mat{A} + \mat{B} \in \F^{m \times n}$ задаётся
+        поэлементно: $(\mat{A} + \mat{B})_{ij} = a_{ij} + b_{ij}$;
+  \item \emph{произведение на скаляр}
+        $\lambda \mat{A} \in \F^{m \times n}$~---
+        $(\lambda \mat{A})_{ij} = \lambda \, a_{ij}$;
+  \item \emph{произведение} $\mat{A}\mat{C} \in \F^{m \times p}$
+        определяется формулой
+        $(\mat{A}\mat{C})_{ik} = \sum_{j=1}^{n} a_{ij}\,c_{jk}$;
+  \item \emph{транспонированная матрица}
+        $\mat{A}\T \in \F^{n \times m}$ имеет
+        $(\mat{A}\T)_{ji} = a_{ij}$.
+\end{itemize}
+\end{definition}
+
+\begin{remark}
+\label{rem:matrix-op-laws}
+Стандартные тождества, выполненные при согласовании размерностей и
+немедленно следующие из определений:
+\begin{align*}
+  &(\mat{A} + \mat{B}) + \mat{C} = \mat{A} + (\mat{B} + \mat{C}),
+  & &\mat{A} + \mat{B} = \mat{B} + \mat{A}, \\
+  &(\mat{A}\mat{B})\mat{C} = \mat{A}(\mat{B}\mat{C}),
+  & &\mat{A}(\mat{B} + \mat{C}) = \mat{A}\mat{B} + \mat{A}\mat{C}, \\
+  &(\mat{B} + \mat{C})\mat{A} = \mat{B}\mat{A} + \mat{C}\mat{A},
+  & &(\lambda \mat{A})\mat{B} = \lambda(\mat{A}\mat{B}) = \mat{A}(\lambda \mat{B}), \\
+  &(\mat{A} + \mat{B})\T = \mat{A}\T + \mat{B}\T,
+  & &(\mat{A}\mat{B})\T = \mat{B}\T \mat{A}\T.
+\end{align*}
+В общем случае умножение матриц \emph{не} коммутативно:
+$\mat{A}\mat{B} \neq \mat{B}\mat{A}$ даже если оба произведения
+определены и имеют одну и ту же размерность (см.~\cref{ex:noncomm-mult}).
+\end{remark}
+
+\begin{definition}
+\label{def:invertible}
+Квадратная матрица $\mat{A} \in \F^{n \times n}$ называется
+\emph{обратимой} (или \emph{невырожденной}), если существует
+$\mat{B} \in \F^{n \times n}$ такая, что
+$\mat{A}\mat{B} = \mat{B}\mat{A} = \mat{I}_n$. Такая~$\mat{B}$
+единственна (если $\mat{B}'$~--- ещё одна обратная, то
+$\mat{B}' = \mat{B}'(\mat{A}\mat{B}) = (\mat{B}'\mat{A})\mat{B} = \mat{B}$);
+обозначается $\mat{A}^{-1}$.
+\end{definition}
+
+\begin{remark}
+Для квадратных матриц над полем достаточно и одностороннего обратного:
+если $\mat{A}\mat{B} = \mat{I}_n$, то и $\mat{B}\mat{A} = \mat{I}_n$.
+Это вытекает из ранговой оценки в \cref{thm:rank-product}:
+$\rank \mat{A} \ge \rank(\mat{A}\mat{B}) = n$, поэтому
+$\rank \mat{A} = n$ и матрица~$\mat{A}$ обратима; умножая
+$\mat{A}\mat{B} = \mat{I}_n$ слева на~$\mat{A}^{-1}$, получаем
+$\mat{B} = \mat{A}^{-1}$, откуда $\mat{B}\mat{A} = \mat{I}_n$.
+\end{remark}
+
+\begin{theorem}[О ранге произведения]
+\label{thm:rank-product}
+Для любых $\mat{A} \in \F^{m \times n}$ и $\mat{B} \in \F^{n \times p}$
+\[
+  \rank(\mat{A}\mat{B}) \;\le\; \min\bigl(\rank \mat{A},\, \rank \mat{B}\bigr).
+\]
+\end{theorem}
+\proofof{rank-product}
+
+Будем считать известной из предыдущих курсов функцию определителя
+$\det\colon \F^{n \times n} \to \F$, характеризуемую как
+$n$-линейная и кососимметричная относительно строк (или столбцов)
+функция, для которой $\det \mat{I}_n = 1$. Используем следующие её
+свойства: кососимметричность (перестановка двух строк меняет знак),
+полилинейность (умножение строки на $c$ умножает определитель
+на~$c$, а прибавление кратного одной строки к другой определитель не
+меняет) и $\det \mat{I}_n = 1$. Отсюда определители трёх элементарных
+матриц (\cref{def:gauss-ero}) равны:
+$\det \mat{E}_{\text{(I)}} = -1$, $\det \mat{E}_{\text{(II)}} = c$,
+$\det \mat{E}_{\text{(III)}} = 1$.
+
+\begin{theorem}[Об определителе произведения]
+\label{thm:det-product}
+Для квадратных матриц $\mat{A}, \mat{B} \in \F^{n \times n}$
+\[
+  \det(\mat{A}\mat{B}) \;=\; \det \mat{A} \cdot \det \mat{B}.
+\]
+\end{theorem}
+\proofof{det-product}
+
+\begin{corollary}
+\label{cor:det-inverse}
+Если $\mat{A}$ обратима, то $\det \mat{A} \neq 0$ и
+$\det(\mat{A}^{-1}) = (\det \mat{A})^{-1}$.
+\end{corollary}
+
+\begin{definition}
+\label{def:adjugate}
+Для $\mat{A} \in \F^{n \times n}$ \emph{минором}~$M_{ij}$ называется
+определитель матрицы порядка $(n-1) \times (n-1)$, полученной
+вычёркиванием $i$-й строки и $j$-го столбца~$\mat{A}$.
+\emph{Алгебраическое дополнение} элемента $a_{ij}$~--- число
+$A_{ij} = (-1)^{i+j} M_{ij}$. \emph{Присоединённая матрица}
+$\adj \mat{A}$~--- транспонированная матрица алгебраических дополнений:
+\[
+  (\adj \mat{A})_{ij} \;=\; A_{ji}.
+\]
+\end{definition}
+
+\begin{theorem}[Формула обратной матрицы через присоединённую]
+\label{thm:cofactor-inverse}
+Для произвольной квадратной матрицы~$\mat{A}$
+\[
+  \mat{A} \cdot \adj \mat{A} \;=\; \adj \mat{A} \cdot \mat{A}
+  \;=\; (\det \mat{A}) \cdot \mat{I}_n.
+\]
+Следовательно, $\mat{A}$ обратима тогда и только тогда, когда
+$\det \mat{A} \neq 0$, и в этом случае
+\[
+  \mat{A}^{-1} \;=\; \frac{1}{\det \mat{A}}\,\adj \mat{A}.
+\]
+\end{theorem}
+\proofof{cofactor-inverse}
+
+\begin{theorem}[Обратная матрица через элементарные преобразования]
+\label{thm:ero-inverse}
+Квадратная матрица $\mat{A} \in \F^{n \times n}$ обратима тогда и
+только тогда, когда её приведённый ступенчатый вид совпадает с
+$\mat{I}_n$. В этом случае последовательность элементарных
+преобразований строк, переводящая~$\mat{A}$ в~$\mat{I}_n$, переводит
+$\mat{I}_n$ в~$\mat{A}^{-1}$. В частности, применяя её к расширенной
+матрице $[\mat{A} \mid \mat{I}_n]$, получаем
+$[\mat{I}_n \mid \mat{A}^{-1}]$.
+\end{theorem}
+\proofof{ero-inverse}
+
+\begin{remark}
+Формула с присоединённой матрицей теоретически изящна, но
+вычислительно дорога (стоимость растёт как $n!$ из-за разложения
+определителя по строке). Метод Гаусса для вычисления обратной требует
+$O(n^3)$ операций над полем и предпочтителен при $n \ge 4$. Дальнейшее
+изложение см.\ в~\cite{Beklemishev2025}.
+\end{remark}
 
 \subsection*{Доказательства}
-% TODO
+
+\begin{proof}[\Cref{thm:rank-product}]
+\proofanchor{rank-product}
+Пусть $\vect{c}_1, \dots, \vect{c}_p$~--- столбцы матрицы~$\mat{B}$.
+$k$-й столбец произведения $\mat{A}\mat{B}$ равен $\mat{A}\vect{c}_k$
+и принадлежит линейной оболочке столбцов~$\mat{A}$. Следовательно,
+линейная оболочка столбцов $\mat{A}\mat{B}$ содержится в линейной
+оболочке столбцов~$\mat{A}$, и
+\[
+  \rank(\mat{A}\mat{B}) \;\le\; \rank \mat{A}.
+\]
+
+Симметрично: $i$-я строка $\mat{A}\mat{B}$ равна
+$\sum_j a_{ij} \cdot (j\text{-я строка }\mat{B})$ и принадлежит
+линейной оболочке строк~$\mat{B}$. Поэтому
+$\rank(\mat{A}\mat{B}) \le \rank \mat{B}$. Объединение даёт нужное
+неравенство.
+\end{proof}
+
+\begin{proof}[\Cref{thm:det-product}]
+\proofanchor{det-product}
+\emph{Шаг 1: $\det(\mat{E}\mat{B}) = \det \mat{E} \cdot \det \mat{B}$
+для элементарной~$\mat{E}$.} Прямо следует из кососимметричности и
+полилинейности~$\det$:
+перестановка строк умножает $\det \mat{B}$ на $-1 = \det \mat{E}_{\text{(I)}}$;
+умножение строки на~$c$ умножает $\det \mat{B}$ на $c = \det \mat{E}_{\text{(II)}}$;
+прибавление кратного одной строки к другой $\det \mat{B}$ не меняет
+($= 1 \cdot \det \mat{B} = \det \mat{E}_{\text{(III)}} \cdot \det \mat{B}$).
+
+\emph{Шаг 2: $\mat{A}$ обратима.} По \cref{thm:gauss-rref} и
+\cref{prop:rank-ero-invariance} обратимая квадратная матрица~$\mat{A}$
+имеет $\rank \mat{A} = n$, так что её приведённый ступенчатый вид
+равен~$\mat{I}_n$. Элементарные преобразования, переводящие~$\mat{A}$
+в~$\mat{I}_n$, соответствуют элементарным матрицам
+$\mat{E}_1, \dots, \mat{E}_k$ с условием
+$\mat{E}_k \cdots \mat{E}_1\,\mat{A} = \mat{I}_n$, откуда
+$\mat{A} = \mat{E}_1^{-1} \cdots \mat{E}_k^{-1}$~--- сама произведение
+элементарных. Применяя шаг~1 несколько раз:
+\[
+  \det(\mat{A}\mat{B})
+  = \det\bigl(\mat{E}_1^{-1} \cdots \mat{E}_k^{-1} \mat{B}\bigr)
+  = \det \mat{E}_1^{-1} \cdots \det \mat{E}_k^{-1} \cdot \det \mat{B}
+  = \det \mat{A} \cdot \det \mat{B}.
+\]
+
+\emph{Шаг 3: $\mat{A}$ вырождена.} Если $\rank \mat{A} < n$, то по
+\cref{thm:rank-product} и $\rank(\mat{A}\mat{B}) < n$; обе матрицы
+$\mat{A}\mat{B}$ и $\mat{A}$ вырождены. Ниже
+(\cref{thm:cofactor-inverse}) будет показано, что определитель
+вырожденной матрицы равен нулю, поэтому обе части равенства равны
+нулю.
+\end{proof}
+
+\begin{proof}[\Cref{thm:cofactor-inverse}]
+\proofanchor{cofactor-inverse}
+Вычислим $(i, j)$-й элемент матрицы $\mat{A} \cdot \adj \mat{A}$:
+\[
+  (\mat{A} \cdot \adj \mat{A})_{ij}
+  \;=\; \sum_{k=1}^{n} a_{ik}\,(\adj \mat{A})_{kj}
+  \;=\; \sum_{k=1}^{n} a_{ik}\,A_{jk}
+  \;=\; \sum_{k=1}^{n} (-1)^{j+k} a_{ik}\,M_{jk}.
+\]
+
+Эта сумма~--- разложение по $j$-й строке определителя матрицы
+$\mat{A}^{(i \to j)}$, полученной из~$\mat{A}$ заменой её $j$-й строки
+на копию $i$-й строки. Поэтому
+$(\mat{A} \cdot \adj \mat{A})_{ij} = \det \mat{A}^{(i \to j)}$.
+
+При $i = j$ имеем $\mat{A}^{(i \to j)} = \mat{A}$, и сумма равна
+$\det \mat{A}$~--- стандартное разложение определителя по строке.
+При $i \neq j$ матрица $\mat{A}^{(i \to j)}$ имеет две одинаковые
+строки (строки~$i$ и~$j$ обе совпадают с $i$-й строкой~$\mat{A}$), а
+её определитель равен нулю в силу кососимметричности.
+
+Таким образом, $\mat{A} \cdot \adj \mat{A} = (\det \mat{A})\,\mat{I}_n$.
+Аналогичное вычисление для $\adj \mat{A} \cdot \mat{A}$ использует
+разложение определителя по столбцу и приводит к тому же результату.
+
+Если $\det \mat{A} \neq 0$, делением на него получаем
+$\mat{A} \cdot \bigl((\det \mat{A})^{-1} \adj \mat{A}\bigr) = \mat{I}_n$,
+то есть~$\mat{A}$ обратима с указанной формулой. Обратно, если~$\mat{A}$
+обратима, то $\det \mat{A} \cdot \det \mat{A}^{-1} = \det \mat{I}_n = 1$
+по \cref{thm:det-product} (шаги~1 и~2 которой не зависят от текущего
+утверждения), откуда $\det \mat{A} \neq 0$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:ero-inverse}]
+\proofanchor{ero-inverse}
+По \cref{prop:rank-ero-invariance} ранг~$\mat{A}$ равен числу ведущих
+элементов в любом её ступенчатом виде. Приведённый ступенчатый вид
+матрицы~$\mat{A}$ совпадает с~$\mat{I}_n$ тогда и только тогда, когда
+ведущих элементов ровно~$n$, то есть когда $\rank \mat{A} = n$, что по
+\cref{thm:cofactor-inverse} равносильно обратимости~$\mat{A}$.
+
+Пусть~$\mat{A}$ обратима. Обозначим через
+$\mat{E}_1, \dots, \mat{E}_k$ элементарные матрицы, реализующие
+преобразования, переводящие~$\mat{A}$ в~$\mat{I}_n$, так что
+$\mat{E}_k \cdots \mat{E}_1\,\mat{A} = \mat{I}_n$. Применение тех же
+преобразований к~$\mat{I}_n$ даёт
+$\mat{E}_k \cdots \mat{E}_1\,\mat{I}_n = \mat{E}_k \cdots \mat{E}_1$.
+Умножая равенство $\mat{E}_k \cdots \mat{E}_1\,\mat{A} = \mat{I}_n$
+справа на~$\mat{A}^{-1}$, получаем
+$\mat{E}_k \cdots \mat{E}_1 = \mat{A}^{-1}$. Поэтому применение этих
+преобразований к~$\mat{I}_n$ даёт~$\mat{A}^{-1}$, а к расширенной
+матрице $[\mat{A} \mid \mat{I}_n]$~--- матрицу
+$[\mat{I}_n \mid \mat{A}^{-1}]$.
+\end{proof}
 
 \subsection*{Примеры}
-% TODO
+
+\begin{example}[Некоммутативность умножения]
+\label{ex:noncomm-mult}
+Возьмём
+\[
+  \mat{A} = \begin{pmatrix} 1 & 2 \\ 3 & 4 \end{pmatrix}, \qquad
+  \mat{B} = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}.
+\]
+Тогда
+\[
+  \mat{A}\mat{B} = \begin{pmatrix} 2 & 1 \\ 4 & 3 \end{pmatrix}, \qquad
+  \mat{B}\mat{A} = \begin{pmatrix} 3 & 4 \\ 1 & 2 \end{pmatrix},
+\]
+и $\mat{A}\mat{B} \neq \mat{B}\mat{A}$.
+\end{example}
+
+\begin{example}[Строгое падение ранга при произведении]
+\label{ex:rank-product-drop}
+Пусть
+\[
+  \mat{A} = \begin{pmatrix} 1 & 0 \\ 0 & 0 \end{pmatrix}, \qquad
+  \mat{B} = \begin{pmatrix} 0 & 0 \\ 0 & 1 \end{pmatrix}.
+\]
+Каждая из них имеет ранг~$1$, но
+$\mat{A}\mat{B} = \mat{0}_{2 \times 2}$ имеет ранг~$0$~--- неравенство
+в \cref{thm:rank-product} может быть строгим. Для сравнения: при
+тех же~$\mat{A}$ и
+$\mat{B}' = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix} = \mat{I}_2$
+(ранга~$2$) произведение $\mat{A}\mat{B}' = \mat{A}$ имеет ранг~$1$,
+то есть достигает $\min(\rank \mat{A}, \rank \mat{B}') = 1$.
+\end{example}
+
+\begin{example}[Определитель произведения]
+\label{ex:det-product}
+Для
+\[
+  \mat{A} = \begin{pmatrix} 1 & 2 \\ 3 & 4 \end{pmatrix}, \qquad
+  \mat{B} = \begin{pmatrix} 2 & 0 \\ 1 & 3 \end{pmatrix}
+\]
+имеем $\det \mat{A} = -2$ и $\det \mat{B} = 6$. Прямое вычисление:
+\[
+  \mat{A}\mat{B} = \begin{pmatrix} 4 & 6 \\ 10 & 12 \end{pmatrix},
+  \qquad \det(\mat{A}\mat{B}) = 48 - 60 = -12 = (-2) \cdot 6,
+\]
+что согласуется с \cref{thm:det-product}.
+\end{example}
+
+\begin{problem}
+\label{prob:invert-3x3}
+Для
+\[
+  \mat{A} = \begin{pmatrix}
+    1 & 1 & 0 \\
+    1 & 1 & 1 \\
+    0 & 1 & 1
+  \end{pmatrix}
+\]
+проверьте, что~$\mat{A}$ обратима, и найдите $\mat{A}^{-1}$ двумя
+способами: (а)~по формуле с присоединённой матрицей, (б)~приведением
+$[\mat{A} \mid \mat{I}_3]$ к виду $[\mat{I}_3 \mid \mat{A}^{-1}]$
+методом Гаусса. Убедитесь, что ответы совпадают.
+\end{problem}
+
+\begin{proof}[Решение]
+Разложение определителя по первой строке даёт
+$\det \mat{A} = 1 \cdot (1 - 1) - 1 \cdot (1 - 0) + 0 = -1 \neq 0$,
+поэтому~$\mat{A}$ обратима.
+
+\emph{(а) Формула с присоединённой матрицей.} Прямое вычисление девяти
+алгебраических дополнений (знаки чередуются от $+$ в левом верхнем
+углу):
+\[
+  \begin{aligned}
+    A_{11} &= +(1-1) = 0,
+    & A_{12} &= -(1-0) = -1,
+    & A_{13} &= +(1-0) = 1, \\
+    A_{21} &= -(1-0) = -1,
+    & A_{22} &= +(1-0) = 1,
+    & A_{23} &= -(1-0) = -1, \\
+    A_{31} &= +(1-0) = 1,
+    & A_{32} &= -(1-0) = -1,
+    & A_{33} &= +(1-1) = 0.
+  \end{aligned}
+\]
+Транспонируя матрицу алгебраических дополнений и деля на
+$\det \mat{A} = -1$:
+\[
+  \mat{A}^{-1} \;=\; \frac{1}{-1}
+  \begin{pmatrix} 0 & -1 & 1 \\ -1 & 1 & -1 \\ 1 & -1 & 0 \end{pmatrix}
+  \;=\;
+  \begin{pmatrix} 0 & 1 & -1 \\ 1 & -1 & 1 \\ -1 & 1 & 0 \end{pmatrix}.
+\]
+
+\emph{(б) Метод Гаусса.} Дописав справа~$\mat{I}_3$ и применяя
+преобразования, переводящие~$\mat{A}$ в~$\mat{I}_3$:
+\[
+  \left[\begin{array}{rrr|rrr}
+    1 & 1 & 0 & 1 & 0 & 0 \\
+    1 & 1 & 1 & 0 & 1 & 0 \\
+    0 & 1 & 1 & 0 & 0 & 1
+  \end{array}\right]
+  \;\xrightarrow{\substack{R_2 \to R_2 - R_1 \\ R_2 \leftrightarrow R_3}}\;
+  \left[\begin{array}{rrr|rrr}
+    1 & 1 & 0 & 1 & 0 & 0 \\
+    0 & 1 & 1 & 0 & 0 & 1 \\
+    0 & 0 & 1 & -1 & 1 & 0
+  \end{array}\right].
+\]
+Обратный ход: $R_2 \to R_2 - R_3$, затем $R_1 \to R_1 - R_2$:
+\[
+  \;\longrightarrow\;
+  \left[\begin{array}{rrr|rrr}
+    1 & 0 & 0 & 0 & 1 & -1 \\
+    0 & 1 & 0 & 1 & -1 & 1 \\
+    0 & 0 & 1 & -1 & 1 & 0
+  \end{array}\right].
+\]
+Правый блок совпадает с найденной в~(а) матрицей~$\mat{A}^{-1}$.
+
+Прямое вычисление $\mat{A}\mat{A}^{-1}$ даёт~$\mat{I}_3$, что
+подтверждает результат.
+\end{proof}
