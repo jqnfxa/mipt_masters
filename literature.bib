@@ -1,0 +1,954 @@
+% =============================================================================
+%  literature.bib — consolidated bibliography for the MIPT FPMI master's
+%  entrance-exam preparation repo.
+%
+%  Source of truth: программа.pdf and the per-section README.md files under
+%  core/ and electives/. One BibTeX entry per recommended title.
+%
+%  Conventions
+%  -----------
+%    * Citation keys are ASCII-only (BibTeX-portable) and tagged by section:
+%        ru:<Author><Year>     for Russian-language sources cited in section X
+%        en:<Author><Year>     for English-language sources
+%      A trailing letter (a, b, …) disambiguates same-author/same-year items.
+%    * Original Russian titles are preserved (UTF-8). For BibTeX engines that
+%      do not handle UTF-8, switch to biblatex + biber, or transliterate.
+%    * `keywords` field lists the program section(s) that cite the work,
+%      so you can pull a per-section subset with e.g.
+%          \nocite{*} + \printbibliography[keyword=core-1.1]
+%
+%  Sections
+%  --------
+%    Core 1.1  Calculus and linear algebra
+%    Core 1.2  Probability theory, statistics, stochastic processes
+%    Core 1.3  Algorithms and data structures
+%    Core 1.4  Introduction to AI
+%    2.1       Equations of mathematical physics & numerical methods
+%    2.2       Discrete analysis & higher algebra
+%    2.3a      Logic & theoretical CS
+%    2.3b      Programming fundamentals
+%    2.4       Convex analysis, optimization, optimal control
+%    2.5       Advanced AI methods
+%    2.6       IT product management
+% =============================================================================
+
+
+% -----------------------------------------------------------------------------
+% Core 1.1 — Math analysis and linear algebra
+% -----------------------------------------------------------------------------
+
+@book{IvanovAnalysis2011,
+    author    = {Иванов, Г. Е.},
+    title     = {Лекции по математическому анализу},
+    edition   = {3},
+    volume    = {1--2},
+    publisher = {МФТИ},
+    address   = {Москва},
+    year      = {2011},
+    keywords  = {core-1.1, calculus},
+}
+
+@book{Beklemishev2025,
+    author    = {Беклемишев, Д. В.},
+    title     = {Курс аналитической геометрии и линейной алгебры},
+    year      = {2025},
+    keywords  = {core-1.1, linear-algebra},
+}
+
+@book{Vinberg1999,
+    author    = {Винберг, Э. Б.},
+    title     = {Курс алгебры},
+    publisher = {МЦНМО},
+    address   = {Москва},
+    year      = {1999},
+    note      = {Reprinted 2001, 2013, 2017, 2018.},
+    keywords  = {core-1.1, linear-algebra},
+}
+
+@book{Kostrikin2000,
+    author    = {Кострикин, А. И.},
+    title     = {Введение в алгебру},
+    volume    = {I--II},
+    publisher = {Физматлит},
+    address   = {Москва},
+    year      = {2000},
+    keywords  = {core-1.1, 2.2, linear-algebra, algebra},
+}
+
+@book{Kurosh1975,
+    author    = {Курош, А. Г.},
+    title     = {Курс высшей алгебры},
+    publisher = {Наука},
+    address   = {Москва},
+    year      = {1975},
+    keywords  = {core-1.1, linear-algebra},
+}
+
+@book{KostrikinProblems2009,
+    editor    = {Кострикин, А. И.},
+    title     = {Сборник задач по алгебре},
+    publisher = {МЦНМО},
+    address   = {Москва},
+    year      = {2009},
+    keywords  = {core-1.1, problems, linear-algebra},
+}
+
+@book{Zorich1981,
+    author    = {Зорич, В. А.},
+    title     = {Математический анализ},
+    volume    = {I--II},
+    publisher = {Наука},
+    address   = {Москва},
+    year      = {1981},
+    note      = {Vol. II published 1984.},
+    keywords  = {core-1.1, calculus},
+}
+
+@book{Kudryavtsev,
+    author    = {Кудрявцев, Л. Д.},
+    title     = {Курс математического анализа},
+    volume    = {1--3},
+    keywords  = {core-1.1, calculus},
+}
+
+@book{Demidovich2007,
+    author    = {Демидович, Б. П.},
+    title     = {Сборник задач и упражнений по математическому анализу},
+    publisher = {АСТ},
+    year      = {2007},
+    keywords  = {core-1.1, problems, calculus},
+}
+
+
+% -----------------------------------------------------------------------------
+% Core 1.2 — Probability, statistics, stochastic processes
+% -----------------------------------------------------------------------------
+
+@book{Gnedenko2001,
+    author    = {Гнеденко, Б. В.},
+    title     = {Курс теории вероятностей},
+    publisher = {УРСС},
+    address   = {Москва},
+    year      = {2001},
+    keywords  = {core-1.2, probability},
+}
+
+@book{GnedenkoKhinchin1970,
+    author    = {Гнеденко, Б. В. and Хинчин, А. Я.},
+    title     = {Элементарное введение в теорию вероятностей},
+    year      = {1970},
+    keywords  = {core-1.2, probability},
+}
+
+@book{Shiryaev1989,
+    author    = {Ширяев, А. Н.},
+    title     = {Вероятность},
+    publisher = {Наука},
+    address   = {Москва},
+    year      = {1989},
+    keywords  = {core-1.2, probability},
+}
+
+@book{Sevastyanov1982,
+    author    = {Севастьянов, Б. А.},
+    title     = {Курс теории вероятностей и математической статистики},
+    publisher = {Наука},
+    address   = {Москва},
+    year      = {1982},
+    keywords  = {core-1.2, probability, statistics},
+}
+
+@book{SevastyanovProblems1986,
+    author    = {Севастьянов, Б. А. and Чистяков, В. П. and Зубков, А. М.},
+    title     = {Сборник задач по теории вероятностей},
+    publisher = {Наука},
+    address   = {Москва},
+    year      = {1986},
+    keywords  = {core-1.2, problems, probability},
+}
+
+
+% -----------------------------------------------------------------------------
+% Core 1.3 — Algorithms and data structures
+% (also referenced from elective 2.3b)
+% -----------------------------------------------------------------------------
+
+@book{CLRS2013,
+    author    = {Кормен, Т. and Лейзерсон, Ч. and Ривест, Р. and Штайн, К.},
+    title     = {Алгоритмы: построение и анализ},
+    edition   = {3},
+    publisher = {Вильямс},
+    address   = {Москва},
+    year      = {2013},
+    note      = {Translation of Cormen, Leiserson, Rivest, Stein, \emph{Introduction to Algorithms}.},
+    keywords  = {core-1.3, 2.3b, algorithms},
+}
+
+@book{Skiena2014,
+    author    = {Скиена, С.},
+    title     = {Алгоритмы. Руководство по разработке},
+    publisher = {БХВ-Петербург},
+    address   = {Санкт-Петербург},
+    year      = {2014},
+    note      = {Translation of Skiena, \emph{The Algorithm Design Manual}.},
+    keywords  = {core-1.3, 2.3b, algorithms},
+}
+
+@book{Okulov2017,
+    author    = {Окулов, С. М.},
+    title     = {Программирование в алгоритмах},
+    publisher = {БИНОМ},
+    address   = {Москва},
+    year      = {2017},
+    keywords  = {core-1.3, 2.3b, algorithms},
+}
+
+@book{Shen2007,
+    author    = {Шень, А.},
+    title     = {Программирование: теоремы и задачи},
+    publisher = {МЦНМО},
+    address   = {Москва},
+    year      = {2007},
+    keywords  = {core-1.3, problems, algorithms},
+}
+
+@book{Wirth2005,
+    author    = {Вирт, Н.},
+    title     = {Алгоритмы и структуры данных},
+    publisher = {Невский диалект},
+    address   = {Санкт-Петербург},
+    year      = {2005},
+    note      = {Translation of Wirth, \emph{Algorithms + Data Structures = Programs}.},
+    keywords  = {core-1.3, algorithms},
+}
+
+@book{KnR2008,
+    author    = {Керниган, Б. and Ритчи, Д.},
+    title     = {Язык программирования C},
+    publisher = {Вильямс},
+    address   = {Москва},
+    year      = {2008},
+    note      = {Translation of Kernighan, Ritchie, \emph{The C Programming Language}.},
+    keywords  = {core-1.3, programming},
+}
+
+
+% -----------------------------------------------------------------------------
+% Core 1.4 — Introduction to AI
+% -----------------------------------------------------------------------------
+
+@misc{VorontsovML,
+    author       = {Воронцов, К. В.},
+    title        = {Машинное обучение, курс лекций},
+    howpublished = {\url{http://www.machinelearning.ru/wiki/}},
+    keywords     = {core-1.4, machine-learning},
+}
+
+@book{ZakiMeira2014,
+    author    = {Zaki, Mohammed J. and Meira~Jr., Wagner},
+    title     = {Data Mining and Analysis: Fundamental Concepts and Algorithms},
+    publisher = {Cambridge University Press},
+    year      = {2014},
+    url       = {http://www.dataminingbook.info/pmwiki.php/Main/BookDownload},
+    keywords  = {core-1.4, machine-learning, data-mining},
+}
+
+@book{Mirkin2010,
+    author    = {Mirkin, Boris},
+    title     = {Core Concepts in Data Analysis: Summarization, Correlation, Visualization},
+    publisher = {Springer},
+    year      = {2010},
+    keywords  = {core-1.4, data-analysis},
+}
+
+@book{BoydVandenberghe2004,
+    author    = {Boyd, Stephen and Vandenberghe, Lieven},
+    title     = {Convex Optimization},
+    publisher = {Cambridge University Press},
+    year      = {2004},
+    keywords  = {core-1.4, 2.4, optimization},
+}
+
+@book{DekkingProb,
+    author    = {Dekking, F. M. and Kraaikamp, C. and Lopuha\"{a}, H. P. and Meester, L. E.},
+    title     = {A Modern Introduction to Probability and Statistics: Understanding Why and How},
+    publisher = {Springer},
+    series    = {Springer Texts in Statistics},
+    year      = {2005},
+    keywords  = {core-1.4, probability, statistics},
+}
+
+
+% -----------------------------------------------------------------------------
+% 2.1 — Equations of mathematical physics, computational mathematics
+% -----------------------------------------------------------------------------
+
+@book{Vladimirov,
+    author    = {Владимиров, В. С.},
+    title     = {Уравнения математической физики},
+    publisher = {Наука},
+    address   = {Москва},
+    keywords  = {2.1, pde, math-physics},
+}
+
+@book{TikhonovSamarskii,
+    author    = {Тихонов, А. Н. and Самарский, А. А.},
+    title     = {Уравнения математической физики},
+    publisher = {Наука},
+    address   = {Москва},
+    keywords  = {2.1, pde, math-physics},
+}
+
+@book{Shubin2001,
+    author    = {Шубин, М. А.},
+    title     = {Лекции об уравнениях математической физики},
+    publisher = {МЦНМО},
+    address   = {Москва},
+    year      = {2001},
+    keywords  = {2.1, pde, math-physics},
+}
+
+@book{Ryabenkii1994,
+    author    = {Рябенький, В. С.},
+    title     = {Введение в вычислительную математику},
+    publisher = {Наука--Физматлит},
+    address   = {Москва},
+    year      = {1994},
+    note      = {2nd ed.: Физматлит, 2000.},
+    keywords  = {2.1, numerical-methods},
+}
+
+@book{Fedorenko1994,
+    author    = {Федоренко, Р. П.},
+    title     = {Введение в вычислительную физику},
+    publisher = {МФТИ},
+    address   = {Москва},
+    year      = {1994},
+    keywords  = {2.1, numerical-methods},
+}
+
+@book{Kalitkin1978,
+    author    = {Калиткин, Н. Н.},
+    title     = {Численные методы},
+    publisher = {Наука},
+    address   = {Москва},
+    year      = {1978},
+    keywords  = {2.1, numerical-methods},
+}
+
+@book{LobanovPetrov2000,
+    author    = {Лобанов, А. И. and Петров, И. Б.},
+    title     = {Вычислительные методы для анализа моделей сложных динамических систем},
+    volume    = {1},
+    publisher = {МФТИ},
+    address   = {Москва},
+    year      = {2000},
+    keywords  = {2.1, numerical-methods},
+}
+
+@book{Kosarev2000,
+    author    = {Косарев, В. И.},
+    title     = {12 лекций по вычислительной математике},
+    edition   = {2},
+    publisher = {МФТИ},
+    address   = {Москва},
+    year      = {2000},
+    keywords  = {2.1, numerical-methods},
+}
+
+@book{RyabenkiiProblems1988,
+    editor    = {Рябенький, В. С.},
+    title     = {Сборник задач для упражнений по курсу «Основы вычислительной математики»},
+    publisher = {МФТИ},
+    address   = {Москва},
+    year      = {1988},
+    keywords  = {2.1, problems, numerical-methods},
+}
+
+@book{BakhvalovZhidkovKobelkov2000,
+    author    = {Бахвалов, Н. С. and Жидков, Н. П. and Кобельков, Г. Г.},
+    title     = {Численные методы},
+    edition   = {8},
+    publisher = {Лаборатория Базовых Знаний},
+    address   = {Москва},
+    year      = {2000},
+    keywords  = {2.1, numerical-methods},
+}
+
+@book{SamarskiiGulin1989,
+    author    = {Самарский, А. А. and Гулин, А. В.},
+    title     = {Численные методы},
+    publisher = {Наука},
+    address   = {Москва},
+    year      = {1989},
+    keywords  = {2.1, numerical-methods},
+}
+
+@book{KolmogorovFomin,
+    author    = {Колмогоров, А. Н. and Фомин, С. В.},
+    title     = {Элементы теории функций и функционального анализа},
+    keywords  = {2.1, functional-analysis},
+}
+
+@book{Yosida,
+    author    = {Иосида, К.},
+    title     = {Функциональный анализ},
+    note      = {Translation of Yosida, \emph{Functional Analysis}.},
+    keywords  = {2.1, functional-analysis},
+}
+
+
+% -----------------------------------------------------------------------------
+% 2.2 — Discrete analysis & higher algebra
+% -----------------------------------------------------------------------------
+
+@book{Raigorodskii2015,
+    author    = {Райгородский, А. М.},
+    title     = {Вероятность и алгебра в комбинаторике},
+    publisher = {МЦНМО},
+    address   = {Москва},
+    year      = {2015},
+    keywords  = {2.2, combinatorics},
+}
+
+@book{ZhuravlevFlerov1999,
+    author    = {Журавлев, Ю. И. and Флёров, Ю. А.},
+    title     = {Дискретный анализ},
+    volume    = {1},
+    publisher = {МФТИ},
+    address   = {Москва},
+    year      = {1999},
+    keywords  = {2.2, discrete-math},
+}
+
+@book{YablonskiiLupanov1974,
+    editor    = {Яблонский, С. В. and Лупанов, О. Б.},
+    title     = {Дискретная математика и математические вопросы кибернетики},
+    volume    = {1},
+    publisher = {Наука},
+    address   = {Москва},
+    year      = {1974},
+    keywords  = {2.2, discrete-math},
+}
+
+@book{Yablonskii1979,
+    author    = {Яблонский, С. В.},
+    title     = {Введение в дискретную математику},
+    publisher = {Наука},
+    address   = {Москва},
+    year      = {1979},
+    keywords  = {2.2, discrete-math},
+}
+
+@book{Stanley1990,
+    author    = {Стенли, Р.},
+    title     = {Перечислительная комбинаторика},
+    publisher = {Мир},
+    address   = {Москва},
+    year      = {1990},
+    note      = {Translation of Stanley, \emph{Enumerative Combinatorics}.},
+    keywords  = {2.2, combinatorics},
+}
+
+@book{ConcreteMath1998,
+    author    = {Грэхем, Р. and Кнут, Д. and Паташник, О.},
+    title     = {Конкретная математика. Основание информатики},
+    publisher = {Мир},
+    address   = {Москва},
+    year      = {1998},
+    note      = {Translation of Graham, Knuth, Patashnik, \emph{Concrete Mathematics}.},
+    keywords  = {2.2, combinatorics, discrete-math},
+}
+
+@book{Lipski1988,
+    author    = {Липский, В.},
+    title     = {Комбинаторика для программистов},
+    publisher = {Мир},
+    address   = {Москва},
+    year      = {1988},
+    keywords  = {2.2, combinatorics},
+}
+
+@book{Wilson1977,
+    author    = {Уилсон, Р. Дж.},
+    title     = {Введение в теорию графов},
+    publisher = {Мир},
+    address   = {Москва},
+    year      = {1977},
+    note      = {Translation of Wilson, \emph{Introduction to Graph Theory}.},
+    keywords  = {2.2, graphs},
+}
+
+@book{VanDerWaerden2004,
+    author    = {Ван дер Варден, Б. Л.},
+    title     = {Алгебра},
+    edition   = {3},
+    publisher = {Лань},
+    address   = {Санкт-Петербург},
+    year      = {2004},
+    note      = {Translation of van der Waerden, \emph{Algebra}.},
+    keywords  = {2.2, algebra},
+}
+
+@book{MishinaProskuryakov1965,
+    author    = {Мишина, А. П. and Проскуряков, И. В.},
+    title     = {Высшая алгебра. Линейная алгебра, многочлены, общая алгебра},
+    publisher = {Наука},
+    address   = {Москва},
+    year      = {1965},
+    keywords  = {2.2, algebra},
+}
+
+@book{Okunev2009,
+    author    = {Окунев, Л. Я.},
+    title     = {Высшая алгебра},
+    publisher = {Лань},
+    address   = {Санкт-Петербург},
+    year      = {2009},
+    note      = {Reprinted 2021.},
+    keywords  = {2.2, algebra},
+}
+
+
+% -----------------------------------------------------------------------------
+% 2.3a — Logic and theoretical computer science
+% -----------------------------------------------------------------------------
+
+@book{VereshchaginShenLogic1,
+    author    = {Верещагин, Н. К. and Шень, А.},
+    title     = {Лекции по математической логике и теории алгоритмов. Часть 1: Начала теории множеств},
+    publisher = {МЦНМО},
+    address   = {Москва},
+    year      = {1999},
+    keywords  = {2.3a, logic, set-theory},
+}
+
+@book{VereshchaginShenLogic3,
+    author    = {Верещагин, Н. К. and Шень, А.},
+    title     = {Лекции по математической логике и теории алгоритмов. Часть 3: Вычислимые функции},
+    publisher = {МЦНМО},
+    address   = {Москва},
+    year      = {1999},
+    keywords  = {2.3a, computability},
+}
+
+@book{BoolosJeffrey1994,
+    author    = {Булос, Дж. and Джеффри, Р.},
+    title     = {Вычислимость и логика},
+    publisher = {Мир},
+    address   = {Москва},
+    year      = {1994},
+    note      = {Translation of Boolos, Jeffrey, \emph{Computability and Logic}.},
+    keywords  = {2.3a, logic, computability},
+}
+
+@book{LavrovMaksimova2002,
+    author    = {Лавров, И. А. and Максимова, Л. Л.},
+    title     = {Задачи по теории множеств, математической логике и теории алгоритмов},
+    publisher = {Физматлит},
+    address   = {Москва},
+    year      = {2002},
+    keywords  = {2.3a, problems, logic},
+}
+
+
+% -----------------------------------------------------------------------------
+% 2.3b — Programming fundamentals
+% (also reuses CLRS / Skiena / Okulov, see core-1.3)
+% -----------------------------------------------------------------------------
+
+@book{Stroustrup2011,
+    author    = {Страуструп, Б.},
+    title     = {Язык программирования C++},
+    edition   = {4},
+    publisher = {Бином-Пресс},
+    address   = {Москва},
+    year      = {2011},
+    note      = {Translation of Stroustrup, \emph{The C++ Programming Language}.},
+    keywords  = {2.3b, cpp},
+}
+
+@book{Meyers2014,
+    author    = {Мейерс, С.},
+    title     = {Эффективное использование C++. 55 верных советов улучшить структуру и код ваших программ},
+    publisher = {ДМК Пресс},
+    address   = {Москва},
+    year      = {2014},
+    note      = {Translation of Meyers, \emph{Effective C++}.},
+    keywords  = {2.3b, cpp},
+}
+
+@book{Horstmann2020,
+    author    = {Хорстманн, К.},
+    title     = {Java. Библиотека профессионала. Том 1. Основы},
+    edition   = {11},
+    publisher = {Диалектика},
+    address   = {Москва},
+    year      = {2020},
+    note      = {Translation of Horstmann, \emph{Core Java, Vol.~I—Fundamentals}.},
+    keywords  = {2.3b, java},
+}
+
+@book{TanenbaumAustin2020,
+    author    = {Таненбаум, Э. and Остин, Т.},
+    title     = {Архитектура компьютера},
+    edition   = {6},
+    publisher = {Питер},
+    address   = {Санкт-Петербург},
+    year      = {2020},
+    note      = {Translation of Tanenbaum, Austin, \emph{Structured Computer Organization}.},
+    keywords  = {2.3b, computer-architecture},
+}
+
+@book{TanenbaumBos2021,
+    author    = {Таненбаум, Э. and Бос, Х.},
+    title     = {Современные операционные системы},
+    edition   = {4},
+    publisher = {Питер},
+    address   = {Санкт-Петербург},
+    year      = {2021},
+    note      = {Translation of Tanenbaum, Bos, \emph{Modern Operating Systems}.},
+    keywords  = {2.3b, operating-systems},
+}
+
+@book{GoF2020,
+    author    = {Гамма, Э. and Хелм, Р. and Джонсон, Р. and Влиссидес, Дж.},
+    title     = {Приёмы объектно-ориентированного проектирования. Паттерны проектирования},
+    publisher = {Питер},
+    address   = {Санкт-Петербург},
+    year      = {2020},
+    note      = {Translation of Gamma, Helm, Johnson, Vlissides, \emph{Design Patterns: Elements of Reusable Object-Oriented Software}.},
+    keywords  = {2.3b, design-patterns, oop},
+}
+
+@book{TanenbaumWetherall2021,
+    author    = {Таненбаум, Э. and Уэзеролл, Д.},
+    title     = {Компьютерные сети},
+    edition   = {5},
+    publisher = {Питер},
+    address   = {Санкт-Петербург},
+    year      = {2021},
+    note      = {Translation of Tanenbaum, Wetherall, \emph{Computer Networks}.},
+    keywords  = {2.3b, networking},
+}
+
+@book{ConnollyBegg2016,
+    author    = {Коннолли, Т. and Бегг, К.},
+    title     = {Базы данных: проектирование, реализация и сопровождение},
+    edition   = {4},
+    publisher = {Вильямс},
+    address   = {Москва},
+    year      = {2016},
+    note      = {Translation of Connolly, Begg, \emph{Database Systems}.},
+    keywords  = {2.3b, databases},
+}
+
+@book{Schneier2002,
+    author    = {Шнайер, Б.},
+    title     = {Прикладная криптография. Протоколы, алгоритмы и исходные тексты на языке C},
+    edition   = {2},
+    publisher = {Триумф},
+    address   = {Москва},
+    year      = {2002},
+    note      = {Translation of Schneier, \emph{Applied Cryptography}.},
+    keywords  = {2.3b, cryptography, security},
+}
+
+@book{Sommerville2019,
+    author    = {Соммервилл, И.},
+    title     = {Инженерия программного обеспечения},
+    edition   = {10},
+    publisher = {Вильямс},
+    address   = {Москва},
+    year      = {2019},
+    note      = {Translation of Sommerville, \emph{Software Engineering}.},
+    keywords  = {2.3b, software-engineering},
+}
+
+
+% -----------------------------------------------------------------------------
+% 2.4 — Convex analysis, optimization, optimal control
+% (Boyd & Vandenberghe also at core-1.4)
+% -----------------------------------------------------------------------------
+
+@book{Gasnikov2021,
+    author    = {Гасников, А. В.},
+    title     = {Современные численные методы оптимизации. Метод универсального градиентного спуска},
+    edition   = {2},
+    publisher = {МФТИ},
+    year      = {2021},
+    keywords  = {2.4, optimization},
+}
+
+@book{Vorontsova2021,
+    author    = {Воронцова, Е. В.},
+    title     = {Выпуклая оптимизация},
+    year      = {2021},
+    keywords  = {2.4, optimization},
+}
+
+@book{MagarilTikhomirov2003,
+    author    = {Магарил-Ильяев, Г. Г. and Тихомиров, В. М.},
+    title     = {Выпуклый анализ и его приложения},
+    publisher = {УРСС},
+    address   = {Москва},
+    year      = {2003},
+    keywords  = {2.4, convex-analysis},
+}
+
+@book{ArutyunovMagarilTikhomirov2006,
+    author    = {Арутюнов, А. В. and Магарил-Ильяев, Г. Г. and Тихомиров, В. М.},
+    title     = {Принцип максимума Понтрягина. Доказательство и приложения},
+    publisher = {Факториал Пресс},
+    address   = {Москва},
+    year      = {2006},
+    keywords  = {2.4, optimal-control, pontryagin},
+}
+
+
+% -----------------------------------------------------------------------------
+% 2.5 — Advanced AI
+% -----------------------------------------------------------------------------
+
+@book{GoodfellowBengioCourville2016,
+    author    = {Goodfellow, Ian and Bengio, Yoshua and Courville, Aaron},
+    title     = {Deep Learning},
+    publisher = {MIT Press},
+    address   = {Cambridge, MA},
+    year      = {2016},
+    url       = {https://www.deeplearningbook.org/},
+    keywords  = {2.5, deep-learning},
+}
+
+@book{SuttonBarto2018,
+    author    = {Sutton, Richard S. and Barto, Andrew G.},
+    title     = {Reinforcement Learning: An Introduction},
+    edition   = {2},
+    publisher = {MIT Press},
+    address   = {Cambridge, MA},
+    year      = {2018},
+    keywords  = {2.5, reinforcement-learning},
+}
+
+@inproceedings{Vaswani2017,
+    author    = {Vaswani, Ashish and Shazeer, Noam and Parmar, Niki and Uszkoreit, Jakob and Jones, Llion and Gomez, Aidan N. and Kaiser, {\L}ukasz and Polosukhin, Illia},
+    title     = {Attention Is All You Need},
+    booktitle = {Advances in Neural Information Processing Systems 30 (NeurIPS 2017)},
+    year      = {2017},
+    eprint    = {1706.03762},
+    archivePrefix = {arXiv},
+    primaryClass  = {cs.CL},
+    keywords  = {2.5, transformer, attention},
+}
+
+@misc{Ruder2016,
+    author       = {Ruder, Sebastian},
+    title        = {An Overview of Gradient Descent Optimization Algorithms},
+    year         = {2016},
+    eprint       = {1609.04747},
+    archivePrefix = {arXiv},
+    primaryClass = {cs.LG},
+    keywords     = {2.5, optimization, deep-learning},
+}
+
+@inproceedings{Christiano2017,
+    author    = {Christiano, Paul F. and Leike, Jan and Brown, Tom B. and Martic, Miljan and Legg, Shane and Amodei, Dario},
+    title     = {Deep Reinforcement Learning from Human Preferences},
+    booktitle = {Advances in Neural Information Processing Systems 30 (NeurIPS 2017)},
+    year      = {2017},
+    eprint    = {1706.03741},
+    archivePrefix = {arXiv},
+    primaryClass  = {stat.ML},
+    keywords  = {2.5, reinforcement-learning, rlhf},
+}
+
+
+% -----------------------------------------------------------------------------
+% 2.6 — IT product management
+% -----------------------------------------------------------------------------
+
+@book{MauryaRunningLean2017,
+    author    = {Maurya, Ash},
+    title     = {Running Lean: Iterate from Plan A to a Plan That Works},
+    edition   = {3},
+    publisher = {O'Reilly Media},
+    address   = {Sebastopol, CA},
+    year      = {2017},
+    keywords  = {2.6, lean-startup},
+}
+
+@book{Kalinin2022,
+    author    = {Калинин, Е.},
+    title     = {Фокусируйся},
+    publisher = {Манн, Иванов и Фербер},
+    address   = {Москва},
+    year      = {2022},
+    keywords  = {2.6, productivity},
+}
+
+@book{Detmer2020,
+    author    = {Детмер, У.},
+    title     = {Теория ограничений Голдратта. Системный подход к непрерывному совершенствованию},
+    publisher = {Альпина Паблишер},
+    address   = {Москва},
+    year      = {2020},
+    note      = {Translation of Dettmer, \emph{Goldratt's Theory of Constraints}.},
+    keywords  = {2.6, theory-of-constraints},
+}
+
+@book{Blank2013,
+    author    = {Blank, Steve},
+    title     = {The Four Steps to the Epiphany: Successful Strategies for Products that Win},
+    publisher = {K\&S Ranch},
+    year      = {2013},
+    keywords  = {2.6, customer-development},
+}
+
+@book{Ries2011,
+    author    = {Ries, Eric},
+    title     = {The Lean Startup: How Today's Entrepreneurs Use Continuous Innovation to Create Radically Successful Businesses},
+    publisher = {Crown Business},
+    address   = {New York},
+    year      = {2011},
+    keywords  = {2.6, lean-startup},
+}
+
+@book{Fitzpatrick2014,
+    author    = {Fitzpatrick, Rob},
+    title     = {The Mom Test: How to Talk to Customers \& Learn If Your Business Is a Good Idea When Everyone Is Lying to You},
+    publisher = {Robfitz Ltd.},
+    year      = {2014},
+    keywords  = {2.6, user-research},
+}
+
+@book{Alvarez2014,
+    author    = {Alvarez, Cindy},
+    title     = {Lean Customer Development: Building Products Your Customers Will Buy},
+    publisher = {O'Reilly Media},
+    address   = {Sebastopol, CA},
+    year      = {2014},
+    keywords  = {2.6, customer-development},
+}
+
+@book{Osterwalder2014,
+    author    = {Osterwalder, Alexander and Pigneur, Yves and Bernarda, Greg and Smith, Alan},
+    title     = {Value Proposition Design: How to Create Products and Services Customers Want},
+    publisher = {Wiley},
+    address   = {Hoboken, NJ},
+    year      = {2014},
+    keywords  = {2.6, value-proposition},
+}
+
+@book{Khanin2022,
+    author    = {Ханин, Д.},
+    title     = {Юнит-экономика. Главная книга для предпринимателя},
+    publisher = {Альпина Паблишер},
+    address   = {Москва},
+    year      = {2022},
+    keywords  = {2.6, unit-economics},
+}
+
+@book{Moore2014,
+    author    = {Moore, Geoffrey A.},
+    title     = {Crossing the Chasm: Marketing and Selling Disruptive Products to Mainstream Customers},
+    edition   = {3},
+    publisher = {HarperBusiness},
+    address   = {New York},
+    year      = {2014},
+    keywords  = {2.6, marketing},
+}
+
+@book{OsterwalderPigneur2010,
+    author    = {Osterwalder, Alexander and Pigneur, Yves},
+    title     = {Business Model Generation: A Handbook for Visionaries, Game Changers, and Challengers},
+    publisher = {Wiley},
+    address   = {Hoboken, NJ},
+    year      = {2010},
+    keywords  = {2.6, business-model-canvas},
+}
+
+@book{PMBOK2024,
+    author    = {{Project Management Institute}},
+    title     = {A Guide to the Project Management Body of Knowledge (PMBOK Guide)},
+    edition   = {8},
+    publisher = {Project Management Institute},
+    address   = {Newtown Square, PA},
+    year      = {2024},
+    keywords  = {2.6, project-management},
+}
+
+@book{Leach2005,
+    author    = {Leach, Lawrence P.},
+    title     = {Critical Chain Project Management},
+    edition   = {2},
+    publisher = {Artech House},
+    address   = {Boston, MA},
+    year      = {2005},
+    keywords  = {2.6, project-management, ccpm},
+}
+
+@book{Beck2004,
+    author    = {Beck, Kent and Andres, Cynthia},
+    title     = {Extreme Programming Explained: Embrace Change},
+    edition   = {2},
+    publisher = {Addison-Wesley},
+    address   = {Boston, MA},
+    year      = {2004},
+    keywords  = {2.6, agile, xp},
+}
+
+@misc{ScrumGuide2020,
+    author       = {Schwaber, Ken and Sutherland, Jeff},
+    title        = {The Scrum Guide: The Definitive Guide to Scrum: The Rules of the Game},
+    year         = {2020},
+    howpublished = {\url{https://scrumguides.org/}},
+    organization = {Scrum.org},
+    keywords     = {2.6, agile, scrum},
+}
+
+@book{WiegersBeatty2013,
+    author    = {Wiegers, Karl E. and Beatty, Joy},
+    title     = {Software Requirements},
+    edition   = {3},
+    publisher = {Microsoft Press},
+    address   = {Redmond, WA},
+    year      = {2013},
+    keywords  = {2.6, requirements},
+}
+
+@book{Levenchuk2024,
+    author    = {Левенчук, А. И.},
+    title     = {Системное мышление 2024},
+    publisher = {RSD},
+    address   = {Москва},
+    year      = {2024},
+    keywords  = {2.6, systems-thinking},
+}
+
+@book{MauryaScalingLean2016,
+    author    = {Maurya, Ash},
+    title     = {Scaling Lean: Mastering the Key Metrics for Startup Growth},
+    publisher = {Penguin Random House},
+    address   = {New York},
+    year      = {2016},
+    keywords  = {2.6, lean-startup},
+}
+
+@book{KotlerArmstrong2017,
+    author    = {Kotler, Philip and Armstrong, Gary},
+    title     = {Principles of Marketing},
+    edition   = {17},
+    publisher = {Pearson},
+    address   = {Harlow},
+    year      = {2017},
+    keywords  = {2.6, marketing},
+}
+
+@book{Lambin2012,
+    author    = {Lambin, Jean-Jacques and Chumpitaz, Ruben and Schuiling, Isabelle},
+    title     = {Market-Driven Management: Strategic and Operational Marketing},
+    publisher = {Palgrave Macmillan},
+    address   = {Basingstoke},
+    year      = {2012},
+    keywords  = {2.6, marketing},
+}

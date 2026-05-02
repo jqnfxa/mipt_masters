@@ -44,7 +44,7 @@ node_modules/
 *.run.xml
 *-blx.bib
 
-# Build outputs (autodocx → .docx → .pdf intermediates live here)
+# Build outputs (latexmk + biber + intermediate .pdf land here)
 build/
 dist/
 out/

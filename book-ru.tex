@@ -1,0 +1,47 @@
+% =============================================================================
+% Master document — Russian edition.
+% Builds book-ru.pdf via `python scripts/build.py book-ru` (or `book`).
+% =============================================================================
+\documentclass[11pt,a4paper,oneside]{book}
+
+\input{preamble}
+\selectlanguage{russian}
+
+\title{%
+  Подготовка к вступительному экзамену\\
+  в магистратуру ФПМИ МФТИ\\[0.5em]
+  \large«Прикладная математика и информатика»%
+}
+\author{Сообщество абитуриентов}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+% =============================================================================
+% Часть I — Основной блок
+% =============================================================================
+\part{Основной блок}
+
+\subfile{core/1.1-calculus-linalg/chapter-ru}
+% \subfile{core/1.2-probability-stats/chapter-ru}
+% \subfile{core/1.3-algorithms-ds/chapter-ru}
+% \subfile{core/1.4-intro-ai/chapter-ru}
+
+% =============================================================================
+% Часть II — Блоки по выбору
+% =============================================================================
+% \part{Блоки по выбору}
+%
+% \subfile{electives/2.1-mathphys-numerical/chapter-ru}
+% \subfile{electives/2.2-discrete-algebra/chapter-ru}
+% \subfile{electives/2.3a-logic-tcs/chapter-ru}
+% \subfile{electives/2.3b-programming/chapter-ru}
+% \subfile{electives/2.4-convex-optimization/chapter-ru}
+% \subfile{electives/2.5-advanced-ai/chapter-ru}
+% \subfile{electives/2.6-it-product/chapter-ru}
+
+\printbibliography[title={Список использованных источников},heading=bibintoc]
+
+\end{document}

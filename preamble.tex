@@ -1,0 +1,112 @@
+% =============================================================================
+% Shared preamble for the MIPT FPMI master's-entrance prep textbook.
+%
+% Loaded by both book-ru.tex and book-en.tex. The active language is selected
+% by each book file via babel's option list (last language wins) and an
+% explicit \selectlanguage{} after \input{preamble}.
+%
+% Build: pdflatex + biber. See README.md and scripts/build.py.
+% Author note: keep this file in English — it's tooling, not content.
+% =============================================================================
+
+% --- encoding & languages -----------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T2A,T1]{fontenc}
+\usepackage[english,russian]{babel}
+
+% --- page geometry ------------------------------------------------------------
+\usepackage[a4paper, margin=2.5cm]{geometry}
+
+% --- math packages ------------------------------------------------------------
+\usepackage{amsmath, amssymb, amsthm, mathtools}
+\usepackage{mathrsfs}     % \mathscr
+\usepackage{bm}           % bold math
+
+% --- math "house style" macros ------------------------------------------------
+% Number sets.
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\F}{\mathbb{F}}
+
+% Probability symbols.
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Prob}{\mathbb{P}}
+
+% Operators (rendered upright).
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\im}{Im}
+\DeclareMathOperator{\spn}{span}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+% Vectors and matrices.
+\newcommand{\vect}[1]{\mathbf{#1}}
+\newcommand{\mat}[1]{\mathbf{#1}}
+\newcommand{\T}{^{\mathsf{T}}}     % transpose
+
+% --- theorem environments -----------------------------------------------------
+% Names are localized via babel's \iflanguage in the headers below.
+\theoremstyle{plain}
+\newtheorem{theorem}{\iflanguage{russian}{Теорема}{Theorem}}[chapter]
+\newtheorem{lemma}[theorem]{\iflanguage{russian}{Лемма}{Lemma}}
+\newtheorem{proposition}[theorem]{\iflanguage{russian}{Утверждение}{Proposition}}
+\newtheorem{corollary}[theorem]{\iflanguage{russian}{Следствие}{Corollary}}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{\iflanguage{russian}{Определение}{Definition}}
+\newtheorem{example}[theorem]{\iflanguage{russian}{Пример}{Example}}
+\newtheorem{problem}[theorem]{\iflanguage{russian}{Задача}{Problem}}
+
+\theoremstyle{remark}
+\newtheorem*{remark}{\iflanguage{russian}{Замечание}{Remark}}
+
+\AtBeginDocument{%
+  \iflanguage{russian}{\renewcommand{\proofname}{Доказательство}}{}%
+}
+
+% --- ticket environment -------------------------------------------------------
+% Renders the verbatim formulation from программа.pdf at the top of each topic.
+% Visual styling only — language-aware label is unnecessary because each topic
+% file is per-language already.
+\newenvironment{ticket}{%
+  \par\medskip\noindent\itshape%
+}{%
+  \par\medskip%
+}
+
+% --- bibliography (GOST 7.0.5/7.1) --------------------------------------------
+\usepackage[
+    backend=biber,
+    style=gost-numeric,
+    sorting=none,
+    language=auto,
+    autolang=other,
+]{biblatex}
+\addbibresource{\subfix{literature.bib}}
+
+% --- hyperlinks & cross-refs --------------------------------------------------
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!50!black,
+    citecolor=green!50!black,
+    urlcolor=blue!70!black,
+}
+\usepackage[capitalize,nameinlink]{cleveref}
+
+% --- subfiles: each chapter compiles as a standalone PDF too ------------------
+\usepackage{subfiles}
+
+% --- misc ---------------------------------------------------------------------
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage{tikz}
