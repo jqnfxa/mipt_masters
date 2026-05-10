@@ -8,10 +8,151 @@
 \end{ticket}
 
 \subsection*{Теория}
-% TODO
+
+Зафиксируем вероятностное пространство $(\Omega, \mathcal{F}, \Prob)$. Условная вероятность~--- формальный способ обновить вероятностную меру при поступлении частичной информации об исходе эксперимента.
+
+\begin{definition}
+\label{def:conditional-probability}
+Для событий $A, B \in \mathcal{F}$ с $\Prob(B) > 0$ \emph{условной вероятностью события~$A$ при условии~$B$} называется
+\[
+  \Prob(A \mid B) \;=\; \frac{\Prob(A \cap B)}{\Prob(B)}.
+\]
+При $\Prob(B) = 0$ выражение $\Prob(\cdot \mid B)$ не определено.
+\end{definition}
+
+Содержательный смысл~--- перенормировать вероятностную массу так, чтобы~$B$ стало новым ``достоверным'' событием. Следующее утверждение делает это точным.
+
+\begin{proposition}[Условная вероятность~--- вероятностная мера]
+\label{prop:cond-is-measure}
+Если $\Prob(B) > 0$, то функция $\Prob_B := \Prob(\cdot \mid B)$ является вероятностной мерой на $(\Omega, \mathcal{F})$, то есть удовлетворяет аксиомам Колмогорова (P1)--(P3) из~\cref{def:prob-measure}. Сверх того, $\Prob_B(B) = 1$ и $\Prob_B(A) = 0$ для любого $A \subseteq \Omega \setminus B$.
+\end{proposition}
+\proofof{cond-is-measure}
+
+Как следствие, все элементарные свойства~$\Prob$ из~\cref{prop:prob-elementary} и непрерывность из~\cref{thm:prob-continuity} дословно переносятся на $\Prob(\cdot \mid B)$; в частности, $\Prob(A^c \mid B) = 1 - \Prob(A \mid B)$.
+
+\begin{proposition}[Правило умножения вероятностей]
+\label{prop:multiplication-rule}
+Для любых событий $A_1, \dots, A_n$ с $\Prob(A_1 \cap \cdots \cap A_{n-1}) > 0$ выполнено
+\[
+  \Prob(A_1 \cap A_2 \cap \cdots \cap A_n)
+  = \Prob(A_1)\, \Prob(A_2 \mid A_1)\, \Prob(A_3 \mid A_1 \cap A_2) \cdots \Prob(A_n \mid A_1 \cap \cdots \cap A_{n-1}).
+\]
+В частности, при определённости обеих частей $\Prob(A \cap B) = \Prob(A) \Prob(B \mid A) = \Prob(B) \Prob(A \mid B)$.
+\end{proposition}
+\proofof{multiplication-rule}
+
+\medskip
+\noindent\textbf{Разбиения и формула полной вероятности.} Конечное или счётное семейство событий $\{H_i\}_{i \in I}$ называется \emph{разбиением}~$\Omega$, если события~$H_i$ попарно не пересекаются и $\bigsqcup_{i} H_i = \Omega$. Допускается, чтобы некоторые~$H_i$ имели нулевую вероятность; в формулах ниже соответствующие слагаемые по соглашению обнуляются ($\Prob(A \mid H_i) \cdot \Prob(H_i)$ читается как~$0$ всякий раз, когда $\Prob(H_i) = 0$).
+
+\begin{theorem}[Формула полной вероятности]
+\label{thm:total-probability}
+Пусть $\{H_i\}_{i \in I}$~--- конечное или счётное разбиение~$\Omega$. Для любого события $A \in \mathcal{F}$
+\[
+  \Prob(A) \;=\; \sum_{i \in I} \Prob(A \cap H_i) \;=\; \sum_{i \in I} \Prob(A \mid H_i)\, \Prob(H_i).
+\]
+\end{theorem}
+\proofof{total-probability}
+
+Гипотезы~$H_i$ удобно интерпретировать как конкурирующие \emph{причины} или \emph{сценарии}; формула раскладывает вероятность наблюдаемого события~$A$ на вклады каждого сценария. Формула Байеса инвертирует эту связь~--- зная, что~$A$ произошло, она вычисляет апостериорные вероятности причин.
+
+\begin{theorem}[Байес]
+\label{thm:bayes}
+Пусть $\{H_i\}_{i \in I}$~--- конечное или счётное разбиение~$\Omega$ и $A \in \mathcal{F}$, $\Prob(A) > 0$. Тогда для всякого $j \in I$ с $\Prob(H_j) > 0$
+\[
+  \Prob(H_j \mid A) \;=\; \frac{\Prob(A \mid H_j)\, \Prob(H_j)}{\sum_{i \in I} \Prob(A \mid H_i)\, \Prob(H_i)}.
+\]
+\end{theorem}
+\proofof{bayes}
+
+Знаменатель~--- это $\Prob(A)$, переписанная по~\cref{thm:total-probability}. На байесовском языке $\Prob(H_j)$~--- \emph{априорная} вероятность гипотезы~$H_j$, $\Prob(A \mid H_j)$~--- \emph{правдоподобие} наблюдения~$A$ при~$H_j$, а $\Prob(H_j \mid A)$~--- \emph{апостериорная} вероятность. Частный случай двух гипотез ($I = \{1, 2\}$ с $H_1 = H$, $H_2 = H^c$) принимает вид
+\[
+  \Prob(H \mid A) \;=\; \frac{\Prob(A \mid H)\, \Prob(H)}{\Prob(A \mid H)\, \Prob(H) + \Prob(A \mid H^c)\, \Prob(H^c)}.
+\]
+
+\begin{remark}
+Условные вероятности служат также мостом к понятию \emph{независимости}, которому посвящена~\cref{sec:1.2.04-independence}: события~$A$ и~$B$ независимы тогда и только тогда, когда $\Prob(A \mid B) = \Prob(A)$ (при $\Prob(B) > 0$). Полное теоретико-мерное обсуждение условных вероятностей, включая условные вероятности относительно $\sigma$-алгебры, а не отдельного события положительной меры, см. в \cite[гл.~II, \S~7]{Shiryaev1989}.
+\end{remark}
 
 \subsection*{Доказательства}
-% TODO
+
+\begin{proof}[\Cref{prop:cond-is-measure}]
+\proofanchor{cond-is-measure}
+Положим $c = 1/\Prob(B) > 0$ и запишем $\Prob_B(A) = c \cdot \Prob(A \cap B)$.
+
+\emph{(P1)} $\Prob(A \cap B) \geq 0$ и $c > 0$, поэтому $\Prob_B(A) \geq 0$. Также $\Prob_B(A) = c \Prob(A \cap B) \leq c \Prob(B) = 1$ в силу монотонности (\cref{prop:prob-elementary}\,(d)).
+
+\emph{(P2)} $\Prob_B(\Omega) = c \Prob(\Omega \cap B) = c \Prob(B) = 1$.
+
+\emph{(P3)} Для попарно непересекающихся $A_1, A_2, \dots$ события $A_n \cap B$ также попарно не пересекаются, поэтому по $\sigma$-аддитивности~$\Prob$
+\[
+  \Prob_B\Bigl(\bigsqcup_n A_n\Bigr) = c\, \Prob\Bigl(\bigsqcup_n (A_n \cap B)\Bigr) = c\, \sum_n \Prob(A_n \cap B) = \sum_n \Prob_B(A_n).
+\]
+Последние два утверждения следуют немедленно: $\Prob_B(B) = c \Prob(B) = 1$, и из $A \subseteq B^c$ следует $A \cap B = \varnothing$, а значит, $\Prob_B(A) = 0$.
+\end{proof}
+
+\begin{proof}[\Cref{prop:multiplication-rule}]
+\proofanchor{multiplication-rule}
+Индукция по~$n$. При $n = 2$ формула~--- это переписанное определение: $\Prob(A_2 \mid A_1) = \Prob(A_1 \cap A_2) / \Prob(A_1)$.
+
+Шаг индукции: пусть формула верна для $n - 1$ событий. Применяя случай $n = 2$ к $C = A_1 \cap \cdots \cap A_{n-1}$ и~$A_n$, получим
+\[
+  \Prob(C \cap A_n) = \Prob(C) \cdot \Prob(A_n \mid C).
+\]
+Подставив сюда индукционное разложение~$\Prob(C)$, приходим к требуемому равенству. Условие $\Prob(A_1 \cap \cdots \cap A_{n-1}) > 0$ обеспечивает корректность всех промежуточных условных вероятностей: при $k \leq n - 1$ по монотонности $\Prob(A_1 \cap \cdots \cap A_k) \geq \Prob(A_1 \cap \cdots \cap A_{n-1}) > 0$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:total-probability}]
+\proofanchor{total-probability}
+Поскольку $\{H_i\}$~--- разбиение~$\Omega$, события $A \cap H_i$ попарно не пересекаются и в объединении дают $A \cap \Omega = A$. По $\sigma$-аддитивности~$\Prob$ (с дополнением нулями в конечном случае) $\Prob(A) = \sum_i \Prob(A \cap H_i)$. Для каждого~$i$ с $\Prob(H_i) > 0$ выполнено $\Prob(A \cap H_i) = \Prob(A \mid H_i) \Prob(H_i)$ по~\cref{def:conditional-probability}; принятое соглашение $\Prob(A \mid H_i) \Prob(H_i) = 0$ при $\Prob(H_i) = 0$ согласуется с $\Prob(A \cap H_i) \leq \Prob(H_i) = 0$, так что второе равенство выполнено для каждого слагаемого по отдельности.
+\end{proof}
+
+\begin{proof}[\Cref{thm:bayes}]
+\proofanchor{bayes}
+Применяя~\cref{def:conditional-probability} в обе стороны, получаем $\Prob(H_j \cap A) = \Prob(H_j \mid A) \Prob(A) = \Prob(A \mid H_j) \Prob(H_j)$. Выражая отсюда $\Prob(H_j \mid A)$ и подставляя в знаменатель формулу полной вероятности из~\cref{thm:total-probability} для $\Prob(A)$, приходим к доказываемому равенству.
+\end{proof}
 
 \subsection*{Примеры}
-% TODO
+
+\begin{example}[Две карты из колоды]
+\label{ex:two-cards}
+Из перетасованной колоды в~$52$ карты последовательно, без возвращения, вынимают две карты. Пусть $A_i$~--- событие ``$i$-я карта~--- туз''. Тогда $\Prob(A_1) = 4/52$ и $\Prob(A_2 \mid A_1) = 3/51$ (один туз изъят, в колоде остался~$51$ карта), поэтому по правилу умножения вероятностей (\cref{prop:multiplication-rule})
+\[
+  \Prob(A_1 \cap A_2) = \frac{4}{52} \cdot \frac{3}{51} = \frac{12}{2652} = \frac{1}{221} \approx 0{,}0045.
+\]
+\end{example}
+
+\begin{example}[Полная вероятность: две урны]
+\label{ex:two-urns}
+В первой урне~$3$ белых и~$7$ чёрных шаров; во второй~--- $6$ белых и~$4$ чёрных. Бросанием правильной монеты выбирают урну, после чего из неё случайно равновероятно достают шар. Пусть $H_i$~--- ``выбрана $i$-я урна'', $W$~--- ``вынутый шар белый''. Тогда $\Prob(H_1) = \Prob(H_2) = 1/2$, $\Prob(W \mid H_1) = 3/10$, $\Prob(W \mid H_2) = 6/10$, и
+\[
+  \Prob(W) = \tfrac{1}{2} \cdot \tfrac{3}{10} + \tfrac{1}{2} \cdot \tfrac{6}{10} = \tfrac{9}{20}.
+\]
+\end{example}
+
+\begin{example}[Байес: медицинский тест на редкое заболевание]
+\label{ex:medical-test}
+Распространённость заболевания в популяции $\Prob(D) = 0{,}01$. Тест обладает чувствительностью $\Prob(T \mid D) = 0{,}99$ (доля истинно положительных результатов) и специфичностью $1 - \Prob(T \mid D^c) = 0{,}95$ (доля ложноположительных равна~$0{,}05$). Какова вероятность заболевания при положительном результате теста?
+
+По формуле Байеса (\cref{thm:bayes}, случай двух гипотез)
+\[
+  \Prob(D \mid T) = \frac{\Prob(T \mid D)\, \Prob(D)}{\Prob(T \mid D)\, \Prob(D) + \Prob(T \mid D^c)\, \Prob(D^c)}
+  = \frac{0{,}99 \cdot 0{,}01}{0{,}99 \cdot 0{,}01 + 0{,}05 \cdot 0{,}99}
+  = \frac{0{,}0099}{0{,}0594} \approx 0{,}167.
+\]
+Положительный результат теста с высокой точностью всё равно оставляет около~$83\%$ вероятности того, что человек здоров: малая априорная вероятность $\Prob(D) = 0{,}01$ ``перевешивает'' информативность теста. Это пример \emph{ошибки игнорирования базовой частоты} (base-rate fallacy).
+\end{example}
+
+\begin{problem}[Парадокс Монти Холла]
+\label{prob:monty-hall}
+За одной из трёх дверей, выбранной случайно равновероятно, спрятан приз. Игрок указывает на дверь~$1$. Ведущий, знающий, где приз, открывает одну из оставшихся дверей, за которой приза \emph{нет}, и предлагает игроку поменять выбор. Стоит ли соглашаться на смену?
+\end{problem}
+
+\begin{proof}[Решение]
+Пусть $H_i$~--- событие ``приз за дверью~$i$''. Тогда $\Prob(H_1) = \Prob(H_2) = \Prob(H_3) = 1/3$. Допустим, ведущий открыл дверь~$3$, и обозначим это наблюдение через~$A$. Найдём $\Prob(A \mid H_i)$ при стандартном протоколе ведущего (когда есть выбор, открыть невыигрышную и не выбранную игроком дверь равновероятно): $\Prob(A \mid H_1) = 1/2$ (ведущий случайно выбирает между дверями~$2$ и~$3$), $\Prob(A \mid H_2) = 1$ (только дверь~$3$ одновременно невыигрышная и не выбранная игроком), $\Prob(A \mid H_3) = 0$. По формуле Байеса
+\[
+  \Prob(H_1 \mid A) = \frac{\tfrac{1}{2} \cdot \tfrac{1}{3}}{\tfrac{1}{2} \cdot \tfrac{1}{3} + 1 \cdot \tfrac{1}{3} + 0} = \frac{1}{3},
+  \qquad
+  \Prob(H_2 \mid A) = \frac{1 \cdot \tfrac{1}{3}}{\tfrac{1}{2} \cdot \tfrac{1}{3} + 1 \cdot \tfrac{1}{3}} = \frac{2}{3}.
+\]
+Смена двери на~$2$ удваивает вероятность выигрыша с~$1/3$ до~$2/3$. Действие ведущего сообщает игроку \emph{конкретную} невыигрышную дверь~--- информация нетривиальна именно потому, что выбор ведущего ограничен начальным выбором игрока.
+\end{proof}
