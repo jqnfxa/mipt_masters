@@ -8,10 +8,265 @@ Representation of matrices and vectors. Matrix multiplication algorithms and eff
 \end{ticket}
 
 \subsection*{Theory}
-% TODO
+
+This ticket combines a data-structure question (how to lay out
+matrices and vectors in memory so that loops are fast) with two
+algorithmic ones (multiplying matrices and solving $A \vect{x} = \vect{b}$).
+For deeper treatment see \cite[Ch.~28]{CLRS2013}.
+
+\subsubsection*{Representation}
+
+A vector $\vect{v} \in \R^n$ is stored as a contiguous array of $n$
+floating-point values; element access is $\Theta(1)$.
+
+A matrix $A \in \R^{m \times n}$ has two principal dense layouts:
+\begin{itemize}
+  \item \emph{row-major}: $A[i][j]$ at memory offset $i \cdot n + j$
+        (used by C, NumPy by default);
+  \item \emph{column-major}: $A[i][j]$ at offset $j \cdot m + i$
+        (used by Fortran, BLAS, MATLAB).
+\end{itemize}
+The choice matters for cache behaviour: a tight loop iterating along
+the contiguous axis enjoys spatial locality, while iteration across
+the strided axis incurs one cache miss per element in the worst case.
+
+For a sparse matrix with $\mathrm{nnz}(A)$ non-zero entries, common
+formats are:
+\begin{itemize}
+  \item \emph{COO} (coordinate): three arrays of length $\mathrm{nnz}(A)$
+        storing $(i, j, A_{ij})$ for each non-zero;
+  \item \emph{CSR} (compressed sparse row): $A_{ij}$ values and column
+        indices grouped by row, with a length-$(m+1)$ row-pointer array;
+        provides $\Theta(\mathrm{nnz}(A_{i,*}))$ row access.
+\end{itemize}
+
+\subsubsection*{Dense matrix multiplication}
+
+Given $A \in \R^{n \times n}$, $B \in \R^{n \times n}$, compute
+$C = AB \in \R^{n \times n}$ with $C_{ij} = \sum_{k=1}^{n} A_{ik} B_{kj}$.
+
+\begin{proposition}[Naive matrix multiplication]
+\label{prop:naive-matmul}
+The triple-loop algorithm
+\[
+  \text{for } i, j, k \in \{1, \dots, n\}\colon\quad C_{ij} \mathrel{+}= A_{ik}\, B_{kj}
+\]
+computes $C = AB$ in $\Theta(n^3)$ time and $\Theta(n^2)$ extra space
+(the matrix~$C$ itself).
+\end{proposition}
+\proofof{naive-matmul}
+
+\begin{theorem}[Strassen 1969]
+\label{thm:strassen}
+There is an algorithm that multiplies two $n \times n$ matrices using
+$T(n) = 7\, T(n/2) + \Theta(n^2)$ arithmetic operations, hence
+$T(n) = \Theta(n^{\log_2 7}) = \Theta(n^{2.807\ldots})$.
+\end{theorem}
+\proofof{strassen}
+
+\begin{remark}[Block multiplication and cache efficiency]
+Even without changing the asymptotic exponent, partitioning $A$ and
+$B$ into $b \times b$ blocks (with $b$ chosen so a block fits in
+cache) gives a constant-factor speed-up over naive triple loops on
+modern hardware: each loaded block is reused $\Theta(n/b)$ times
+before eviction. With~$b = \Theta(\sqrt{M})$ where $M$ is the cache
+size, the number of cache misses drops from $\Theta(n^3)$ to
+$\Theta(n^3 / \sqrt{M})$.
+\end{remark}
+
+\subsubsection*{Direct solvers}
+
+For $A \in \R^{n \times n}$ non-singular and $\vect{b} \in \R^n$,
+\emph{Gaussian elimination} reduces $A$ to upper-triangular form by
+forward elimination, then \emph{back-substitution} solves the
+triangular system. Equivalently, the elimination factorises
+$P A = L U$ where $L$ is unit lower-triangular, $U$ is upper-triangular,
+and $P$ is a permutation matrix recording the row swaps used for
+\emph{partial pivoting} (always pivot on the largest-magnitude entry
+in the current column to limit numerical growth).
+
+\begin{theorem}[Cost of LU with partial pivoting]
+\label{thm:lu-cost}
+Computing the factorisation $P A = L U$ for $A \in \R^{n \times n}$
+takes $\tfrac{2}{3} n^3 + O(n^2)$ floating-point operations and
+$O(n^2)$ extra memory. Given the factorisation, solving
+$A \vect{x} = \vect{b}$ via $L \vect{y} = P \vect{b}$ followed by
+$U \vect{x} = \vect{y}$ takes $2 n^2 + O(n)$ flops by triangular
+solves.
+\end{theorem}
+\proofof{lu-cost}
+
+For an SPD matrix, the analogous \emph{Cholesky factorisation}
+$A = L L^\top$ exists, costs half as many flops, and avoids pivoting.
+
+\subsubsection*{Iterative solvers}
+
+For large sparse $A$, direct methods are dominated by the
+$\Theta(n^3)$ cost of dense factorisation. Iterative methods produce
+a sequence $\vect{x}^{(0)}, \vect{x}^{(1)}, \dots$ that converges to
+the true solution.
+
+A \emph{stationary iteration} is built from a splitting $A = M - N$
+with $M$ easily invertible:
+\[
+  \vect{x}^{(k+1)} \;=\; M^{-1} \bigl(N \vect{x}^{(k)} + \vect{b}\bigr)
+                      \;=\; T \vect{x}^{(k)} + \vect{c},
+  \qquad T = M^{-1} N, \;\vect{c} = M^{-1} \vect{b}.
+\]
+Two classical choices, with $A = D + L_A + U_A$ for diagonal~$D$ and
+strictly lower / upper triangular $L_A, U_A$:
+\begin{itemize}
+  \item \emph{Jacobi:} $M = D$, $N = -(L_A + U_A)$, so
+        $T_J = -D^{-1}(L_A + U_A)$;
+  \item \emph{Gauss--Seidel:} $M = D + L_A$, $N = -U_A$, so
+        $T_{GS} = -(D + L_A)^{-1} U_A$.
+\end{itemize}
+
+\begin{theorem}[Convergence of stationary iterations]
+\label{thm:stationary-convergence}
+The iteration $\vect{x}^{(k+1)} = T \vect{x}^{(k)} + \vect{c}$
+converges to the unique fixed point $\vect{x}^* = (I - T)^{-1} \vect{c}$
+from every starting vector $\vect{x}^{(0)}$ if and only if the
+\emph{spectral radius} $\rho(T) = \max\{|\lambda| : \lambda \text{ eigenvalue of } T\}$
+is strictly less than~$1$. The asymptotic error reduction per step
+is $\rho(T)$.
+\end{theorem}
+\proofof{stationary-convergence}
+
+A common sufficient condition: if $A$ is strictly diagonally dominant
+($|A_{ii}| > \sum_{j \neq i} |A_{ij}|$ for every~$i$), both Jacobi and
+Gauss--Seidel converge.
 
 \subsection*{Proofs}
-% TODO
+
+\begin{proof}[\Cref{prop:naive-matmul}]
+\proofanchor{naive-matmul}
+The body $C_{ij} \mathrel{+}= A_{ik} B_{kj}$ executes once for each
+$(i, j, k) \in \{1, \dots, n\}^3$, that is $n^3$ times; each
+execution is $O(1)$. Initialising $C$ to zero costs $\Theta(n^2)$.
+Total: $\Theta(n^3)$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:strassen}]
+\proofanchor{strassen}
+Partition $A$, $B$, $C$ into $2 \times 2$ blocks of size $n/2 \times n/2$:
+\[
+  A = \begin{pmatrix} A_{11} & A_{12} \\ A_{21} & A_{22} \end{pmatrix},\quad
+  B = \begin{pmatrix} B_{11} & B_{12} \\ B_{21} & B_{22} \end{pmatrix}.
+\]
+The naive blocked algorithm uses $8$ multiplications of $(n/2)$-sized
+matrices, giving $T(n) = 8 T(n/2) + \Theta(n^2) = \Theta(n^3)$ — no
+gain. Strassen gives explicit formulas for $C_{ij}$ using only
+\emph{seven} block products $M_1, \dots, M_7$ of suitable additions/subtractions
+of the $A_{ij}$ and $B_{ij}$, e.g.
+\[
+  M_1 = (A_{11} + A_{22})(B_{11} + B_{22}),\quad
+  M_2 = (A_{21} + A_{22}) B_{11},\quad \dots
+\]
+The blocks $C_{ij}$ are then linear combinations of $M_1, \dots, M_7$.
+The recurrence becomes $T(n) = 7 T(n/2) + \Theta(n^2)$, and by the
+Master Theorem (\cref{thm:master}) with $a = 7, b = 2, \alpha = \log_2 7 \approx 2.807$
+and $f(n) = \Theta(n^2) = O(n^{\alpha - \varepsilon})$ for any
+$\varepsilon < \alpha - 2$, case~(a) gives $T(n) = \Theta(n^{\log_2 7})$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:lu-cost}]
+\proofanchor{lu-cost}
+Eliminating column~$k$ ($k = 1, \dots, n - 1$) requires $n - k$
+multipliers (entries below the diagonal in column~$k$ of~$L$) and
+updates the remaining $(n - k) \times (n - k)$ submatrix with one
+multiply and one subtract per entry: $(n - k)^2$ flops.
+
+Total flops for forward elimination:
+\[
+  \sum_{k=1}^{n-1} \bigl[(n - k) + 2 (n - k)^2\bigr]
+  \;=\; \tfrac{n(n - 1)}{2} + 2 \cdot \tfrac{(n - 1) n (2n - 1)}{6}
+  \;=\; \tfrac{2}{3} n^3 + O(n^2).
+\]
+Triangular solves: forward solve $L \vect{y} = P \vect{b}$ uses
+$\sum_{i=1}^{n} (i - 1)$ multiplications and the same number of
+subtractions, $= n^2 + O(n)$ flops; back substitution
+$U \vect{x} = \vect{y}$ uses another $n^2 + O(n)$. Total $2 n^2 + O(n)$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:stationary-convergence}]
+\proofanchor{stationary-convergence}
+Let $\vect{e}^{(k)} = \vect{x}^{(k)} - \vect{x}^*$. Subtracting the
+fixed-point equation $\vect{x}^* = T \vect{x}^* + \vect{c}$ from the
+iteration gives $\vect{e}^{(k+1)} = T \vect{e}^{(k)}$, hence
+$\vect{e}^{(k)} = T^k \vect{e}^{(0)}$.
+
+\emph{Sufficiency.} If $\rho(T) < 1$, then $\|T^k\| \to 0$ in any
+matrix norm (Gelfand's formula:
+$\rho(T) = \lim_k \|T^k\|^{1/k}$, so for any
+$r \in (\rho(T), 1)$ eventually $\|T^k\| \leq r^k \to 0$). Hence
+$\vect{e}^{(k)} \to 0$ for every initial $\vect{e}^{(0)}$.
+
+\emph{Necessity.} If $\rho(T) \geq 1$, take an eigenpair
+$T \vect{v} = \lambda \vect{v}$ with $|\lambda| \geq 1$ and start
+with $\vect{e}^{(0)} = \vect{v}$: then
+$\|\vect{e}^{(k)}\| = |\lambda|^k \|\vect{v}\|$, which does not tend
+to zero.
+
+The asymptotic rate $\rho(T)$ follows from $\|T^k\|^{1/k} \to \rho(T)$.
+\end{proof}
 
 \subsection*{Examples}
-% TODO
+
+\begin{example}[Naive vs. Strassen at $n = 1024$]
+\label{ex:naive-vs-strassen}
+Naive multiplication does $1024^3 \approx 1.07 \times 10^9$ scalar
+multiplications. Strassen's recurrence applied recursively down to
+some small base case~$n_0$ does roughly
+$1024^{\log_2 7} \approx 1024^{2.807} \approx 1.32 \times 10^8$
+scalar multiplications — about $8 \times$ fewer.
+
+The crossover at which Strassen's constant overhead pays off is
+typically $n_0 \approx 50$--$100$ on real hardware (Strassen's seven
+block products are accompanied by 18 block additions/subtractions,
+versus naive's 8 products and 4 additions). Production BLAS libraries
+fall back to a tuned naive triple loop for $n \leq n_0$.
+\end{example}
+
+\begin{example}[LU on a $3 \times 3$ matrix]
+\label{ex:lu-3x3}
+Let $A = \begin{pmatrix} 2 & 1 & 1 \\ 4 & 3 & 3 \\ 8 & 7 & 9 \end{pmatrix}$.
+Without pivoting:
+\begin{enumerate}[label=(\arabic*)]
+  \item subtract $\tfrac{4}{2} = 2$ times row~1 from row~2; row~2
+        becomes $(0, 1, 1)$;
+  \item subtract $\tfrac{8}{2} = 4$ times row~1 from row~3; row~3
+        becomes $(0, 3, 5)$;
+  \item subtract $\tfrac{3}{1} = 3$ times row~2 (now $(0, 1, 1)$)
+        from row~3; row~3 becomes $(0, 0, 2)$.
+\end{enumerate}
+The factors are
+$L = \begin{pmatrix} 1 & 0 & 0 \\ 2 & 1 & 0 \\ 4 & 3 & 1 \end{pmatrix}$,
+$U = \begin{pmatrix} 2 & 1 & 1 \\ 0 & 1 & 1 \\ 0 & 0 & 2 \end{pmatrix}$.
+A direct check verifies $LU = A$. Solving $A \vect{x} = (4, 11, 29)\T$
+by forward then back substitution yields
+$\vect{y} = (4, 3, 4)\T$ and $\vect{x} = (1, 1, 2)\T$.
+\end{example}
+
+\begin{example}[Jacobi on a small SPD system]
+\label{ex:jacobi}
+Let $A = \begin{pmatrix} 4 & 1 \\ 1 & 3 \end{pmatrix}$, $\vect{b} = (5, 4)\T$, true solution $\vect{x}^* = (1, 1)\T$.
+The Jacobi iteration matrix is
+$T_J = -D^{-1}(L_A + U_A) = -\begin{pmatrix} 1/4 & 0 \\ 0 & 1/3 \end{pmatrix}\begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix} = \begin{pmatrix} 0 & -1/4 \\ -1/3 & 0 \end{pmatrix}$.
+Its eigenvalues solve $\lambda^2 = 1/12$, so $\rho(T_J) = 1/\sqrt{12} \approx 0.289$
+and the iteration converges, halving the error roughly every
+$\log_2(1/\rho) \approx 1.79$ steps. Starting from $\vect{x}^{(0)} = 0$,
+the first iterates are $(5/4, 4/3) \approx (1.25, 1.33)$,
+$(5/4 - 4/12, 4/3 - 5/12) \approx (0.917, 0.917)$, converging
+visibly toward $(1, 1)$.
+\end{example}
+
+\begin{problem}[Cache-aware blocking]
+Suppose the cache holds $M$ floating-point values and matrices $A$, $B$,
+$C$ are stored in row-major order. Show that the naive triple-loop
+matrix multiplication of two $n \times n$ matrices incurs
+$\Theta(n^3)$ cache misses when $n^2 > M$ (no useful row reuse). Then
+show that block multiplication with block size $b = \Theta(\sqrt{M})$
+incurs only $\Theta(n^3 / \sqrt{M})$ misses, achieving the
+Hong--Kung lower bound for matrix multiplication.
+\end{problem}
