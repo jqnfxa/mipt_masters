@@ -8,10 +8,436 @@ A vector space, its basis and dimension. Coordinate transformations in a vector 
 \end{ticket}
 
 \subsection*{Theory}
-% TODO
+
+We continue to work over a fixed field~$\F$.
+
+\begin{definition}
+\label{def:vector-space}
+A \emph{vector space} over~$\F$ is a set~$V$ equipped with operations
+$+\colon V \times V \to V$ (addition) and
+$\cdot\colon \F \times V \to V$ (scalar multiplication) such that
+$(V, +)$ is an abelian group and, for all $\alpha, \beta \in \F$ and
+$\vect{u}, \vect{v} \in V$:
+\[
+  (\alpha \beta)\vect{v} = \alpha(\beta \vect{v}), \quad
+  1 \cdot \vect{v} = \vect{v}, \quad
+  (\alpha + \beta)\vect{v} = \alpha \vect{v} + \beta \vect{v}, \quad
+  \alpha(\vect{u} + \vect{v}) = \alpha \vect{u} + \alpha \vect{v}.
+\]
+Elements of~$V$ are called \emph{vectors}. The unique additive identity
+is denoted~$\vect{0}$.
+\end{definition}
+
+\begin{example}[Standard examples]
+\label{ex:vector-space-examples}
+$\F^n$ with coordinatewise operations; the polynomial space
+$\F[x]_{\le n} = \{p(x) \in \F[x] : \deg p \le n\}$; the space
+$\F^{m \times n}$ of $m \times n$ matrices; the space of all
+functions $X \to \F$ for any set~$X$.
+\end{example}
+
+\begin{definition}
+\label{def:subspace}
+A \emph{subspace} of~$V$ is a subset $U \subseteq V$ that is closed
+under addition and scalar multiplication and contains~$\vect{0}$.
+Equivalently, $U$ is itself a vector space under the inherited
+operations.
+
+The \emph{linear span} of a finite system $\vect{v}_1, \dots, \vect{v}_k \in V$
+is the subspace
+$\spn(\vect{v}_1, \dots, \vect{v}_k) = \{\alpha_1 \vect{v}_1 + \dots + \alpha_k \vect{v}_k : \alpha_i \in \F\}$.
+A space~$V$ is \emph{finitely generated} (or \emph{finite-dimensional})
+if $V = \spn(\vect{v}_1, \dots, \vect{v}_k)$ for some finite system.
+\end{definition}
+
+\begin{definition}
+\label{def:basis-dim}
+A \emph{basis} of a finite-dimensional vector space~$V$ is a
+linearly independent system $\vect{e}_1, \dots, \vect{e}_n$ that
+spans~$V$. By the main lemma on linear dependence
+(\cref{thm:main-lemma}) all bases of~$V$ contain the same number of
+vectors; this common number is the \emph{dimension} of~$V$, denoted
+$\dim V$.
+\end{definition}
+
+\begin{theorem}[Existence of a basis]
+\label{thm:basis-exists}
+Every finitely generated vector space has a basis. More precisely, any
+finite spanning system contains a basis as a subsystem; any linearly
+independent system can be extended to a basis.
+\end{theorem}
+\proofof{basis-exists}
+
+\begin{theorem}[Coordinates in a basis]
+\label{thm:coordinates}
+Let $\vect{e}_1, \dots, \vect{e}_n$ be a basis of~$V$. Every $\vect{v} \in V$
+admits a unique representation
+$\vect{v} = x_1 \vect{e}_1 + \dots + x_n \vect{e}_n$ with $x_i \in \F$.
+The column $\vect{x} = (x_1, \dots, x_n)\T \in \F^n$ is called the
+\emph{coordinate column} of~$\vect{v}$ in the basis
+$\{\vect{e}_i\}$. The map $\vect{v} \mapsto \vect{x}$ is a bijection
+$V \leftrightarrow \F^n$ that respects addition and scalar
+multiplication.
+\end{theorem}
+\proofof{coordinates}
+
+\begin{definition}
+\label{def:transition-matrix}
+Let $\{\vect{e}_i\}$ and $\{\vect{e}'_j\}$ be two bases of~$V$
+(both of size~$n$). The \emph{transition matrix from
+$\{\vect{e}_i\}$ to $\{\vect{e}'_j\}$} is the matrix
+$\mat{T} = (t_{ij}) \in \F^{n \times n}$ whose columns are the
+coordinate columns of the new basis in the old:
+\[
+  \vect{e}'_j \;=\; \sum_{i=1}^{n} t_{ij}\,\vect{e}_i,
+  \qquad j = 1, \dots, n.
+\]
+\end{definition}
+
+\begin{theorem}[Change-of-basis formula]
+\label{thm:change-of-basis}
+Let $\mat{T}$ be the transition matrix from $\{\vect{e}_i\}$ to
+$\{\vect{e}'_j\}$. If $\vect{x}, \vect{x}' \in \F^n$ are the
+coordinate columns of the same vector~$\vect{v}$ in the two bases,
+then
+\[
+  \vect{x} \;=\; \mat{T} \vect{x}', \qquad \text{equivalently} \qquad
+  \vect{x}' \;=\; \mat{T}^{-1} \vect{x}.
+\]
+The matrix~$\mat{T}$ is invertible, since both bases are linearly
+independent.
+\end{theorem}
+\proofof{change-of-basis}
+
+\begin{definition}
+\label{def:sum-intersection}
+For subspaces $U, W \subseteq V$, the \emph{sum} and \emph{intersection}
+are
+\[
+  U + W \;=\; \{\vect{u} + \vect{w} : \vect{u} \in U,\, \vect{w} \in W\},
+  \qquad
+  U \cap W \;=\; \{\vect{v} : \vect{v} \in U \text{ and } \vect{v} \in W\}.
+\]
+Both are subspaces of~$V$.
+\end{definition}
+
+\begin{theorem}[Subspaces of $\F^n$ as kernels]
+\label{thm:subspace-kernel}
+A subset $U \subseteq \F^n$ is a subspace if and only if there exists a
+matrix $\mat{A} \in \F^{m \times n}$ (for some $m$) such that
+$U = \ker \mat{A} = \{\vect{x} \in \F^n : \mat{A}\vect{x} = \vect{0}\}$.
+The number of independent equations defining~$U$ is
+$n - \dim U$, the codimension of~$U$ in~$\F^n$.
+\end{theorem}
+\proofof{subspace-kernel}
+
+\begin{definition}
+\label{def:direct-sum}
+Subspaces $U, W \subseteq V$ are said to form a \emph{direct sum} if
+$U \cap W = \{\vect{0}\}$. The sum $U + W$ is then written $U \oplus W$.
+A system of subspaces $U_1, \dots, U_k$ is \emph{linearly independent}
+(or said to form a \emph{direct sum}, denoted $U_1 \oplus \dots \oplus U_k$)
+if for every~$i$,
+\[
+  U_i \;\cap\; \Bigl(\sum_{j \neq i} U_j\Bigr) \;=\; \{\vect{0}\}.
+\]
+\end{definition}
+
+\begin{theorem}[Grassmann's dimension formula]
+\label{thm:grassmann}
+For finite-dimensional subspaces $U, W \subseteq V$,
+\[
+  \dim(U + W) \;=\; \dim U + \dim W - \dim(U \cap W).
+\]
+In particular, $\dim(U \oplus W) = \dim U + \dim W$ when $U \cap W = \{\vect{0}\}$.
+\end{theorem}
+\proofof{grassmann}
+
+\begin{theorem}[Characterization of direct sum]
+\label{thm:direct-sum-equiv}
+For subspaces $U_1, \dots, U_k \subseteq V$ in a finite-dimensional
+space, the following are equivalent:
+\begin{enumerate}[label=(\alph*)]
+  \item $U_1, \dots, U_k$ are linearly independent (\cref{def:direct-sum});
+  \item every $\vect{v} \in U_1 + \dots + U_k$ has a unique
+        decomposition $\vect{v} = \vect{u}_1 + \dots + \vect{u}_k$
+        with $\vect{u}_i \in U_i$;
+  \item $\dim(U_1 + \dots + U_k) = \dim U_1 + \dots + \dim U_k$;
+  \item the union of any chosen bases of $U_1, \dots, U_k$ is a basis of
+        $U_1 + \dots + U_k$.
+\end{enumerate}
+\end{theorem}
+\proofof{direct-sum-equiv}
+
+\begin{remark}
+For deeper reading on vector-space basics, including the
+infinite-dimensional case (where every space has a Hamel basis by Zorn's
+lemma but dimensions need not match coordinate counts), see
+\cite{Beklemishev2025}.
+\end{remark}
 
 \subsection*{Proofs}
-% TODO
+
+\begin{proof}[\Cref{thm:basis-exists}]
+\proofanchor{basis-exists}
+Let $V = \spn(\vect{v}_1, \dots, \vect{v}_k)$ for some finite system.
+Iteratively remove any vector that is a linear combination of the
+others. Each removal preserves the span (the removed vector remains
+expressible from the rest). The process terminates with a linearly
+independent spanning subsystem, which is a basis.
+
+For the second statement, let $\vect{w}_1, \dots, \vect{w}_r \in V$ be
+linearly independent. If they already span~$V$, they are a basis.
+Otherwise some $\vect{w} \in V$ is not in their span; appending~$\vect{w}$
+keeps the system linearly independent (a nontrivial relation would
+express~$\vect{w}$ through the others, contradiction). Repeat. The
+process stops at a basis after at most $\dim V$ steps, since by the
+main lemma no linearly independent system in~$V$ can exceed
+$\dim V$ vectors.
+\end{proof}
+
+\begin{proof}[\Cref{thm:coordinates}]
+\proofanchor{coordinates}
+\emph{Existence:} since $\{\vect{e}_i\}$ spans~$V$, every $\vect{v}$
+is some linear combination of the $\vect{e}_i$.
+
+\emph{Uniqueness:} if $\vect{v} = \sum x_i \vect{e}_i = \sum x'_i \vect{e}_i$,
+then $\sum (x_i - x'_i) \vect{e}_i = \vect{0}$. Linear independence of
+$\{\vect{e}_i\}$ forces $x_i = x'_i$ for every~$i$.
+
+The coordinate map respects addition and scalar multiplication
+because, if $\vect{u} = \sum x_i \vect{e}_i$ and $\vect{v} = \sum y_i \vect{e}_i$,
+then $\vect{u} + \vect{v} = \sum(x_i + y_i)\vect{e}_i$ and
+$\alpha \vect{u} = \sum (\alpha x_i)\vect{e}_i$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:change-of-basis}]
+\proofanchor{change-of-basis}
+Let $\vect{v} = \sum_j x'_j \vect{e}'_j$. Substituting the definition
+$\vect{e}'_j = \sum_i t_{ij}\vect{e}_i$:
+\[
+  \vect{v} \;=\; \sum_j x'_j \sum_i t_{ij}\vect{e}_i
+  \;=\; \sum_i \Bigl( \sum_j t_{ij} x'_j \Bigr) \vect{e}_i.
+\]
+By uniqueness of coordinates (\cref{thm:coordinates}),
+$x_i = \sum_j t_{ij} x'_j$, that is $\vect{x} = \mat{T}\vect{x}'$.
+
+To see~$\mat{T}$ is invertible, view the columns of~$\mat{T}$ as the
+coordinate vectors of $\vect{e}'_1, \dots, \vect{e}'_n$ in the
+basis~$\{\vect{e}_i\}$. The bijective coordinate map
+(\cref{thm:coordinates}) sends linearly independent systems to
+linearly independent systems, so the columns of~$\mat{T}$ are
+linearly independent and $\rank \mat{T} = n$, hence~$\mat{T}$ is
+invertible by \cref{thm:cofactor-inverse}. Multiplying
+$\vect{x} = \mat{T}\vect{x}'$ by $\mat{T}^{-1}$ gives the second
+form.
+\end{proof}
+
+\begin{proof}[\Cref{thm:subspace-kernel}]
+\proofanchor{subspace-kernel}
+\emph{($\Leftarrow$).} For any matrix~$\mat{A}$, the set
+$\ker \mat{A}$ is closed under addition and scalar multiplication
+and contains~$\vect{0}$, hence is a subspace.
+
+\emph{($\Rightarrow$).} Let $U \subseteq \F^n$ be a subspace of
+dimension~$k$. If $k = n$ take $\mat{A} = \mat{0}_{1 \times n}$, whose
+kernel is all of~$\F^n$. Assume $k < n$.
+
+Define a bilinear pairing on~$\F^n$ by
+$\langle \vect{v}, \vect{w} \rangle = \sum_{i=1}^{n} v_i w_i$ and let
+\[
+  U^{\circ} \;=\; \{\vect{v} \in \F^n : \langle \vect{v}, \vect{u} \rangle = 0
+  \text{ for all } \vect{u} \in U\}.
+\]
+Choose a basis $\vect{u}_1, \dots, \vect{u}_k$ of~$U$ and let~$\mat{M}$
+be the $n \times k$ matrix whose columns are the~$\vect{u}_i$. By
+linearity, $\langle \vect{v}, \vect{u} \rangle = 0$ for all
+$\vect{u} \in U$ iff $\mat{M}\T \vect{v} = \vect{0}$, so $U^{\circ}$ is
+the kernel of~$\mat{M}\T \in \F^{k \times n}$. Since
+$\rank \mat{M}\T = \rank \mat{M} = k$ (\cref{thm:rank-row-col}),
+\cref{thm:solution-structure} gives $\dim U^{\circ} = n - k$.
+
+Choose a basis $\vect{v}_1, \dots, \vect{v}_{n-k}$ of~$U^{\circ}$ and
+let~$\mat{A} \in \F^{(n-k) \times n}$ be the matrix whose rows are the
+$\vect{v}_i$. By construction, $U \subseteq \ker \mat{A}$ (each row
+annihilates every $\vect{u} \in U$). Conversely,
+$\dim \ker \mat{A} = n - \rank \mat{A} = n - (n - k) = k = \dim U$,
+so the inclusion is an equality.
+\end{proof}
+
+\begin{proof}[\Cref{thm:grassmann}]
+\proofanchor{grassmann}
+Let $\dim(U \cap W) = p$ and pick a basis
+$\vect{w}_1, \dots, \vect{w}_p$ of $U \cap W$. By
+\cref{thm:basis-exists} extend this to a basis
+\[
+  \vect{w}_1, \dots, \vect{w}_p,\; \vect{u}_1, \dots, \vect{u}_q
+\]
+of~$U$ (so $\dim U = p + q$) and to a basis
+\[
+  \vect{w}_1, \dots, \vect{w}_p,\; \vect{z}_1, \dots, \vect{z}_r
+\]
+of~$W$ (so $\dim W = p + r$). We claim that
+\[
+  \mathcal{B} = \{\vect{w}_1, \dots, \vect{w}_p,\; \vect{u}_1, \dots, \vect{u}_q,\;
+                  \vect{z}_1, \dots, \vect{z}_r\}
+\]
+is a basis of $U + W$, which yields $\dim(U + W) = p + q + r =
+(p + q) + (p + r) - p$.
+
+\emph{Spanning.} Every element of $U + W$ is $\vect{u} + \vect{w}$
+with $\vect{u} \in U$, $\vect{w} \in W$. Expand $\vect{u}$ in the
+$U$-basis (in $\spn$ of $\{\vect{w}_i, \vect{u}_j\}$) and $\vect{w}$ in
+the $W$-basis (in $\spn$ of $\{\vect{w}_i, \vect{z}_k\}$); the sum lies
+in $\spn \mathcal{B}$.
+
+\emph{Linear independence.} Suppose
+$\sum a_i \vect{w}_i + \sum b_j \vect{u}_j + \sum c_k \vect{z}_k = \vect{0}$.
+Then
+\[
+  \sum c_k \vect{z}_k \;=\; -\sum a_i \vect{w}_i - \sum b_j \vect{u}_j,
+\]
+the right-hand side lying in~$U$. Since the left-hand side lies
+in~$W$, the vector $\sum c_k \vect{z}_k$ belongs to $U \cap W = \spn(\vect{w}_i)$.
+Thus $\sum c_k \vect{z}_k = \sum d_i \vect{w}_i$ for some scalars $d_i$;
+rearranging, $\sum d_i \vect{w}_i - \sum c_k \vect{z}_k = \vect{0}$.
+This is a linear relation among the basis $\{\vect{w}_i, \vect{z}_k\}$
+of~$W$, so $d_i = 0$ and $c_k = 0$. Substituting back,
+$\sum a_i \vect{w}_i + \sum b_j \vect{u}_j = \vect{0}$, a relation in
+the basis of~$U$, forcing $a_i = b_j = 0$. So the relation is trivial
+and~$\mathcal{B}$ is linearly independent.
+\end{proof}
+
+\begin{proof}[\Cref{thm:direct-sum-equiv}]
+\proofanchor{direct-sum-equiv}
+We sketch the implications $(a) \Rightarrow (b) \Rightarrow (c) \Rightarrow (d) \Rightarrow (a)$.
+
+$(a) \Rightarrow (b)$: if $\vect{v} = \sum \vect{u}_i = \sum \vect{u}'_i$ are
+two decompositions, then $\vect{u}_1 - \vect{u}'_1 = \sum_{i \neq 1}(\vect{u}'_i - \vect{u}_i) \in U_1 \cap (\sum_{i \neq 1} U_i) = \{\vect{0}\}$,
+so $\vect{u}_1 = \vect{u}'_1$. Repeat for each~$i$.
+
+$(b) \Rightarrow (c)$: by induction on~$k$ using \cref{thm:grassmann}. For
+$k = 2$, condition~(b) forces $U_1 \cap U_2 = \{\vect{0}\}$ (the
+ambiguity $\vect{0} = \vect{v} + (-\vect{v})$ for $\vect{v} \in U_1 \cap U_2$
+contradicts uniqueness unless $\vect{v} = \vect{0}$), hence
+$\dim(U_1 + U_2) = \dim U_1 + \dim U_2$ by Grassmann. The inductive
+step uses the same argument applied to $U_1 + \dots + U_{k-1}$ and
+$U_k$.
+
+$(c) \Rightarrow (d)$: take a basis of each $U_i$ and concatenate them.
+By the spanning argument from the Grassmann proof, the concatenation
+spans $U_1 + \dots + U_k$. Its size equals $\dim(U_1 + \dots + U_k)$
+by~(c), so it is a basis.
+
+$(d) \Rightarrow (a)$: if some
+$\vect{v} \in U_i \cap (\sum_{j \neq i} U_j)$ were nonzero, expanding
+$\vect{v}$ as an element of~$U_i$ and as an element of $\sum_{j \neq i} U_j$
+in the chosen bases would give two distinct expressions for the same
+vector in the basis $\{\text{union of bases}\}$, contradicting
+uniqueness of coordinates (\cref{thm:coordinates}).
+\end{proof}
 
 \subsection*{Examples}
-% TODO
+
+\begin{example}[Subspace defined by equations]
+\label{ex:subspace-from-system}
+In $\R^3$, consider
+\[
+  U \;=\; \{(x, y, z) : x + y - z = 0,\; 2x - y + z = 0\}.
+\]
+Adding the two equations gives $3x = 0$, so $x = 0$, and then
+$y = z$. Hence $U = \{(0, t, t) : t \in \R\} = \spn\bigl((0, 1, 1)\bigr)$
+and $\dim U = 1$. As a sanity check, the coefficient matrix has
+rank~$2$ and $\dim U = 3 - 2 = 1$ in agreement with
+\cref{thm:subspace-kernel}.
+\end{example}
+
+\begin{example}[Coordinate transformation]
+\label{ex:change-of-basis-numeric}
+Take $V = \R^2$ with the standard basis $\vect{e}_1 = (1, 0)$,
+$\vect{e}_2 = (0, 1)$ and the new basis
+$\vect{e}'_1 = (1, 1)$, $\vect{e}'_2 = (1, -1)$. The transition matrix
+\[
+  \mat{T} \;=\; \begin{pmatrix} 1 & 1 \\ 1 & -1 \end{pmatrix}
+\]
+has columns $\vect{e}'_1, \vect{e}'_2$ written in the standard basis.
+For $\vect{v} = 3\vect{e}_1 + 1\vect{e}_2$ (so $\vect{x} = (3, 1)\T$),
+\[
+  \mat{T}^{-1} \;=\; \frac{1}{-2}\begin{pmatrix} -1 & -1 \\ -1 & 1 \end{pmatrix}
+  \;=\; \frac{1}{2}\begin{pmatrix} 1 & 1 \\ 1 & -1 \end{pmatrix},
+  \qquad
+  \vect{x}' \;=\; \mat{T}^{-1}\vect{x} \;=\; \begin{pmatrix} 2 \\ 1 \end{pmatrix}.
+\]
+A direct check: $2\vect{e}'_1 + 1\vect{e}'_2 = 2(1,1) + (1,-1) = (3, 1) = \vect{v}$.
+\end{example}
+
+\begin{example}[Grassmann formula]
+\label{ex:grassmann-numeric}
+In $\R^4$, let
+\[
+  U = \spn\bigl((1, 1, 0, 0),\; (0, 0, 1, 1)\bigr), \qquad
+  W = \spn\bigl((1, 0, 1, 0),\; (0, 1, 0, 1)\bigr).
+\]
+Each generating system is linearly independent, so $\dim U = \dim W = 2$.
+
+For $U + W$, stack all four vectors as rows and row-reduce:
+\[
+  \begin{pmatrix}
+    1 & 1 & 0 & 0 \\
+    0 & 0 & 1 & 1 \\
+    1 & 0 & 1 & 0 \\
+    0 & 1 & 0 & 1
+  \end{pmatrix}
+  \;\longrightarrow\;
+  \begin{pmatrix}
+    1 & 1 & 0 & 0 \\
+    0 & 1 & 0 & 1 \\
+    0 & 0 & 1 & 1 \\
+    0 & 0 & 0 & 0
+  \end{pmatrix}.
+\]
+Three pivots, so $\dim(U + W) = 3$. \Cref{thm:grassmann} predicts
+$\dim(U \cap W) = \dim U + \dim W - \dim(U + W) = 2 + 2 - 3 = 1$.
+
+To find a basis of $U \cap W$ explicitly, we look for scalars
+$a, b, c, d$ with $a(1,1,0,0) + b(0,0,1,1) = c(1,0,1,0) + d(0,1,0,1)$.
+Component-wise: $a = c$, $a = d$, $b = c$, $b = d$. All four scalars
+are equal; setting them to~$1$ yields the vector $(1, 1, 1, 1)$, which
+spans $U \cap W$. Thus $U \cap W = \spn\bigl((1, 1, 1, 1)\bigr)$ has
+dimension~$1$, confirming Grassmann.
+\end{example}
+
+\begin{problem}
+\label{prob:direct-sum-decomp}
+In $\R^3$, let $U = \spn\bigl((1, 1, 0),\, (0, 1, 1)\bigr)$ and
+$W = \spn\bigl((0, 0, 1)\bigr)$. Show that $\R^3 = U \oplus W$ and
+find the (unique) decomposition of $\vect{v} = (3, 4, 2)$ as a sum of
+a vector in~$U$ and a vector in~$W$.
+\end{problem}
+
+\begin{proof}[Solution]
+$\dim U = 2$ and $\dim W = 1$, so by \cref{thm:direct-sum-equiv}\,(c)
+the sum is direct iff $\dim(U + W) = 3$, in which case it must equal
+all of~$\R^3$. Stack the three generators as rows:
+\[
+  \begin{pmatrix}
+    1 & 1 & 0 \\
+    0 & 1 & 1 \\
+    0 & 0 & 1
+  \end{pmatrix}.
+\]
+The matrix is already in REF with three pivots, so $\dim(U + W) = 3$
+and $\R^3 = U \oplus W$.
+
+\emph{Decomposition.} Write
+$\vect{v} = (3, 4, 2) = a(1,1,0) + b(0,1,1) + c(0,0,1)$ and solve
+component-wise: $a = 3$, $a + b = 4 \Rightarrow b = 1$,
+$b + c = 2 \Rightarrow c = 1$. Hence
+\[
+  \vect{u} = 3(1, 1, 0) + 1(0, 1, 1) = (3, 4, 1) \in U,
+  \qquad
+  \vect{w} = (0, 0, 1) \in W,
+\]
+with $\vect{v} = \vect{u} + \vect{w}$ — the unique such
+decomposition.
+\end{proof}
