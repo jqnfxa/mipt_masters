@@ -197,10 +197,11 @@ Reduce~$\mat{A}$ to REF~$\mat{U}$ with $r$ pivots. By
 the column rank of~$\mat{A}$ equals the column rank of~$\mat{U}$, so
 it suffices to compute the column rank of~$\mat{U}$.
 
-The pivot columns of~$\mat{U}$ are linearly independent: any nontrivial
-linear combination of them, considered in the row of the topmost
-involved pivot, has a nonzero entry there (other pivot columns vanish
-in that row by the staircase pattern). Conversely, every non-pivot
+The pivot columns of~$\mat{U}$ are linearly independent: in any
+nontrivial linear combination of them, the row of the bottommost
+involved pivot has a nonzero entry (the other involved pivots sit
+strictly above this row, and entries below a pivot in its column are
+zero by the staircase pattern, so only the bottommost pivot contributes). Conversely, every non-pivot
 column of~$\mat{U}$ is a linear combination of the pivot columns to
 its left: in REF, only the rows containing pivots in those leftward
 positions can have nonzero entries in that column, so the back-substitution
@@ -263,11 +264,19 @@ row-equivalent to~$\mat{A}$. By \cref{prop:rank-ero-invariance} they
 have the same row span~$V$. We show $\mat{U} = \mat{U}'$.
 
 A column index~$j$ is a pivot column of an RREF iff $V$ contains an
-element whose first nonzero entry is in column~$j$ but does not contain
-an element whose first nonzero entry lies strictly to the left of~$j$
-inside the row space restricted to columns $\ge j$. This characterization
-involves only~$V$, so $\mat{U}$ and $\mat{U}'$ have the same pivot
-columns $j_1 < \dots < j_r$.
+element whose leading nonzero entry sits exactly in column~$j$. One
+direction: the $k$-th row of the RREF has its leading entry at $j_k$
+with zeros to the left, so the row itself witnesses column~$j_k$.
+Conversely, suppose $v \in V$ has leading entry at column~$j$ and write
+$v = \sum_k c_k r_k$ where $r_k$ is the $k$-th row of~$\mat{U}$. Then
+$c_k = v[j_k]$ since $r_k[j_l] = \delta_{kl}$; from $v[i] = 0$ for
+$i < j$ we conclude $c_k = 0$ for every~$k$ with $j_k < j$. So $v$ is
+a combination of the rows whose pivots lie at $j_k \ge j$, and its
+leading entry occurs at $\min\{j_k : c_k \neq 0\} \ge j$, forcing $j$
+to be one of the~$j_k$.
+
+This characterization involves only~$V$, so $\mat{U}$ and $\mat{U}'$
+have the same pivot columns $j_1 < \dots < j_r$.
 
 Within RREF, the $k$-th nonzero row is the unique element of~$V$ that
 has a~$1$ in position~$j_k$, $0$ in positions $j_1, \dots, j_{k-1},
