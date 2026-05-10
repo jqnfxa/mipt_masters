@@ -8,10 +8,209 @@ Mean-square ergodic stochastic processes (in expectation, variance, correlation 
 \end{ticket}
 
 \subsection*{Theory}
-% TODO
+
+The strong law of large numbers (\cref{thm:slln}) says that the
+time average of an i.i.d.\ sequence converges to the ensemble mean.
+For dependent processes, the analogous question is: when does the
+time average over a single trajectory recover the population
+parameters? The mean-square framework gives the cleanest answer
+under second-moment hypotheses.
+
+\medskip
+\noindent\textbf{Wide-sense stationary processes.}
+
+\begin{definition}[WSS process]
+\label{def:wss}
+A stochastic process $X = (X_t)_{t \in T}$ with $T \in \{\Z, \R, [0, \infty)\}$
+and $X_t \in L^2$ for all~$t$ is \emph{wide-sense stationary
+(WSS)} if
+\begin{enumerate}[label=(\alph*)]
+  \item $\E X_t = m$ is constant in~$t$;
+  \item $\Cov(X_s, X_t)$ depends only on the time lag $\tau = t - s$.
+\end{enumerate}
+The function $K(\tau) = \Cov(X_t, X_{t + \tau})$ is the
+\emph{(auto-)covariance function} (or \emph{correlation function} in
+parts of the Russian literature, when the process is centred).
+\end{definition}
+
+By \cref{prop:cov-properties}, $K(0) = \Var X_t \geq 0$ and $K(-\tau) = K(\tau)$;
+moreover $K$ is positive-semidefinite as a kernel, so it admits a
+spectral representation \cite[Ch.~VI, \S~1]{Sevastyanov1982}.
+
+\medskip
+\noindent\textbf{Mean-square ergodicity.} For a WSS process, the
+time-average estimator of the mean is
+\[
+  \bar X_T \;=\; \frac{1}{T} \int_0^{T} X_t\, dt \quad \text{(continuous time)}, \qquad
+  \bar X_n \;=\; \frac{1}{n} \sum_{k=1}^{n} X_k \quad \text{(discrete time)}.
+\]
+We treat the continuous-time case below; the discrete case is
+parallel with sums in place of integrals.
+
+\begin{definition}[Mean-square ergodicity]
+\label{def:ms-ergodic}
+A WSS process~$X$ is \emph{mean-square ergodic in the mean} if
+$\bar X_T \to m$ in mean square as $T \to \infty$, i.e.\
+$\E (\bar X_T - m)^2 \to 0$. Analogously, $X$ is mean-square
+ergodic \emph{in variance} (resp.\ \emph{in correlation function})
+if the time-average estimators of $\Var X_t$ (resp.\ of
+$K(\tau)$ for fixed lag~$\tau$) converge in $L^2$ to the
+corresponding population quantities.
+\end{definition}
+
+\begin{theorem}[Criterion for mean-square ergodicity in the mean]
+\label{thm:ms-ergodic-criterion}
+Let $X$ be a WSS process with mean~$m$ and covariance function~$K$.
+Then $X$ is mean-square ergodic in the mean if and only if
+\[
+  \frac{1}{T^2} \int_0^{T} \int_0^{T} K(t - s)\, ds\, dt \;\to\; 0 \qquad (T \to \infty).
+\]
+Equivalently, after a change of variables $\tau = t - s$, this is
+\[
+  \frac{2}{T} \int_0^{T} \Bigl(1 - \frac{\tau}{T}\Bigr) K(\tau)\, d\tau \;\to\; 0.
+\]
+\end{theorem}
+\proofof{ms-ergodic-criterion}
+
+\begin{corollary}[Sufficient condition]
+\label{cor:ms-ergodic-sufficient}
+If $K(\tau) \to 0$ as $\tau \to \infty$, then $X$ is mean-square
+ergodic in the mean. In particular, this holds whenever
+$\int_0^{\infty} |K(\tau)|\, d\tau < \infty$.
+\end{corollary}
+\proofof{ms-ergodic-sufficient}
+
+\begin{remark}
+The criterion isolates the role of long-range correlation. If
+$K(\tau)$ decays to zero, the variance of the time average vanishes
+at rate $O(1/T)$ (or better) — sample paths self-average. If
+$K(\tau)$ persists at a positive level — for instance, if
+$X_t = Y$ for a single random variable~$Y$, in which case
+$K(\tau) \equiv \Var Y$ — the time average concentrates not around
+$m$ but around the random variable~$Y$, and ergodicity fails.
+Mean-square ergodicity in variance and in correlation is reduced to
+the same criterion applied to the auxiliary processes
+$(X_t - m)^2$ and $(X_t - m)(X_{t + \tau} - m)$, provided the
+necessary fourth moments exist
+\cite[Ch.~VI, \S~5]{Sevastyanov1982}.
+\end{remark}
 
 \subsection*{Proofs}
-% TODO
+
+\begin{proof}[\Cref{thm:ms-ergodic-criterion}]
+\proofanchor{ms-ergodic-criterion}
+By Fubini and linearity of expectation
+(\cref{prop:exp-properties}\,(a)),
+$\E \bar X_T = \frac{1}{T} \int_0^T \E X_t\, dt = m$. Hence
+\[
+  \E (\bar X_T - m)^2 = \Var \bar X_T = \frac{1}{T^2} \int_0^T \!\!\int_0^T \Cov(X_s, X_t)\, ds\, dt = \frac{1}{T^2} \int_0^T \!\!\int_0^T K(t - s)\, ds\, dt,
+\]
+using stationarity in the last step. So $L^2$-convergence
+$\bar X_T \to m$ is equivalent to the displayed double integral
+tending to~$0$, which is condition~(\ref{thm:ms-ergodic-criterion}).
+
+For the equivalent single-integral form, change variables to
+$\tau = t - s$, $\sigma = s$ on the square
+$[0, T] \times [0, T]$. The image is
+$\{(\tau, \sigma) : 0 \leq \sigma \leq T,\ -\sigma \leq \tau \leq T - \sigma\}$;
+fix $\tau$ and integrate over $\sigma \in [\max(0, -\tau), \min(T, T - \tau)]$,
+which has length $T - |\tau|$ for $|\tau| \leq T$. By symmetry
+$K(-\tau) = K(\tau)$, the integral becomes
+\[
+  \frac{1}{T^2} \int_{-T}^{T} (T - |\tau|) K(\tau)\, d\tau = \frac{2}{T} \int_0^T \Bigl(1 - \frac{\tau}{T}\Bigr) K(\tau)\, d\tau. \qedhere
+\]
+\end{proof}
+
+\begin{proof}[\Cref{cor:ms-ergodic-sufficient}]
+\proofanchor{ms-ergodic-sufficient}
+Suppose $K(\tau) \to 0$ as $\tau \to \infty$, so given $\varepsilon > 0$
+there is~$M$ with $|K(\tau)| < \varepsilon$ for $\tau \geq M$. For
+$T > M$, split the inner integral in
+\cref{thm:ms-ergodic-criterion}:
+\[
+  \frac{2}{T} \int_0^T \Bigl(1 - \frac{\tau}{T}\Bigr) K(\tau)\, d\tau = \frac{2}{T} \int_0^M (\cdot)\, d\tau + \frac{2}{T} \int_M^T (\cdot)\, d\tau.
+\]
+The first integral is bounded by $2M \cdot \max_{[0, M]} |K|/T \to 0$
+as $T \to \infty$. The second is bounded by
+$\frac{2}{T} \int_M^T (1 - \tau/T) \varepsilon\, d\tau \leq \varepsilon$
+(since the weight $1 - \tau/T \leq 1$ and the interval has
+length~$\leq T$). Hence the lim sup is $\leq \varepsilon$ for every
+$\varepsilon > 0$, i.e.\ the integral tends to~$0$, and
+\cref{thm:ms-ergodic-criterion} gives mean-square ergodicity. The
+absolute-integrability case $\int_0^{\infty} |K| < \infty$ is even
+simpler: $\frac{2}{T} \int_0^T (1 - \tau/T) |K(\tau)|\, d\tau \leq \frac{2}{T} \int_0^{\infty} |K|\, d\tau \to 0$.
+\end{proof}
 
 \subsection*{Examples}
-% TODO
+
+\begin{example}[White noise]
+\label{ex:white-noise}
+Let $(X_n)_{n \in \Z}$ be i.i.d.\ with mean~$m$ and variance
+$\sigma^2$. Then $K(0) = \sigma^2$ and $K(\tau) = 0$ for
+$\tau \neq 0$. Trivially $K(\tau) \to 0$, so by
+\cref{cor:ms-ergodic-sufficient} the process is mean-square
+ergodic in the mean. The discrete-time analogue of the variance
+of the average is $\Var \bar X_n = \sigma^2/n \to 0$ — exactly
+\cref{ex:binomial-moments} re-cast.
+\end{example}
+
+\begin{example}[Ornstein–Uhlenbeck process]
+\label{ex:ou-ergodic}
+The continuous-time Gaussian process from \cref{prob:fdd-marginal}
+with $K(\tau) = e^{-|\tau|}$ satisfies $K(\tau) \to 0$
+exponentially, so it is mean-square ergodic in the mean. The
+sufficient condition's quantitative form gives the rate
+\[
+  \Var \bar X_T = \frac{2}{T} \int_0^T \bigl(1 - \tau/T\bigr) e^{-\tau}\, d\tau = \frac{2}{T}\bigl(1 - (1 - e^{-T})/T\bigr) \sim \frac{2}{T},
+\]
+asymptotically the same $1/T$ rate as for white noise — long-range
+correlations are weak enough that they do not slow self-averaging
+beyond a constant factor.
+\end{example}
+
+\begin{example}[Constant random process — non-ergodic]
+\label{ex:constant-process}
+Let $Y$ be any random variable with $\Var Y = \sigma^2 > 0$ and
+set $X_t \equiv Y$ for all~$t$. Then $\E X_t = \E Y = m$ and
+$K(\tau) = \Cov(X_s, X_{s + \tau}) = \Var Y = \sigma^2$ for every
+lag~$\tau$. The criterion fails because
+$\frac{1}{T^2} \int_0^T \int_0^T K(t - s)\, ds\, dt = \sigma^2 \neq 0$.
+Indeed, $\bar X_T = Y$ for every~$T$, so the time average is
+identically $Y$ and concentrates at the random variable~$Y$
+rather than at the constant~$m$.
+\end{example}
+
+\begin{problem}
+\label{prob:periodic-ergodic}
+Let $X_t = A \cos(\omega t + \Phi)$ where $A, \omega \in \R$ are
+constants and $\Phi \sim \mathrm{Uniform}(0, 2\pi)$. Show that $X$
+is WSS, compute its correlation function, and decide whether $X$
+is mean-square ergodic in the mean.
+\end{problem}
+
+\begin{proof}[Solution]
+$\E X_t = A\, \E \cos(\omega t + \Phi) = \frac{A}{2\pi} \int_0^{2\pi} \cos(\omega t + \varphi)\, d\varphi = 0$
+since $\cos$ integrates to $0$ over a full period. For the
+covariance,
+\[
+  \E (X_s X_t) = A^2 \E \cos(\omega s + \Phi)\cos(\omega t + \Phi) = \tfrac{A^2}{2}\, \E\bigl(\cos(\omega(t - s)) + \cos(\omega(s + t) + 2\Phi)\bigr).
+\]
+The second term vanishes after taking expectation (its phase
+$2\Phi$ is uniform on $(0, 4\pi)$), leaving
+$\Cov(X_s, X_t) = K(t - s) = \frac{A^2}{2} \cos(\omega(t - s))$.
+Both conditions of \cref{def:wss} hold (mean is the constant~$0$
+and covariance depends only on the lag), so~$X$ is WSS.
+
+For ergodicity, $K(\tau) = \frac{A^2}{2} \cos(\omega \tau)$ does
+\emph{not} tend to $0$, so the sufficient condition fails. Apply
+\cref{thm:ms-ergodic-criterion} directly: for $\omega \neq 0$,
+\[
+  \frac{2}{T} \int_0^T \bigl(1 - \tau/T\bigr) \tfrac{A^2}{2} \cos(\omega \tau)\, d\tau = \frac{A^2}{T} \cdot \frac{1 - \cos(\omega T)}{\omega^2 T} = O(1/T^2) \to 0,
+\]
+so the process \emph{is} mean-square ergodic in the mean despite
+the non-decaying~$K$ — the oscillations average to zero. (For
+$\omega = 0$ we recover \cref{ex:constant-process} and ergodicity
+fails.) The takeaway: the criterion of
+\cref{thm:ms-ergodic-criterion} is more delicate than the
+sufficient condition of \cref{cor:ms-ergodic-sufficient}.
+\end{proof}
