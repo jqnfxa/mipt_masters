@@ -8,10 +8,328 @@
 \end{ticket}
 
 \subsection*{Теория}
-% TODO
+
+Рассматриваем вещественнозначные функции $f \colon U \to \R$ на
+открытом множестве $U \subseteq \R^n$. Векторы из~$\R^n$ записываем
+столбцами; через $\langle \cdot, \cdot \rangle$ и $\|\cdot\|$
+обозначаем стандартное скалярное произведение и евклидову норму.
+Через $\vect{e}_1, \dots, \vect{e}_n$ обозначим стандартный
+базис~$\R^n$.
+
+\begin{definition}
+\label{def:partial-derivative}
+\emph{Частной производной} функции~$f$ по переменной~$x_i$ в
+точке $\vect{x} \in U$ называется
+\[
+  \frac{\partial f}{\partial x_i}(\vect{x})
+  \;=\; \lim_{t \to 0} \frac{f(\vect{x} + t\vect{e}_i) - f(\vect{x})}{t},
+\]
+если этот предел существует. Это обычная производная при $t = 0$
+функции одной переменной $t \mapsto f(\vect{x} + t \vect{e}_i)$.
+\end{definition}
+
+\begin{definition}
+\label{def:differentiable-multi}
+Функция~$f$ называется \emph{дифференцируемой в точке~$\vect{x}$},
+если существует вектор $\vect{a} \in \R^n$, для которого
+\[
+  f(\vect{x} + \vect{h}) \;=\; f(\vect{x}) + \langle \vect{a}, \vect{h} \rangle + o(\|\vect{h}\|)
+  \qquad \text{при } \vect{h} \to \vect{0}.
+\]
+В этом случае такой~$\vect{a}$ единствен и называется
+\emph{градиентом}~$f$ в точке~$\vect{x}$; обозначается
+$\nabla f(\vect{x})$.
+\end{definition}
+
+\begin{proposition}[Дифференцируемость $\Rightarrow$ существование частных производных и формула градиента]
+\label{prop:diff-implies-partials}
+Если~$f$ дифференцируема в точке~$\vect{x}$, то все частные производные
+$\partial f / \partial x_i$ существуют в~$\vect{x}$ и
+\[
+  \nabla f(\vect{x}) \;=\; \Bigl(\frac{\partial f}{\partial x_1}(\vect{x}), \dots, \frac{\partial f}{\partial x_n}(\vect{x})\Bigr)\T.
+\]
+\end{proposition}
+\proofof{diff-implies-partials}
+
+\begin{theorem}[Из непрерывности частных производных следует дифференцируемость]
+\label{thm:cont-partials-diff}
+Если все частные производные $\partial f / \partial x_i$ существуют в
+некоторой окрестности точки~$\vect{x}$ и непрерывны в~$\vect{x}$, то
+функция~$f$ дифференцируема в~$\vect{x}$ (а градиент задаётся
+формулой из \cref{prop:diff-implies-partials}).
+\end{theorem}
+\proofof{cont-partials-diff}
+
+Обратное к \cref{prop:diff-implies-partials} в общем случае
+\emph{неверно}: функция может иметь все частные производные в точке и
+при этом не быть дифференцируемой. \cref{thm:cont-partials-diff} даёт
+стандартное достаточное условие.
+
+\begin{definition}
+\label{def:directional-derivative}
+Для единичного вектора $\vect{v} \in \R^n$ ($\|\vect{v}\| = 1$)
+\emph{производной по направлению}~$\vect{v}$ функции~$f$ в
+точке~$\vect{x}$ называется
+\[
+  D_{\vect{v}} f(\vect{x}) \;=\; \lim_{t \to 0^{+}} \frac{f(\vect{x} + t\vect{v}) - f(\vect{x})}{t}.
+\]
+\end{definition}
+
+\begin{theorem}[Формула производной по направлению]
+\label{thm:directional-derivative-formula}
+Если~$f$ дифференцируема в точке~$\vect{x}$ и $\vect{v}$~--- единичный
+вектор, то
+\[
+  D_{\vect{v}} f(\vect{x}) \;=\; \langle \nabla f(\vect{x}), \vect{v} \rangle.
+\]
+\end{theorem}
+\proofof{directional-derivative-formula}
+
+\begin{theorem}[Геометрический смысл градиента]
+\label{thm:gradient-geometry}
+Пусть~$f$ дифференцируема в точке~$\vect{x}$ и $\nabla f(\vect{x}) \neq \vect{0}$.
+\begin{enumerate}[label=(\alph*)]
+  \item Среди всех единичных направлений~$\vect{v}$ производная
+        $D_{\vect{v}} f(\vect{x})$ максимальна при
+        $\vect{v} = \nabla f(\vect{x}) / \|\nabla f(\vect{x})\|$ и
+        её максимальное значение равно $\|\nabla f(\vect{x})\|$.
+  \item Градиент ортогонален поверхности уровня
+        $\{\vect{y} \in U : f(\vect{y}) = f(\vect{x})\}$ в следующем
+        смысле: для всякой гладкой кривой
+        $\gamma \colon (-\varepsilon, \varepsilon) \to U$ с
+        $\gamma(0) = \vect{x}$ и $f(\gamma(t)) \equiv f(\vect{x})$
+        выполнено $\langle \nabla f(\vect{x}), \gamma'(0) \rangle = 0$.
+\end{enumerate}
+\end{theorem}
+\proofof{gradient-geometry}
+
+\medskip
+
+\noindent\textbf{Метод градиентного спуска.} Геометрическое
+содержание \cref{thm:gradient-geometry}\,(а) служит основой
+итеративного алгоритма минимизации~$f$.
+
+\begin{definition}
+\label{def:gradient-descent}
+\emph{Градиентным спуском} с шагом $\alpha > 0$ называется
+итерационный процесс
+\[
+  \vect{x}_{k+1} \;=\; \vect{x}_k \;-\; \alpha\, \nabla f(\vect{x}_k),
+  \qquad k = 0, 1, 2, \dots,
+\]
+стартующий из выбранной начальной точки~$\vect{x}_0$.
+\end{definition}
+
+Знак минус реализует направление наискорейшего \emph{убывания}
+$-\nabla f(\vect{x})$ (ср.\ \cref{thm:gradient-geometry}\,(а),
+применённую к $-f$).
+
+\begin{theorem}[Неравенство убывания за один шаг]
+\label{thm:gd-descent}
+Пусть~$f$ дифференцируема на~$\R^n$ и её градиент
+\emph{$L$-липшицев}, то есть
+$\|\nabla f(\vect{y}) - \nabla f(\vect{x})\| \le L\,\|\vect{y} - \vect{x}\|$
+при всех $\vect{x}, \vect{y}$. Тогда для любых $\alpha > 0$ и
+$\vect{x} \in \R^n$
+\[
+  f\bigl(\vect{x} - \alpha\, \nabla f(\vect{x})\bigr)
+  \;\le\; f(\vect{x}) - \alpha\Bigl(1 - \tfrac{\alpha L}{2}\Bigr) \|\nabla f(\vect{x})\|^2.
+\]
+В частности, при $0 < \alpha < 2/L$ скобка справа положительна, и
+каждый шаг градиентного спуска строго уменьшает~$f$ в точках, где
+$\nabla f(\vect{x}) \neq \vect{0}$.
+\end{theorem}
+\proofof{gd-descent}
+
+\begin{remark}
+Полная теория сходимости градиентного спуска (скорости для выпуклых и
+сильно выпуклых задач, роль числа обусловленности, ускоренные методы)
+относится к выпуклой оптимизации; см.\ \cref{sec:2.4-convex-optimization}
+и \cite{Zorich1981} для предварительных сведений из исчисления
+функций многих переменных.
+\end{remark}
 
 \subsection*{Доказательства}
-% TODO
+
+\begin{proof}[\Cref{prop:diff-implies-partials}]
+\proofanchor{diff-implies-partials}
+Подставим $\vect{h} = t \vect{e}_i$ (со скаляром~$t$) в разложение
+дифференцируемости из \cref{def:differentiable-multi}:
+\[
+  f(\vect{x} + t\vect{e}_i) \;=\; f(\vect{x}) + t\, \langle \vect{a}, \vect{e}_i \rangle + o(|t|).
+\]
+Вычитая и деля на~$t$, получаем
+\[
+  \frac{f(\vect{x} + t\vect{e}_i) - f(\vect{x})}{t} \;=\; a_i + \frac{o(|t|)}{t} \;\to\; a_i \quad (t \to 0),
+\]
+поскольку $o(|t|)/t \to 0$. Значит, $\partial f / \partial x_i (\vect{x})$
+существует и равен~$a_i$~--- $i$-й компоненте вектора
+$\vect{a} = \nabla f(\vect{x})$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:cont-partials-diff}]
+\proofanchor{cont-partials-diff}
+Зафиксируем~$\vect{x}$ и возьмём $\vect{h} = (h_1, \dots, h_n)\T$
+настолько малое, чтобы отрезок $\vect{x} + s\vect{h}$ оставался в том
+открытом множестве, где все частные производные непрерывны. Соединим
+$\vect{x}$ с $\vect{x} + \vect{h}$ ломаной, на которой за один шаг
+изменяется ровно одна координата:
+$\vect{p}_0 = \vect{x}$, $\vect{p}_i = \vect{p}_{i-1} + h_i \vect{e}_i$.
+По одномерной теореме о среднем, применённой к функции
+$t \mapsto f(\vect{p}_{i-1} + t \vect{e}_i)$ на отрезке $[0, h_i]$,
+найдётся $\theta_i \in (0, h_i)$ (либо в $(h_i, 0)$ при $h_i < 0$),
+для которого
+\[
+  f(\vect{p}_i) - f(\vect{p}_{i-1}) \;=\; \frac{\partial f}{\partial x_i}\bigl(\vect{p}_{i-1} + \theta_i \vect{e}_i\bigr) \cdot h_i.
+\]
+Телескопически:
+\[
+  f(\vect{x} + \vect{h}) - f(\vect{x}) \;=\; \sum_{i=1}^{n} \frac{\partial f}{\partial x_i}(\vect{q}_i) \cdot h_i,
+\]
+где $\vect{q}_i = \vect{p}_{i-1} + \theta_i \vect{e}_i$ стремится
+к~$\vect{x}$ при $\vect{h} \to \vect{0}$. По непрерывности частных
+производных в~$\vect{x}$
+$\partial f / \partial x_i(\vect{q}_i) = \partial f / \partial x_i(\vect{x}) + \varepsilon_i(\vect{h})$
+с $\varepsilon_i(\vect{h}) \to 0$. Поэтому
+\[
+  f(\vect{x} + \vect{h}) - f(\vect{x}) \;=\; \sum_i \frac{\partial f}{\partial x_i}(\vect{x}) h_i + \sum_i \varepsilon_i(\vect{h}) h_i.
+\]
+Первая сумма равна $\langle \nabla f(\vect{x}), \vect{h} \rangle$.
+Модуль второй оценивается как
+$\bigl(\sum |\varepsilon_i(\vect{h})|\bigr) \|\vect{h}\|_\infty \le \bigl(\sum |\varepsilon_i(\vect{h})|\bigr) \|\vect{h}\| = o(\|\vect{h}\|)$,
+поскольку каждый $\varepsilon_i(\vect{h}) \to 0$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:directional-derivative-formula}]
+\proofanchor{directional-derivative-formula}
+Применим разложение дифференцируемости при $\vect{h} = t\vect{v}$
+($t > 0$, $\|\vect{v}\| = 1$):
+\[
+  f(\vect{x} + t\vect{v}) \;=\; f(\vect{x}) + t\, \langle \nabla f(\vect{x}), \vect{v} \rangle + o(t).
+\]
+Вычитая, деля на~$t$ и переходя к пределу $t \to 0^{+}$, получаем
+требуемую формулу.
+\end{proof}
+
+\begin{proof}[\Cref{thm:gradient-geometry}]
+\proofanchor{gradient-geometry}
+\emph{(а)} Для произвольного единичного~$\vect{v}$ по неравенству
+Коши--Буняковского
+$\langle \nabla f(\vect{x}), \vect{v} \rangle \le \|\nabla f(\vect{x})\|$,
+причём равенство достигается тогда и только тогда, когда $\vect{v}$
+есть положительный кратный $\nabla f(\vect{x})$. Единичный вектор,
+реализующий равенство,~---
+$\vect{v} = \nabla f(\vect{x}) / \|\nabla f(\vect{x})\|$, а
+максимальное значение равно $\|\nabla f(\vect{x})\|$.
+
+\emph{(б)} Пусть $\gamma$~--- гладкая кривая на поверхности уровня с
+$\gamma(0) = \vect{x}$. Дифференцируя тождество
+$f(\gamma(t)) \equiv f(\vect{x})$ при $t = 0$ по правилу цепи
+(частный случай формулы производной по направлению вдоль $\gamma'(0)$
+после нормировки на единичную длину), получаем
+$0 = \langle \nabla f(\vect{x}), \gamma'(0) \rangle$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:gd-descent}]
+\proofanchor{gd-descent}
+Стандартная \emph{лемма убывания} для $L$-гладких функций утверждает,
+что для всех $\vect{x}, \vect{h}$
+\[
+  f(\vect{x} + \vect{h}) \;\le\; f(\vect{x}) + \langle \nabla f(\vect{x}), \vect{h} \rangle + \tfrac{L}{2}\|\vect{h}\|^2.
+\]
+(Её получают интегрированием липшицевой оценки на $\nabla f$ вдоль
+отрезка от $\vect{x}$ до $\vect{x} + \vect{h}$:
+$f(\vect{x} + \vect{h}) - f(\vect{x}) - \langle \nabla f(\vect{x}), \vect{h} \rangle = \int_0^1 \langle \nabla f(\vect{x} + s\vect{h}) - \nabla f(\vect{x}), \vect{h}\rangle\,ds \le \int_0^1 sL\|\vect{h}\|^2 ds = L\|\vect{h}\|^2/2$.)
+
+Подставим $\vect{h} = -\alpha \nabla f(\vect{x})$:
+\[
+  f(\vect{x} - \alpha \nabla f(\vect{x}))
+  \;\le\; f(\vect{x}) - \alpha\,\|\nabla f(\vect{x})\|^2 + \tfrac{L \alpha^2}{2}\|\nabla f(\vect{x})\|^2
+  \;=\; f(\vect{x}) - \alpha\Bigl(1 - \tfrac{\alpha L}{2}\Bigr) \|\nabla f(\vect{x})\|^2.
+\]
+При $\alpha \in (0, 2/L)$ скобка $1 - \alpha L / 2$ строго
+положительна, поэтому правая часть строго меньше~$f(\vect{x})$,
+коль скоро $\nabla f(\vect{x}) \neq \vect{0}$.
+\end{proof}
 
 \subsection*{Примеры}
-% TODO
+
+\begin{example}[Вычисление градиента]
+\label{ex:gradient-compute}
+Для $f(x, y) = x^2 y + y^3 + 3 x y^2 - 4x$ частные производные равны
+\[
+  \frac{\partial f}{\partial x} = 2 x y + 3 y^2 - 4, \qquad
+  \frac{\partial f}{\partial y} = x^2 + 3 y^2 + 6 x y.
+\]
+Обе функции~--- многочлены, а значит, непрерывны, поэтому по
+\cref{thm:cont-partials-diff} функция~$f$ дифференцируема всюду
+в~$\R^2$ и $\nabla f(x, y) = (2xy + 3y^2 - 4,\; x^2 + 3y^2 + 6xy)\T$.
+В точке $(1, 2)$ получаем
+$\nabla f(1, 2) = (4 + 12 - 4,\; 1 + 12 + 12) = (12, 25)\T$.
+\end{example}
+
+\begin{example}[Градиент ортогонален линии уровня]
+\label{ex:gradient-orthogonal}
+Пусть $f(x, y) = x^2 + y^2$. Линия уровня $f = c$~--- окружность
+$x^2 + y^2 = c$ (при $c > 0$); градиент
+$\nabla f(x, y) = (2x, 2y)$~--- радиальный вектор $2(x, y)$,
+действительно перпендикулярный касательной к окружности в каждой
+точке. Это согласуется с \cref{thm:gradient-geometry}\,(б):
+дифференцируя $\gamma(t) = (\sqrt{c}\cos t, \sqrt{c}\sin t)$,
+получаем $\gamma'(t) = \sqrt{c}(-\sin t, \cos t)$ и
+$\langle \nabla f(\gamma(t)), \gamma'(t) \rangle = 2\sqrt{c}\cos t \cdot \sqrt{c}(-\sin t) + 2\sqrt{c}\sin t \cdot \sqrt{c}\cos t = 0$.
+\end{example}
+
+\begin{example}[Один шаг градиентного спуска для квадратичной функции]
+\label{ex:gd-step}
+Для выпуклой квадратичной функции
+$f(\vect{x}) = \tfrac{1}{2} \langle \vect{x}, \mat{A} \vect{x} \rangle - \langle \vect{b}, \vect{x} \rangle$
+с симметричной положительно определённой~$\mat{A}$ градиент равен
+$\nabla f(\vect{x}) = \mat{A}\vect{x} - \vect{b}$ (ср.\
+\cref{thm:cofactor-inverse} для алгебры разложения квадратичной
+формы). Возьмём $\mat{A} = \begin{pmatrix} 4 & 0 \\ 0 & 1 \end{pmatrix}$,
+$\vect{b} = (4, 1)\T$, $\vect{x}_0 = (0, 0)\T$, $\alpha = 0{,}2$.
+Тогда $\nabla f(\vect{x}_0) = -\vect{b} = (-4, -1)\T$, и один шаг
+спуска даёт
+$\vect{x}_1 = \vect{x}_0 - 0{,}2 \cdot (-4, -1)\T = (0{,}8,\, 0{,}2)\T$.
+
+Прямая проверка: $f(\vect{x}_0) = 0$, а
+$f(\vect{x}_1) = \tfrac{1}{2}(4 \cdot 0{,}64 + 1 \cdot 0{,}04) - (4 \cdot 0{,}8 + 1 \cdot 0{,}2) = 1{,}34 - 3{,}4 = -2{,}06$,~---
+функция действительно уменьшилась. Константа Липшица для
+$\nabla f$~--- $L = \|\mat{A}\| = 4$, и скобка
+$1 - \alpha L / 2 = 1 - 0{,}4 = 0{,}6 > 0$ из \cref{thm:gd-descent}
+гарантирует уменьшение не менее чем на
+$0{,}2 \cdot 0{,}6 \cdot \|\nabla f(\vect{x}_0)\|^2 = 0{,}12 \cdot 17 = 2{,}04$,
+что близко к наблюдаемому падению в $2{,}06$.
+\end{example}
+
+\begin{problem}
+\label{prob:gd-anisotropic}
+Пусть $f(x, y) = x^2 + 4 y^2$. Найдите $\nabla f$, выполните два шага
+градиентного спуска из точки $(1, 1)$ с шагом $\alpha = 0{,}1$ и
+сравните скорости убывания координат.
+\end{problem}
+
+\begin{proof}[Решение]
+$\nabla f(x, y) = (2x, 8y)$, константа Липшица $L = 8$ (большее
+собственное значение $\diag(2, 8)$). Единственный глобальный минимум~---
+$(0, 0)$ при $f = 0$.
+
+\emph{Шаг 0.} $\vect{x}_0 = (1, 1)$, $\nabla f(\vect{x}_0) = (2, 8)$.
+$\vect{x}_1 = \vect{x}_0 - 0{,}1 \cdot (2, 8) = (0{,}8,\, 0{,}2)$.
+$f(\vect{x}_1) = 0{,}64 + 0{,}16 = 0{,}80$ (было $f(\vect{x}_0) = 5$).
+
+\emph{Шаг 1.} $\nabla f(\vect{x}_1) = (1{,}6,\, 1{,}6)$.
+$\vect{x}_2 = \vect{x}_1 - 0{,}1 \cdot (1{,}6,\, 1{,}6) = (0{,}64,\, 0{,}04)$.
+$f(\vect{x}_2) = 0{,}4096 + 0{,}0064 = 0{,}416$.
+
+Координата $y$ уменьшается с $1$ до $0{,}2$, затем до $0{,}04$~---
+коэффициент $0{,}2$ за шаг (что согласуется с
+$|1 - \alpha \cdot 8| = 0{,}2$). Координата $x$ уменьшается с $1$ до
+$0{,}8$, затем до $0{,}64$~--- коэффициент $0{,}8$ за шаг
+($|1 - \alpha \cdot 2| = 0{,}8$). Число обусловленности задачи
+$L/\mu = 8/2 = 4$; именно медленно убывающая координата ($x$)
+затягивает сходимость~--- ключевое наблюдение, мотивирующее
+предобусловливание и ускоренные методы в
+\cref{sec:2.4-convex-optimization}.
+\end{proof}
