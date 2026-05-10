@@ -8,10 +8,337 @@
 \end{ticket}
 
 \subsection*{Теория}
-% TODO
+
+Все рассмотрения по-прежнему ведутся над фиксированным полем~$\F$. Если
+не оговорено противное, все векторные пространства в этом разделе
+считаются конечномерными.
+
+\begin{definition}
+\label{def:linear-map}
+Отображение $T \colon V \to W$ векторных пространств над~$\F$
+называется \emph{линейным} (\emph{$\F$-линейным отображением},
+\emph{гомоморфизмом векторных пространств}), если
+\[
+  T(\vect{u} + \vect{v}) = T(\vect{u}) + T(\vect{v}), \qquad
+  T(\alpha \vect{v}) = \alpha\, T(\vect{v})
+\]
+для любых $\vect{u}, \vect{v} \in V$ и $\alpha \in \F$. \emph{Линейным
+оператором} на~$V$ называется линейное отображение $T \colon V \to V$.
+\end{definition}
+
+\begin{theorem}[Линейное отображение задаётся значениями на базисе]
+\label{thm:lin-determined-by-basis}
+Пусть $\vect{e}_1, \dots, \vect{e}_n$~--- базис пространства~$V$, а
+$\vect{w}_1, \dots, \vect{w}_n$~--- произвольные векторы из~$W$. Тогда
+существует и единственно линейное отображение $T \colon V \to W$, для
+которого $T(\vect{e}_j) = \vect{w}_j$ при $j = 1, \dots, n$.
+\end{theorem}
+\proofof{lin-determined-by-basis}
+
+\begin{definition}
+\label{def:matrix-of-linear-map}
+Пусть $T \colon V \to W$~--- линейное отображение,
+$\{\vect{e}_j\}_{j=1}^{n}$~--- базис~$V$, $\{\vect{f}_i\}_{i=1}^{m}$~---
+базис~$W$. \emph{Матрицей отображения~$T$ в этих базисах} называется
+матрица $\mat{A} = (a_{ij}) \in \F^{m \times n}$, для которой
+\[
+  T(\vect{e}_j) \;=\; \sum_{i=1}^{m} a_{ij}\,\vect{f}_i,
+  \qquad j = 1, \dots, n.
+\]
+Эквивалентно, $j$-й столбец матрицы~$\mat{A}$~--- координатный столбец
+вектора $T(\vect{e}_j)$ в базисе~$\{\vect{f}_i\}$.
+
+Если $\vect{x} \in \F^n$~--- координатный столбец~$\vect{v}$ в
+$\{\vect{e}_j\}$, то $\mat{A}\vect{x}$~--- координатный столбец
+$T(\vect{v})$ в~$\{\vect{f}_i\}$.
+\end{definition}
+
+\begin{theorem}[Композиции отображений отвечает произведение матриц]
+\label{thm:composition-of-maps}
+Пусть $S \colon U \to V$ и $T \colon V \to W$~--- линейные отображения
+с матрицами~$\mat{B}$ и~$\mat{A}$ соответственно в выбранных базисах
+$U, V, W$. Тогда композиция $T \circ S \colon U \to W$ имеет в базисах
+$U$ и~$W$ матрицу $\mat{A}\mat{B}$.
+\end{theorem}
+\proofof{composition-of-maps}
+
+\begin{definition}
+\label{def:image-kernel}
+Для линейного отображения $T \colon V \to W$ \emph{образом} и
+\emph{ядром} называются подпространства
+\[
+  \im T \;=\; \{T(\vect{v}) : \vect{v} \in V\} \;\subseteq\; W,
+  \qquad
+  \ker T \;=\; \{\vect{v} \in V : T(\vect{v}) = \vect{0}\} \;\subseteq\; V.
+\]
+\end{definition}
+
+Если~$\mat{A}$~--- матрица~$T$ в некоторой паре базисов, то $\im T$
+отождествляется (через координатный изоморфизм, см.\
+\cref{thm:coordinates}) с линейной оболочкой столбцов~$\mat{A}$, а
+$\ker T$~--- с ядром~$\mat{A}$ в смысле \cref{def:fsr}.
+
+\begin{theorem}[О ранге и дефекте]
+\label{thm:rank-nullity-map}
+Для всякого линейного отображения $T \colon V \to W$ при конечном
+$\dim V$
+\[
+  \dim \im T \;+\; \dim \ker T \;=\; \dim V.
+\]
+\end{theorem}
+\proofof{rank-nullity-map}
+
+\begin{definition}
+\label{def:dual-space-basis}
+\emph{Сопряжённым пространством} к~$V$ называется пространство
+\emph{линейных функционалов} на~$V$:
+\[
+  V^{*} \;=\; \{\varphi \colon V \to \F : \varphi \text{ линейно}\}.
+\]
+Поточечные операции
+$(\varphi + \psi)(\vect{v}) = \varphi(\vect{v}) + \psi(\vect{v})$ и
+$(\alpha\varphi)(\vect{v}) = \alpha\,\varphi(\vect{v})$ превращают
+$V^{*}$ в векторное пространство над~$\F$.
+
+Для базиса $\{\vect{e}_j\}_{j=1}^{n}$ пространства~$V$
+\emph{сопряжённый базис} $\{e^i\}_{i=1}^{n}$ пространства~$V^{*}$
+определяется условиями
+\[
+  e^{i}(\vect{e}_j) \;=\; \delta_{ij}
+  \;=\;
+  \begin{cases}
+    1, & i = j, \\
+    0, & i \neq j.
+  \end{cases}
+\]
+\end{definition}
+
+\begin{theorem}[Существование сопряжённого базиса размера $n$]
+\label{thm:dual-basis-exists}
+Для любого базиса~$V$ сопряжённый базис из \cref{def:dual-space-basis}
+существует, определён однозначно и является базисом~$V^{*}$. В
+частности, $\dim V^{*} = \dim V$.
+\end{theorem}
+\proofof{dual-basis-exists}
+
+\begin{theorem}[Изменение матрицы линейного оператора]
+\label{thm:operator-change-of-basis}
+Пусть $T \colon V \to V$~--- линейный оператор с матрицей~$\mat{A}$ в
+базисе $\{\vect{e}_j\}$, а $\{\vect{e}'_j\}$~--- другой базис, причём
+матрица перехода от $\{\vect{e}_j\}$ к $\{\vect{e}'_j\}$ есть~$\mat{T}$
+(см.\ \cref{def:transition-matrix}). Тогда матрица оператора~$T$ в
+базисе $\{\vect{e}'_j\}$ равна
+\[
+  \mat{A}' \;=\; \mat{T}^{-1} \mat{A}\, \mat{T}.
+\]
+Две квадратные матрицы, связанные таким соотношением, называются
+\emph{подобными}.
+\end{theorem}
+\proofof{operator-change-of-basis}
+
+\begin{remark}
+Матрицы одного и того же оператора в различных базисах образуют класс
+эквивалентности по подобию; внутренние инварианты оператора (ранг,
+определитель, след, характеристический многочлен, спектр) суть функции
+от любого представителя этого класса. К вопросу о выборе базиса, в
+котором матрица оператора имеет максимально простой вид (по
+возможности диагональный), вернёмся в
+\cref{sec:1.1.06-eigenvalues,sec:1.1.07-quadratic-forms}. Дальнейшее
+изложение см.\ в~\cite{Beklemishev2025}.
+\end{remark}
 
 \subsection*{Доказательства}
-% TODO
+
+\begin{proof}[\Cref{thm:lin-determined-by-basis}]
+\proofanchor{lin-determined-by-basis}
+\emph{Существование.} Для $\vect{v} \in V$ с единственным разложением
+$\vect{v} = \sum_j x_j \vect{e}_j$ (\cref{thm:coordinates}) положим
+$T(\vect{v}) = \sum_j x_j \vect{w}_j \in W$. Линейность~$T$ следует из
+линейности координат: если $\vect{v} = \sum x_j \vect{e}_j$ и
+$\vect{v}' = \sum x'_j \vect{e}_j$, то
+$\vect{v} + \alpha \vect{v}' = \sum (x_j + \alpha x'_j) \vect{e}_j$
+имеет образ
+$\sum (x_j + \alpha x'_j) \vect{w}_j = T(\vect{v}) + \alpha T(\vect{v}')$.
+Положив $\vect{v} = \vect{e}_j$ (так что $x_k = \delta_{jk}$), получаем
+$T(\vect{e}_j) = \vect{w}_j$.
+
+\emph{Единственность.} Любое линейное~$T'$ с
+$T'(\vect{e}_j) = \vect{w}_j$ удовлетворяет, в силу линейности,
+$T'(\sum x_j \vect{e}_j) = \sum x_j T'(\vect{e}_j) = \sum x_j \vect{w}_j = T(\sum x_j \vect{e}_j)$,
+так что $T' = T$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:composition-of-maps}]
+\proofanchor{composition-of-maps}
+Пусть $\vect{x} \in \F^p$~--- координатный столбец вектора
+$\vect{u} \in U$ в выбранном базисе~$U$. По
+\cref{def:matrix-of-linear-map} вектор $S(\vect{u})$ имеет в базисе~$V$
+координатный столбец $\mat{B}\vect{x}$, а тогда $T(S(\vect{u}))$ имеет
+в базисе~$W$ координатный столбец
+$\mat{A}(\mat{B}\vect{x}) = (\mat{A}\mat{B})\vect{x}$. Значит,
+$\mat{A}\mat{B}$~--- матрица композиции $T \circ S$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:rank-nullity-map}]
+\proofanchor{rank-nullity-map}
+Положим $k = \dim \ker T$ и выберем базис
+$\vect{u}_1, \dots, \vect{u}_k$ ядра $\ker T$. По
+\cref{thm:basis-exists} дополним его до базиса
+$\vect{u}_1, \dots, \vect{u}_k, \vect{v}_1, \dots, \vect{v}_{n-k}$
+пространства~$V$, где $n = \dim V$.
+
+Покажем, что $T(\vect{v}_1), \dots, T(\vect{v}_{n-k})$~--- базис $\im T$;
+отсюда $\dim \im T = n - k$ и нужное равенство.
+
+\emph{Порождение.} Любой элемент $\im T$ имеет вид $T(\vect{v})$ при
+некотором $\vect{v} \in V$. Разложение
+$\vect{v} = \sum a_i \vect{u}_i + \sum b_j \vect{v}_j$ и применение~$T$
+(с учётом $T(\vect{u}_i) = \vect{0}$) дают
+$T(\vect{v}) = \sum b_j T(\vect{v}_j) \in \spn(T(\vect{v}_1), \dots, T(\vect{v}_{n-k}))$.
+
+\emph{Линейная независимость.} Пусть $\sum b_j T(\vect{v}_j) = \vect{0}$.
+Тогда $T(\sum b_j \vect{v}_j) = \vect{0}$, поэтому
+$\sum b_j \vect{v}_j \in \ker T = \spn(\vect{u}_i)$, то есть
+$\sum b_j \vect{v}_j = \sum c_i \vect{u}_i$ при некоторых~$c_i$.
+Переписывая: $\sum b_j \vect{v}_j - \sum c_i \vect{u}_i = \vect{0}$~---
+зависимость в базисе $\{\vect{u}_i, \vect{v}_j\}$ пространства~$V$,
+откуда все $b_j = 0$ (и все $c_i = 0$).
+\end{proof}
+
+\begin{proof}[\Cref{thm:dual-basis-exists}]
+\proofanchor{dual-basis-exists}
+\emph{Существование и единственность каждого~$e^i$.} Значения
+$e^i(\vect{e}_j) = \delta_{ij}$ задают $e^i$ на базисе~$V$, поэтому по
+\cref{thm:lin-determined-by-basis} существует и единствен линейный
+функционал $e^i \in V^{*}$ с этими значениями.
+
+\emph{$\{e^i\}$~--- базис пространства~$V^{*}$.}
+\textit{Линейная независимость:} если $\sum c_i e^i = 0$ как функционал,
+то, вычисляя в~$\vect{e}_j$, получаем $c_j = 0$.
+\textit{Порождение:} для произвольного $\varphi \in V^{*}$ положим
+$\psi = \sum_i \varphi(\vect{e}_i)\, e^i$. Тогда
+$\psi(\vect{e}_j) = \sum_i \varphi(\vect{e}_i)\, \delta_{ij} = \varphi(\vect{e}_j)$
+для каждого~$j$, так что $\psi$ и $\varphi$ совпадают на базисе~$V$ и
+равны (\cref{thm:lin-determined-by-basis}).
+
+В частности, $\dim V^{*} = n = \dim V$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:operator-change-of-basis}]
+\proofanchor{operator-change-of-basis}
+Пусть $\vect{v} \in V$ имеет координатные столбцы $\vect{x}$ в
+$\{\vect{e}_j\}$ и $\vect{x}'$ в $\{\vect{e}'_j\}$, а $T(\vect{v})$~---
+координатные столбцы $\vect{y}$ и $\vect{y}'$ соответственно. По
+формуле замены базиса (\cref{thm:change-of-basis})
+\[
+  \vect{x} \;=\; \mat{T}\vect{x}', \qquad \vect{y} \;=\; \mat{T}\vect{y}'.
+\]
+По определениям~$\mat{A}$ и~$\mat{A}'$ имеем $\vect{y} = \mat{A}\vect{x}$
+и $\vect{y}' = \mat{A}' \vect{x}'$. Подставляя:
+\[
+  \mat{T}\vect{y}' \;=\; \vect{y} \;=\; \mat{A}\vect{x} \;=\; \mat{A}\mat{T}\vect{x}',
+\]
+откуда $\vect{y}' = \mat{T}^{-1}\mat{A}\mat{T}\vect{x}'$. Так как это
+верно для произвольного~$\vect{x}'$, получаем
+$\mat{A}' = \mat{T}^{-1}\mat{A}\mat{T}$.
+\end{proof}
 
 \subsection*{Примеры}
-% TODO
+
+\begin{example}[Матрица конкретного линейного отображения]
+\label{ex:matrix-of-linear-map}
+Зададим $T \colon \R^2 \to \R^3$ формулой
+$T(x, y) = (x + y,\; x - y,\; 2x)$. В стандартном базисе~$\R^2$
+$\vect{e}_1 = (1, 0)$, $\vect{e}_2 = (0, 1)$ образы суть
+$T(\vect{e}_1) = (1, 1, 2)$ и $T(\vect{e}_2) = (1, -1, 0)$, поэтому
+матрица~$T$ в стандартных базисах равна
+\[
+  \mat{A} = \begin{pmatrix} 1 & 1 \\ 1 & -1 \\ 2 & 0 \end{pmatrix}.
+\]
+По \cref{thm:rank-row-col} ранг~$\mat{A}$ равен~$2$ (определитель
+верхнего $2 \times 2$-минора равен $-2$), откуда $\dim \im T = 2$ и, по
+теореме о ранге и дефекте, $\dim \ker T = 2 - 2 = 0$. Значит,
+отображение инъективно.
+\end{example}
+
+\begin{example}[Проверка теоремы о ранге и дефекте на матрице ранга~$1$]
+\label{ex:rank-nullity-numeric}
+Рассмотрим
+$\mat{A} = \begin{pmatrix} 1 & 2 & 3 \\ 2 & 4 & 6 \\ 3 & 6 & 9 \end{pmatrix}$
+как матрицу оператора $T \colon \R^3 \to \R^3$ в стандартном базисе.
+Каждая строка кратна $(1, 2, 3)$, поэтому $\rank \mat{A} = 1$ и
+$\im T = \spn\bigl((1, 2, 3)\T\bigr)$.
+
+Решение системы $\mat{A}\vect{x} = \vect{0}$ сводится к одному
+уравнению $x + 2y + 3z = 0$, его пространство решений двумерно с ФСР
+$\bigl((-2, 1, 0)\T,\; (-3, 0, 1)\T\bigr)$. Значит, $\dim \ker T = 2$,
+и $\dim \im T + \dim \ker T = 1 + 2 = 3 = \dim \R^3$~--- согласно
+\cref{thm:rank-nullity-map}.
+\end{example}
+
+\begin{example}[Сопряжённый базис в $\R^2$]
+\label{ex:dual-basis-numeric}
+Возьмём $V = \R^2$ с базисом $\vect{e}_1 = (1, 1)$,
+$\vect{e}_2 = (1, -1)$. Любой функционал $\varphi \in V^{*}$ имеет вид
+$\varphi(x_1, x_2) = \alpha x_1 + \beta x_2$ при некоторых
+$(\alpha, \beta)$, зависящих от~$\varphi$.
+
+Для сопряжённого базиса требуется $e^1(\vect{e}_1) = 1$,
+$e^1(\vect{e}_2) = 0$. Решая $\alpha + \beta = 1$, $\alpha - \beta = 0$,
+получаем $\alpha = \beta = 1/2$, то есть
+$e^1(x_1, x_2) = (x_1 + x_2)/2$.
+
+Аналогично условия $e^2(\vect{e}_1) = 0$, $e^2(\vect{e}_2) = 1$ дают
+$\alpha = 1/2$, $\beta = -1/2$, и $e^2(x_1, x_2) = (x_1 - x_2)/2$.
+
+Контроль: для произвольного $\vect{v} = a \vect{e}_1 + b \vect{e}_2 = (a + b,\, a - b)$
+имеем $e^1(\vect{v}) = ((a + b) + (a - b))/2 = a$ и
+$e^2(\vect{v}) = ((a + b) - (a - b))/2 = b$~--- получаем именно
+координаты~$\vect{v}$ в базисе $\{\vect{e}_1, \vect{e}_2\}$. Это и есть
+общий принцип: сопряжённый базис извлекает координаты.
+\end{example}
+
+\begin{problem}
+\label{prob:operator-similarity}
+Пусть $T \colon \R^2 \to \R^2$~--- оператор
+$T(x, y) = (2x + y,\; x + 2y)$. Найдите его матрицы в стандартном
+базисе $\vect{e}_1 = (1, 0)$, $\vect{e}_2 = (0, 1)$ и в базисе
+$\vect{e}'_1 = (1, 1)$, $\vect{e}'_2 = (1, -1)$. Прямой проверкой
+убедитесь, что эти матрицы подобны: $\mat{A}' = \mat{T}^{-1}\mat{A}\mat{T}$,
+где~$\mat{T}$~--- матрица перехода.
+\end{problem}
+
+\begin{proof}[Решение]
+В стандартном базисе:
+$T(\vect{e}_1) = (2, 1) = 2\vect{e}_1 + \vect{e}_2$ и
+$T(\vect{e}_2) = (1, 2) = \vect{e}_1 + 2\vect{e}_2$, поэтому
+\[
+  \mat{A} = \begin{pmatrix} 2 & 1 \\ 1 & 2 \end{pmatrix}.
+\]
+
+В новом базисе: $T(\vect{e}'_1) = T(1, 1) = (3, 3) = 3\vect{e}'_1$ и
+$T(\vect{e}'_2) = T(1, -1) = (1, -1) = \vect{e}'_2$, так что
+\[
+  \mat{A}' = \begin{pmatrix} 3 & 0 \\ 0 & 1 \end{pmatrix}.
+\]
+Базис $\{\vect{e}'_1, \vect{e}'_2\}$ диагонализует оператор; собственные
+значения $3$ и~$1$~--- предвестник \cref{sec:1.1.06-eigenvalues}.
+
+\emph{Прямая проверка.} Матрица перехода и обратная к ней:
+\[
+  \mat{T} = \begin{pmatrix} 1 & 1 \\ 1 & -1 \end{pmatrix}, \qquad
+  \mat{T}^{-1} = \frac{1}{2}\begin{pmatrix} 1 & 1 \\ 1 & -1 \end{pmatrix}.
+\]
+Сначала $\mat{A}\mat{T}$:
+\[
+  \mat{A}\mat{T} = \begin{pmatrix} 2 & 1 \\ 1 & 2 \end{pmatrix}\begin{pmatrix} 1 & 1 \\ 1 & -1 \end{pmatrix}
+  = \begin{pmatrix} 3 & 1 \\ 3 & -1 \end{pmatrix},
+\]
+затем $\mat{T}^{-1}\mat{A}\mat{T}$:
+\[
+  \frac{1}{2}\begin{pmatrix} 1 & 1 \\ 1 & -1 \end{pmatrix}\begin{pmatrix} 3 & 1 \\ 3 & -1 \end{pmatrix}
+  = \frac{1}{2}\begin{pmatrix} 6 & 0 \\ 0 & 2 \end{pmatrix}
+  = \begin{pmatrix} 3 & 0 \\ 0 & 1 \end{pmatrix} = \mat{A}',
+\]
+что согласуется с \cref{thm:operator-change-of-basis}.
+\end{proof}
