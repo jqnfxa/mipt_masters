@@ -8,10 +8,446 @@
 \end{ticket}
 
 \subsection*{Теория}
-% TODO
+
+Все рассмотрения по-прежнему ведутся над фиксированным полем~$\F$.
+
+\begin{definition}
+\label{def:vector-space}
+\emph{Векторным пространством} над полем~$\F$ называется множество~$V$,
+снабжённое операциями
+$+\colon V \times V \to V$ (сложение) и
+$\cdot\colon \F \times V \to V$ (умножение на скаляр), такими, что
+$(V, +)$~--- абелева группа и для любых $\alpha, \beta \in \F$ и
+$\vect{u}, \vect{v} \in V$
+\[
+  (\alpha \beta)\vect{v} = \alpha(\beta \vect{v}), \quad
+  1 \cdot \vect{v} = \vect{v}, \quad
+  (\alpha + \beta)\vect{v} = \alpha \vect{v} + \beta \vect{v}, \quad
+  \alpha(\vect{u} + \vect{v}) = \alpha \vect{u} + \alpha \vect{v}.
+\]
+Элементы~$V$ называются \emph{векторами}; единственный нейтральный
+элемент по сложению обозначается~$\vect{0}$.
+\end{definition}
+
+\begin{example}[Стандартные примеры]
+\label{ex:vector-space-examples}
+Пространство $\F^n$ с покоординатными операциями; пространство
+многочленов $\F[x]_{\le n} = \{p(x) \in \F[x] : \deg p \le n\}$;
+пространство $\F^{m \times n}$ матриц размера $m \times n$;
+пространство всех функций $X \to \F$ для произвольного множества~$X$.
+\end{example}
+
+\begin{definition}
+\label{def:subspace}
+\emph{Подпространством} пространства~$V$ называется подмножество
+$U \subseteq V$, замкнутое относительно сложения и умножения на скаляр
+и содержащее~$\vect{0}$. Эквивалентно, $U$ само является векторным
+пространством относительно унаследованных операций.
+
+\emph{Линейной оболочкой} конечной системы
+$\vect{v}_1, \dots, \vect{v}_k \in V$ называется подпространство
+$\spn(\vect{v}_1, \dots, \vect{v}_k) = \{\alpha_1 \vect{v}_1 + \dots + \alpha_k \vect{v}_k : \alpha_i \in \F\}$.
+Пространство~$V$ называется \emph{конечно порождённым}
+(или \emph{конечномерным}), если $V = \spn(\vect{v}_1, \dots, \vect{v}_k)$
+для некоторой конечной системы.
+\end{definition}
+
+\begin{definition}
+\label{def:basis-dim}
+\emph{Базисом} конечномерного векторного пространства~$V$ называется
+линейно независимая система $\vect{e}_1, \dots, \vect{e}_n$,
+порождающая~$V$. По основной лемме о линейной зависимости
+(\cref{thm:main-lemma}) все базисы~$V$ содержат одинаковое число
+векторов; это общее число называется \emph{размерностью}~$V$ и
+обозначается $\dim V$.
+\end{definition}
+
+\begin{theorem}[Существование базиса]
+\label{thm:basis-exists}
+Любое конечно порождённое векторное пространство обладает базисом.
+Точнее: из всякой конечной порождающей системы можно выделить базис как
+её подсистему; всякую линейно независимую систему можно дополнить до
+базиса.
+\end{theorem}
+\proofof{basis-exists}
+
+\begin{theorem}[Координаты в базисе]
+\label{thm:coordinates}
+Пусть $\vect{e}_1, \dots, \vect{e}_n$~--- базис пространства~$V$. Тогда
+каждый вектор $\vect{v} \in V$ единственным образом представляется в
+виде $\vect{v} = x_1 \vect{e}_1 + \dots + x_n \vect{e}_n$ с
+$x_i \in \F$. Столбец $\vect{x} = (x_1, \dots, x_n)\T \in \F^n$
+называется \emph{координатным столбцом} вектора~$\vect{v}$ в
+базисе~$\{\vect{e}_i\}$. Отображение $\vect{v} \mapsto \vect{x}$~---
+биекция $V \leftrightarrow \F^n$, согласованная со сложением и
+умножением на скаляр.
+\end{theorem}
+\proofof{coordinates}
+
+\begin{definition}
+\label{def:transition-matrix}
+Пусть $\{\vect{e}_i\}$ и $\{\vect{e}'_j\}$~--- два базиса
+пространства~$V$ (оба размера~$n$). \emph{Матрицей перехода от базиса
+$\{\vect{e}_i\}$ к базису $\{\vect{e}'_j\}$} называется матрица
+$\mat{T} = (t_{ij}) \in \F^{n \times n}$, столбцы которой суть
+координатные столбцы векторов нового базиса в старом:
+\[
+  \vect{e}'_j \;=\; \sum_{i=1}^{n} t_{ij}\,\vect{e}_i,
+  \qquad j = 1, \dots, n.
+\]
+\end{definition}
+
+\begin{theorem}[Формула замены базиса]
+\label{thm:change-of-basis}
+Пусть $\mat{T}$~--- матрица перехода от $\{\vect{e}_i\}$ к
+$\{\vect{e}'_j\}$. Если $\vect{x}, \vect{x}' \in \F^n$~--- координатные
+столбцы одного и того же вектора~$\vect{v}$ в этих базисах, то
+\[
+  \vect{x} \;=\; \mat{T} \vect{x}', \qquad \text{или, что то же самое,} \qquad
+  \vect{x}' \;=\; \mat{T}^{-1} \vect{x}.
+\]
+Матрица~$\mat{T}$ обратима, поскольку оба базиса линейно независимы.
+\end{theorem}
+\proofof{change-of-basis}
+
+\begin{definition}
+\label{def:sum-intersection}
+Для подпространств $U, W \subseteq V$ \emph{сумма} и \emph{пересечение}
+определяются равенствами
+\[
+  U + W \;=\; \{\vect{u} + \vect{w} : \vect{u} \in U,\, \vect{w} \in W\},
+  \qquad
+  U \cap W \;=\; \{\vect{v} : \vect{v} \in U \text{ и } \vect{v} \in W\}.
+\]
+Оба множества являются подпространствами в~$V$.
+\end{definition}
+
+\begin{theorem}[Подпространства в $\F^n$ как ядра]
+\label{thm:subspace-kernel}
+Подмножество $U \subseteq \F^n$ есть подпространство тогда и только
+тогда, когда найдётся матрица $\mat{A} \in \F^{m \times n}$ (для
+некоторого~$m$), для которой
+$U = \ker \mat{A} = \{\vect{x} \in \F^n : \mat{A}\vect{x} = \vect{0}\}$.
+Число независимых уравнений, задающих~$U$, равно $n - \dim U$~---
+коразмерности~$U$ в~$\F^n$.
+\end{theorem}
+\proofof{subspace-kernel}
+
+\begin{definition}
+\label{def:direct-sum}
+Подпространства $U, W \subseteq V$ образуют \emph{прямую сумму}, если
+$U \cap W = \{\vect{0}\}$; в этом случае их сумма $U + W$ обозначается
+$U \oplus W$. Система подпространств $U_1, \dots, U_k$ называется
+\emph{линейно независимой} (или говорят, что они образуют
+\emph{прямую сумму} $U_1 \oplus \dots \oplus U_k$), если для каждого~$i$
+\[
+  U_i \;\cap\; \Bigl(\sum_{j \neq i} U_j\Bigr) \;=\; \{\vect{0}\}.
+\]
+\end{definition}
+
+\begin{theorem}[Формула Грассмана]
+\label{thm:grassmann}
+Для конечномерных подпространств $U, W \subseteq V$
+\[
+  \dim(U + W) \;=\; \dim U + \dim W - \dim(U \cap W).
+\]
+В частности, при $U \cap W = \{\vect{0}\}$ имеем
+$\dim(U \oplus W) = \dim U + \dim W$.
+\end{theorem}
+\proofof{grassmann}
+
+\begin{theorem}[Характеризация прямой суммы]
+\label{thm:direct-sum-equiv}
+Для подпространств $U_1, \dots, U_k \subseteq V$ конечномерного
+пространства следующие условия равносильны:
+\begin{enumerate}[label=(\alph*)]
+  \item $U_1, \dots, U_k$ линейно независимы (\cref{def:direct-sum});
+  \item каждый вектор $\vect{v} \in U_1 + \dots + U_k$ обладает
+        единственным разложением $\vect{v} = \vect{u}_1 + \dots + \vect{u}_k$
+        с $\vect{u}_i \in U_i$;
+  \item $\dim(U_1 + \dots + U_k) = \dim U_1 + \dots + \dim U_k$;
+  \item объединение произвольно выбранных базисов
+        $U_1, \dots, U_k$ есть базис суммы $U_1 + \dots + U_k$.
+\end{enumerate}
+\end{theorem}
+\proofof{direct-sum-equiv}
+
+\begin{remark}
+Углублённое изложение основ теории векторных пространств, в том числе
+бесконечномерного случая (где существование базиса (Гамеля) вытекает из
+леммы Цорна, а размерность не сводится к числу координат), см.\ в
+\cite{Beklemishev2025}.
+\end{remark}
 
 \subsection*{Доказательства}
-% TODO
+
+\begin{proof}[\Cref{thm:basis-exists}]
+\proofanchor{basis-exists}
+Пусть $V = \spn(\vect{v}_1, \dots, \vect{v}_k)$~--- произвольная
+конечная порождающая система. Будем последовательно удалять любой
+вектор, являющийся линейной комбинацией остальных. Каждое такое
+удаление сохраняет линейную оболочку (удалённый вектор по-прежнему
+выражается через оставшиеся). Процесс заканчивается на линейно
+независимой порождающей подсистеме, которая и есть базис.
+
+Для второго утверждения пусть $\vect{w}_1, \dots, \vect{w}_r \in V$~---
+линейно независимая система. Если она уже порождает~$V$, то это базис.
+Иначе найдётся $\vect{w} \in V$, не лежащий в её линейной оболочке;
+добавление~$\vect{w}$ сохраняет линейную независимость (нетривиальная
+зависимость означала бы выражение~$\vect{w}$ через остальные, что
+противоречит выбору). Повторяя этот шаг, получим базис не более чем за
+$\dim V$ шагов: по основной лемме линейно независимая система в~$V$ не
+может содержать более $\dim V$ векторов.
+\end{proof}
+
+\begin{proof}[\Cref{thm:coordinates}]
+\proofanchor{coordinates}
+\emph{Существование.} Поскольку $\{\vect{e}_i\}$ порождает~$V$, всякий
+вектор~$\vect{v}$ есть некоторая линейная комбинация $\vect{e}_i$.
+
+\emph{Единственность.} Если $\vect{v} = \sum x_i \vect{e}_i = \sum x'_i \vect{e}_i$,
+то $\sum (x_i - x'_i) \vect{e}_i = \vect{0}$, и линейная независимость
+$\{\vect{e}_i\}$ влечёт $x_i = x'_i$ для всех~$i$.
+
+Согласованность координатного отображения с операциями вытекает из
+равенств: если $\vect{u} = \sum x_i \vect{e}_i$ и
+$\vect{v} = \sum y_i \vect{e}_i$, то
+$\vect{u} + \vect{v} = \sum(x_i + y_i)\vect{e}_i$ и
+$\alpha \vect{u} = \sum (\alpha x_i)\vect{e}_i$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:change-of-basis}]
+\proofanchor{change-of-basis}
+Пусть $\vect{v} = \sum_j x'_j \vect{e}'_j$. Подставляя
+$\vect{e}'_j = \sum_i t_{ij}\vect{e}_i$:
+\[
+  \vect{v} \;=\; \sum_j x'_j \sum_i t_{ij}\vect{e}_i
+  \;=\; \sum_i \Bigl( \sum_j t_{ij} x'_j \Bigr) \vect{e}_i.
+\]
+В силу единственности координат (\cref{thm:coordinates}),
+$x_i = \sum_j t_{ij} x'_j$, то есть $\vect{x} = \mat{T}\vect{x}'$.
+
+Покажем, что~$\mat{T}$ обратима. Столбцы~$\mat{T}$~--- координатные
+столбцы векторов $\vect{e}'_1, \dots, \vect{e}'_n$ в базисе
+$\{\vect{e}_i\}$. Биективное координатное отображение
+(\cref{thm:coordinates}) переводит линейно независимые системы в
+линейно независимые, так что столбцы~$\mat{T}$ линейно независимы и
+$\rank \mat{T} = n$. По \cref{thm:cofactor-inverse} матрица~$\mat{T}$
+обратима. Умножая равенство $\vect{x} = \mat{T}\vect{x}'$ слева
+на~$\mat{T}^{-1}$, получаем вторую формулу.
+\end{proof}
+
+\begin{proof}[\Cref{thm:subspace-kernel}]
+\proofanchor{subspace-kernel}
+\emph{($\Leftarrow$).} Для произвольной матрицы~$\mat{A}$ множество
+$\ker \mat{A}$ замкнуто относительно сложения и умножения на скаляр и
+содержит~$\vect{0}$, а значит, является подпространством.
+
+\emph{($\Rightarrow$).} Пусть $U \subseteq \F^n$~--- подпространство
+размерности~$k$. При $k = n$ возьмём $\mat{A} = \mat{0}_{1 \times n}$;
+её ядро есть всё~$\F^n$. Считаем $k < n$.
+
+Введём билинейную форму на~$\F^n$ равенством
+$\langle \vect{v}, \vect{w} \rangle = \sum_{i=1}^{n} v_i w_i$ и положим
+\[
+  U^{\circ} \;=\; \{\vect{v} \in \F^n : \langle \vect{v}, \vect{u} \rangle = 0
+  \text{ для всех } \vect{u} \in U\}.
+\]
+Выберем базис $\vect{u}_1, \dots, \vect{u}_k$ подпространства~$U$ и
+обозначим через~$\mat{M}$ матрицу размера $n \times k$, столбцами
+которой служат~$\vect{u}_i$. По линейности
+$\langle \vect{v}, \vect{u} \rangle = 0$ для всех $\vect{u} \in U$
+равносильно $\mat{M}\T \vect{v} = \vect{0}$, поэтому $U^{\circ}$ есть
+ядро матрицы $\mat{M}\T \in \F^{k \times n}$. Поскольку
+$\rank \mat{M}\T = \rank \mat{M} = k$ (\cref{thm:rank-row-col}),
+\cref{thm:solution-structure} даёт $\dim U^{\circ} = n - k$.
+
+Выберем базис $\vect{v}_1, \dots, \vect{v}_{n-k}$ подпространства
+$U^{\circ}$ и составим из этих векторов строки матрицы
+$\mat{A} \in \F^{(n-k) \times n}$. По построению $U \subseteq \ker \mat{A}$
+(каждая строка обращается в нуль на любом $\vect{u} \in U$). С другой
+стороны, $\dim \ker \mat{A} = n - \rank \mat{A} = n - (n - k) = k = \dim U$,
+так что включение~--- равенство.
+\end{proof}
+
+\begin{proof}[\Cref{thm:grassmann}]
+\proofanchor{grassmann}
+Положим $\dim(U \cap W) = p$ и выберем базис
+$\vect{w}_1, \dots, \vect{w}_p$ пересечения $U \cap W$. По
+\cref{thm:basis-exists} дополним его до базиса
+\[
+  \vect{w}_1, \dots, \vect{w}_p,\; \vect{u}_1, \dots, \vect{u}_q
+\]
+подпространства~$U$ (так что $\dim U = p + q$) и до базиса
+\[
+  \vect{w}_1, \dots, \vect{w}_p,\; \vect{z}_1, \dots, \vect{z}_r
+\]
+подпространства~$W$ (так что $\dim W = p + r$). Покажем, что система
+\[
+  \mathcal{B} = \{\vect{w}_1, \dots, \vect{w}_p,\; \vect{u}_1, \dots, \vect{u}_q,\;
+                  \vect{z}_1, \dots, \vect{z}_r\}
+\]
+есть базис суммы $U + W$; отсюда следует
+$\dim(U + W) = p + q + r = (p + q) + (p + r) - p$.
+
+\emph{Порождение.} Любой элемент $U + W$ имеет вид $\vect{u} + \vect{w}$
+с $\vect{u} \in U$, $\vect{w} \in W$. Разложим $\vect{u}$ по базису~$U$
+(в линейной оболочке $\{\vect{w}_i, \vect{u}_j\}$), а $\vect{w}$~--- по
+базису~$W$ (в линейной оболочке $\{\vect{w}_i, \vect{z}_k\}$); их сумма
+лежит в $\spn \mathcal{B}$.
+
+\emph{Линейная независимость.} Пусть
+$\sum a_i \vect{w}_i + \sum b_j \vect{u}_j + \sum c_k \vect{z}_k = \vect{0}$.
+Тогда
+\[
+  \sum c_k \vect{z}_k \;=\; -\sum a_i \vect{w}_i - \sum b_j \vect{u}_j;
+\]
+правая часть лежит в~$U$, а левая~--- в~$W$, поэтому
+$\sum c_k \vect{z}_k \in U \cap W = \spn(\vect{w}_i)$. Значит,
+$\sum c_k \vect{z}_k = \sum d_i \vect{w}_i$ при некоторых~$d_i$;
+переписывая, получаем $\sum d_i \vect{w}_i - \sum c_k \vect{z}_k = \vect{0}$~---
+линейную зависимость в базисе $\{\vect{w}_i, \vect{z}_k\}$
+пространства~$W$, откуда $d_i = 0$ и $c_k = 0$. Подставляя, имеем
+$\sum a_i \vect{w}_i + \sum b_j \vect{u}_j = \vect{0}$~--- зависимость
+в базисе~$U$, дающая $a_i = b_j = 0$. Все коэффициенты нулевые, поэтому
+$\mathcal{B}$ линейно независима.
+\end{proof}
+
+\begin{proof}[\Cref{thm:direct-sum-equiv}]
+\proofanchor{direct-sum-equiv}
+Покажем импликации $(a) \Rightarrow (b) \Rightarrow (c) \Rightarrow (d) \Rightarrow (a)$.
+
+$(a) \Rightarrow (b)$: если $\vect{v} = \sum \vect{u}_i = \sum \vect{u}'_i$~---
+два разложения, то
+$\vect{u}_1 - \vect{u}'_1 = \sum_{i \neq 1}(\vect{u}'_i - \vect{u}_i) \in U_1 \cap (\sum_{i \neq 1} U_i) = \{\vect{0}\}$,
+откуда $\vect{u}_1 = \vect{u}'_1$. Аналогично для каждого~$i$.
+
+$(b) \Rightarrow (c)$: индукция по~$k$ с применением \cref{thm:grassmann}.
+При $k = 2$ из условия~(b) следует $U_1 \cap U_2 = \{\vect{0}\}$ (для
+$\vect{v} \in U_1 \cap U_2$ запись $\vect{0} = \vect{v} + (-\vect{v})$
+противоречит единственности при $\vect{v} \neq \vect{0}$), и формула
+Грассмана даёт $\dim(U_1 + U_2) = \dim U_1 + \dim U_2$. Шаг индукции
+повторяет рассуждение для подпространств $U_1 + \dots + U_{k-1}$ и
+$U_k$.
+
+$(c) \Rightarrow (d)$: возьмём по базису в каждом~$U_i$ и объединим их.
+По рассуждению о порождающей системе из доказательства формулы
+Грассмана объединение порождает $U_1 + \dots + U_k$. Его мощность
+совпадает с $\dim(U_1 + \dots + U_k)$ в силу~(c), значит, это базис.
+
+$(d) \Rightarrow (a)$: если $\vect{v} \in U_i \cap (\sum_{j \neq i} U_j)$
+ненулевой, то его разложение по базису~$U_i$ и его разложение как
+элемента $\sum_{j \neq i} U_j$ дают два различных представления одного
+вектора в объединении базисов~--- противоречие с единственностью
+координат (\cref{thm:coordinates}).
+\end{proof}
 
 \subsection*{Примеры}
-% TODO
+
+\begin{example}[Подпространство, заданное уравнениями]
+\label{ex:subspace-from-system}
+В~$\R^3$ рассмотрим
+\[
+  U \;=\; \{(x, y, z) : x + y - z = 0,\; 2x - y + z = 0\}.
+\]
+Сложение уравнений даёт $3x = 0$, то есть $x = 0$, откуда $y = z$.
+Следовательно, $U = \{(0, t, t) : t \in \R\} = \spn\bigl((0, 1, 1)\bigr)$
+и $\dim U = 1$. Для контроля: матрица коэффициентов имеет ранг~$2$, и
+$\dim U = 3 - 2 = 1$ согласно \cref{thm:subspace-kernel}.
+\end{example}
+
+\begin{example}[Преобразование координат]
+\label{ex:change-of-basis-numeric}
+Пусть $V = \R^2$ со стандартным базисом $\vect{e}_1 = (1, 0)$,
+$\vect{e}_2 = (0, 1)$ и новым базисом $\vect{e}'_1 = (1, 1)$,
+$\vect{e}'_2 = (1, -1)$. Матрица перехода
+\[
+  \mat{T} \;=\; \begin{pmatrix} 1 & 1 \\ 1 & -1 \end{pmatrix}
+\]
+содержит в столбцах координаты $\vect{e}'_1, \vect{e}'_2$ в стандартном
+базисе. Для $\vect{v} = 3\vect{e}_1 + 1\vect{e}_2$ (то есть
+$\vect{x} = (3, 1)\T$):
+\[
+  \mat{T}^{-1} \;=\; \frac{1}{-2}\begin{pmatrix} -1 & -1 \\ -1 & 1 \end{pmatrix}
+  \;=\; \frac{1}{2}\begin{pmatrix} 1 & 1 \\ 1 & -1 \end{pmatrix},
+  \qquad
+  \vect{x}' \;=\; \mat{T}^{-1}\vect{x} \;=\; \begin{pmatrix} 2 \\ 1 \end{pmatrix}.
+\]
+Прямая проверка: $2\vect{e}'_1 + 1\vect{e}'_2 = 2(1,1) + (1,-1) = (3, 1) = \vect{v}$.
+\end{example}
+
+\begin{example}[Формула Грассмана]
+\label{ex:grassmann-numeric}
+В~$\R^4$ положим
+\[
+  U = \spn\bigl((1, 1, 0, 0),\; (0, 0, 1, 1)\bigr), \qquad
+  W = \spn\bigl((1, 0, 1, 0),\; (0, 1, 0, 1)\bigr).
+\]
+Каждая порождающая система линейно независима, поэтому
+$\dim U = \dim W = 2$.
+
+Для вычисления $\dim(U + W)$ запишем все четыре вектора как строки и
+приведём к ступенчатому виду:
+\[
+  \begin{pmatrix}
+    1 & 1 & 0 & 0 \\
+    0 & 0 & 1 & 1 \\
+    1 & 0 & 1 & 0 \\
+    0 & 1 & 0 & 1
+  \end{pmatrix}
+  \;\longrightarrow\;
+  \begin{pmatrix}
+    1 & 1 & 0 & 0 \\
+    0 & 1 & 0 & 1 \\
+    0 & 0 & 1 & 1 \\
+    0 & 0 & 0 & 0
+  \end{pmatrix}.
+\]
+Получаем три ведущих элемента, так что $\dim(U + W) = 3$. По
+\cref{thm:grassmann}
+$\dim(U \cap W) = \dim U + \dim W - \dim(U + W) = 2 + 2 - 3 = 1$.
+
+Найдём явно базис $U \cap W$. Ищем коэффициенты $a, b, c, d$ из
+условия $a(1,1,0,0) + b(0,0,1,1) = c(1,0,1,0) + d(0,1,0,1)$.
+Покоординатно: $a = c$, $a = d$, $b = c$, $b = d$~--- все четыре
+коэффициента совпадают; полагая их равными~$1$, получаем вектор
+$(1, 1, 1, 1)$, порождающий $U \cap W$. Тем самым
+$U \cap W = \spn\bigl((1, 1, 1, 1)\bigr)$ имеет размерность~$1$, что
+согласуется с формулой Грассмана.
+\end{example}
+
+\begin{problem}
+\label{prob:direct-sum-decomp}
+В~$\R^3$ заданы $U = \spn\bigl((1, 1, 0),\, (0, 1, 1)\bigr)$ и
+$W = \spn\bigl((0, 0, 1)\bigr)$. Покажите, что $\R^3 = U \oplus W$, и
+найдите (единственное) разложение вектора $\vect{v} = (3, 4, 2)$ в
+сумму вектора из~$U$ и вектора из~$W$.
+\end{problem}
+
+\begin{proof}[Решение]
+$\dim U = 2$ и $\dim W = 1$, так что по
+\cref{thm:direct-sum-equiv}\,(c) сумма прямая тогда и только тогда,
+когда $\dim(U + W) = 3$, и в этом случае она совпадает со всем~$\R^3$.
+Запишем три порождающих вектора как строки:
+\[
+  \begin{pmatrix}
+    1 & 1 & 0 \\
+    0 & 1 & 1 \\
+    0 & 0 & 1
+  \end{pmatrix}.
+\]
+Матрица уже имеет ступенчатый вид с тремя ведущими элементами, поэтому
+$\dim(U + W) = 3$ и $\R^3 = U \oplus W$.
+
+\emph{Разложение.} Запишем
+$\vect{v} = (3, 4, 2) = a(1,1,0) + b(0,1,1) + c(0,0,1)$ и решим
+покоординатно: $a = 3$, $a + b = 4 \Rightarrow b = 1$,
+$b + c = 2 \Rightarrow c = 1$. Получаем
+\[
+  \vect{u} = 3(1, 1, 0) + 1(0, 1, 1) = (3, 4, 1) \in U,
+  \qquad
+  \vect{w} = (0, 0, 1) \in W,
+\]
+причём $\vect{v} = \vect{u} + \vect{w}$~--- единственное такое
+разложение.
+\end{proof}
