@@ -8,10 +8,261 @@ Fundamental theorems of probability. Chebyshev's inequality. Law of Large Number
 \end{ticket}
 
 \subsection*{Theory}
-% TODO
+
+We turn from properties of fixed distributions to the behaviour of
+sums of many random variables. Three pillars structure the
+discussion: tail inequalities (Markov, Chebyshev) that bound rare
+deviations; the law of large numbers, which says that empirical
+averages concentrate around the mean; and the central limit theorem,
+which says that the fluctuations around that mean are universally
+Gaussian after rescaling.
+
+\begin{theorem}[Markov's inequality]
+\label{thm:markov-ineq}
+For any non-negative random variable $X \geq 0$ and any $a > 0$,
+\[
+  \Prob(X \geq a) \;\leq\; \frac{\E X}{a}.
+\]
+\end{theorem}
+\proofof{markov-ineq}
+
+\begin{theorem}[Chebyshev's inequality]
+\label{thm:chebyshev-ineq}
+For any $X \in L^2$ and any $a > 0$,
+\[
+  \Prob\bigl(|X - \E X| \geq a\bigr) \;\leq\; \frac{\Var X}{a^2}.
+\]
+\end{theorem}
+\proofof{chebyshev-ineq}
+
+These are the workhorse tail bounds: distribution-free, requiring
+only one or two moments. The constants are tight in the sense that
+no sharper bound holds for the whole class of $L^1$ (resp.~$L^2$)
+random variables — see \cite[Ch.~II, \S~1]{Shiryaev1989}.
+
+\medskip
+\noindent\textbf{Modes of convergence of random variables.} A
+sequence $(Y_n)$ may approach a limit~$Y$ in several inequivalent
+senses.
+
+\begin{definition}[Modes of convergence]
+\label{def:convergence-modes}
+Let $Y_1, Y_2, \dots, Y$ be random variables on a common probability
+space.
+\begin{itemize}
+  \item \emph{In probability,} $Y_n \xrightarrow{\Prob} Y$, if for every
+        $\varepsilon > 0$, $\Prob(|Y_n - Y| > \varepsilon) \to 0$.
+  \item \emph{Almost surely,} $Y_n \xrightarrow{\text{a.s.}} Y$, if
+        $\Prob(\{\omega : Y_n(\omega) \to Y(\omega)\}) = 1$.
+  \item \emph{In distribution,} $Y_n \xrightarrow{d} Y$, if
+        $F_{Y_n}(x) \to F_Y(x)$ at every point~$x$ of continuity
+        of~$F_Y$.
+\end{itemize}
+\end{definition}
+
+The implications are
+$\xrightarrow{\text{a.s.}} \Rightarrow \xrightarrow{\Prob} \Rightarrow \xrightarrow{d}$;
+none of the reverse implications hold in general. Convergence in
+distribution depends only on the marginal laws and is the weakest
+notion — it is the one used by the central limit theorem.
+
+\begin{theorem}[Weak Law of Large Numbers]
+\label{thm:wlln}
+Let $X_1, X_2, \dots$ be independent random variables with common
+mean $\E X_i = \mu$ and uniformly bounded variance $\Var X_i \leq C < \infty$.
+Set $\bar X_n = (X_1 + \cdots + X_n)/n$. Then
+\[
+  \bar X_n \xrightarrow{\Prob} \mu \qquad (n \to \infty).
+\]
+In particular, when the $X_i$ are i.i.d.\ with finite variance, the
+sample mean converges in probability to the common mean.
+\end{theorem}
+\proofof{wlln}
+
+\begin{theorem}[Strong Law of Large Numbers, Kolmogorov]
+\label{thm:slln}
+Let $X_1, X_2, \dots$ be i.i.d.\ random variables with $\E |X_1| < \infty$
+and $\E X_1 = \mu$. Then
+\[
+  \bar X_n \xrightarrow{\text{a.s.}} \mu \qquad (n \to \infty).
+\]
+\end{theorem}
+\proofof{slln}
+
+The strong law strengthens the weak law in two respects: (a) it
+upgrades convergence in probability to almost-sure convergence, and
+(b) it requires only a first moment instead of a second. The proof
+is harder; we sketch only the case $\E X_1^4 < \infty$ via the
+Borel–Cantelli lemma. For the general $L^1$ case, see
+\cite[Ch.~III, \S~3]{Shiryaev1989} or \cite[Ch.~VI]{Gnedenko2001}.
+
+\begin{theorem}[Central Limit Theorem, Lindeberg–Lévy]
+\label{thm:clt}
+Let $X_1, X_2, \dots$ be i.i.d.\ random variables with $\E X_1 = \mu$
+and $\Var X_1 = \sigma^2 \in (0, \infty)$. Set $S_n = X_1 + \cdots + X_n$
+and
+\[
+  Z_n \;=\; \frac{S_n - n\mu}{\sigma \sqrt{n}}.
+\]
+Then $Z_n \xrightarrow{d} \mathcal{N}(0, 1)$, i.e.\ for every
+$x \in \R$,
+\[
+  \Prob(Z_n \leq x) \;\to\; \Phi(x) \;:=\; \frac{1}{\sqrt{2\pi}} \int_{-\infty}^{x} e^{-t^2/2}\, dt.
+\]
+\end{theorem}
+\proofof{clt}
+
+\begin{remark}
+The strong law is asymptotic ($\bar X_n \to \mu$); Chebyshev is a
+quantitative bound ($\Prob(|\bar X_n - \mu| \geq \varepsilon) \leq C/(n\varepsilon^2)$);
+the CLT identifies the \emph{rate} of fluctuation as $1/\sqrt{n}$
+with a \emph{universal} Gaussian limit. The clean proof of the CLT
+via characteristic functions is taken up in
+\cref{sec:1.2.06-standard-distributions}; here we only sketch the
+key idea so the statement is in hand.
+\end{remark}
 
 \subsection*{Proofs}
-% TODO
+
+\begin{proof}[\Cref{thm:markov-ineq}]
+\proofanchor{markov-ineq}
+Decompose $X = X \cdot \mathbf{1}_{\{X \geq a\}} + X \cdot \mathbf{1}_{\{X < a\}}$.
+Both summands are non-negative (since $X \geq 0$), so by monotonicity
+and linearity (\cref{prop:exp-properties}),
+\[
+  \E X \;\geq\; \E\bigl[X \cdot \mathbf{1}_{\{X \geq a\}}\bigr] \;\geq\; \E\bigl[a \cdot \mathbf{1}_{\{X \geq a\}}\bigr] \;=\; a\, \Prob(X \geq a).
+\]
+Divide by $a > 0$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:chebyshev-ineq}]
+\proofanchor{chebyshev-ineq}
+Apply \cref{thm:markov-ineq} to the non-negative variable $(X - \E X)^2$
+with threshold $a^2$:
+\[
+  \Prob\bigl(|X - \E X| \geq a\bigr) = \Prob\bigl((X - \E X)^2 \geq a^2\bigr) \leq \frac{\E[(X - \E X)^2]}{a^2} = \frac{\Var X}{a^2}. \qedhere
+\]
+\end{proof}
+
+\begin{proof}[\Cref{thm:wlln}]
+\proofanchor{wlln}
+By independence and \cref{cor:var-sum-indep},
+$\Var(X_1 + \cdots + X_n) = \sum_i \Var X_i \leq nC$, hence
+$\Var \bar X_n = \Var(X_1 + \cdots + X_n)/n^2 \leq C/n$. By
+\cref{thm:chebyshev-ineq} applied to $\bar X_n$ (which has mean
+$\mu$ by linearity),
+\[
+  \Prob\bigl(|\bar X_n - \mu| \geq \varepsilon\bigr) \;\leq\; \frac{\Var \bar X_n}{\varepsilon^2} \;\leq\; \frac{C}{n \varepsilon^2} \;\to\; 0.
+\]
+\end{proof}
+
+\begin{proof}[\Cref{thm:slln}, sketch under $\E X_1^4 < \infty$]
+\proofanchor{slln}
+Without loss of generality $\mu = 0$ (replace $X_i$ by $X_i - \mu$).
+Set $S_n = X_1 + \cdots + X_n$. Expanding $\E S_n^4$ and using
+i.i.d.\ with zero mean, only the $\E X_i^4$ and the
+$\binom{n}{2} \binom{4}{2} \E[X_i^2] \E[X_j^2] = 3 n(n-1) \sigma^4$
+terms survive, giving $\E S_n^4 \leq c\, n^2$ for a constant
+$c$ depending on the fourth moment. By Markov,
+$\Prob(|\bar X_n| \geq \varepsilon) = \Prob(|S_n|^4 \geq n^4 \varepsilon^4) \leq c\, n^2 / (n^4 \varepsilon^4) = c/(n^2 \varepsilon^4)$.
+This is summable in $n$, so by the first Borel–Cantelli lemma
+(\cite[Ch.~II, \S~10]{Shiryaev1989}) $\Prob(|\bar X_n| \geq \varepsilon \text{ infinitely often}) = 0$
+for each $\varepsilon$, and intersecting over a sequence
+$\varepsilon \to 0$ gives $\bar X_n \to 0$ a.s. The general
+$L^1$ case requires Kolmogorov's truncation argument and is in
+the references cited above.
+\end{proof}
+
+\begin{proof}[\Cref{thm:clt}, idea]
+\proofanchor{clt}
+Standardise: with $Y_i = (X_i - \mu)/\sigma$, the variables $Y_i$ are
+i.i.d.\ with $\E Y_i = 0$, $\Var Y_i = 1$, and
+$Z_n = (Y_1 + \cdots + Y_n)/\sqrt{n}$.
+
+Let $\varphi(t) = \E e^{itY_1}$ be the characteristic function of
+$Y_1$ (\cref{def:char-function}). Then
+\[
+  \E e^{itZ_n} \;=\; \E\, e^{it(Y_1 + \cdots + Y_n)/\sqrt n} \;=\; \varphi\bigl(t/\sqrt n\bigr)^n,
+\]
+using independence and the multiplicativity of $\E e^{i t \cdot \,}$
+on independent sums (\cref{thm:indep-multiplicative}). The Taylor
+expansion of $\varphi$ at the origin reads
+$\varphi(s) = 1 - \tfrac{1}{2} s^2 + o(s^2)$ as $s \to 0$ (using
+$\varphi'(0) = i \E Y_1 = 0$, $\varphi''(0) = -\E Y_1^2 = -1$).
+Therefore
+\[
+  \varphi(t/\sqrt n)^n = \Bigl(1 - \tfrac{t^2}{2n} + o(1/n)\Bigr)^n \to e^{-t^2/2} \qquad (n \to \infty),
+\]
+which is the characteristic function of $\mathcal{N}(0, 1)$. By the
+continuity theorem of Lévy (\cref{thm:levy-continuity}), pointwise
+convergence of characteristic functions to a continuous limit
+implies convergence in distribution to the corresponding law,
+i.e.\ $Z_n \xrightarrow{d} \mathcal{N}(0, 1)$.
+\end{proof}
 
 \subsection*{Examples}
-% TODO
+
+\begin{example}[Sample size from Chebyshev]
+\label{ex:cheb-poll}
+A pollster wants to estimate a proportion $p \in [0, 1]$ from
+$n$ independent Bernoulli($p$) responses, with the empirical
+proportion $\bar X_n$ within $\varepsilon = 0.03$ of~$p$ with
+probability at least~$0.95$. Since
+$\Var X_i = p(1-p) \leq 1/4$, Chebyshev gives
+\[
+  \Prob\bigl(|\bar X_n - p| \geq \varepsilon\bigr) \leq \frac{p(1-p)}{n \varepsilon^2} \leq \frac{1}{4 n \varepsilon^2}.
+\]
+For this to be $\leq 0.05$, take $n \geq 1 / (4 \cdot 0.05 \cdot \varepsilon^2) = 1/(0.2 \cdot 9 \cdot 10^{-4}) \approx 5556$.
+The CLT-based bound (\cref{ex:clt-poll}) sharpens this dramatically.
+\end{example}
+
+\begin{example}[Empirical mean of fair coin flips, WLLN]
+\label{ex:wlln-coin}
+Let the $X_i$ be i.i.d.\ Bernoulli($1/2$). Then $\E X_i = 1/2$,
+$\Var X_i = 1/4$, and \cref{thm:wlln} gives $\bar X_n \to 1/2$ in
+probability with the rate
+\[
+  \Prob\bigl(|\bar X_n - 1/2| \geq 0.01\bigr) \leq \frac{1}{4 n \cdot 10^{-4}} = \frac{2500}{n};
+\]
+so for $n = 10^6$ the empirical proportion is within $0.01$ of
+$1/2$ with probability at least $0.9975$. The strong law
+(\cref{thm:slln}) further says that for almost every infinite
+sequence of coin flips, the empirical proportion actually
+\emph{converges} to $1/2$ — not merely concentrates around it.
+\end{example}
+
+\begin{example}[Normal approximation to a binomial, CLT]
+\label{ex:clt-poll}
+With the polling setup of \cref{ex:cheb-poll} and $p$ unknown but
+$p(1-p) \leq 1/4$, the CLT gives
+$Z_n = \sqrt n (\bar X_n - p)/\sqrt{p(1-p)} \approx \mathcal{N}(0,1)$,
+so
+\[
+  \Prob\bigl(|\bar X_n - p| \geq \varepsilon\bigr) \approx 2\bigl(1 - \Phi(\varepsilon \sqrt n / \sqrt{p(1-p)})\bigr) \leq 2(1 - \Phi(2 \varepsilon \sqrt n)).
+\]
+Setting this $\leq 0.05$ requires $\Phi(2 \varepsilon \sqrt n) \geq 0.975$,
+i.e.\ $2 \varepsilon \sqrt n \geq 1.96$, so $n \geq (1.96/(2 \varepsilon))^2 = (1.96/0.06)^2 \approx 1067$ —
+about five times smaller than the Chebyshev sample size, and the
+standard rule of thumb behind ``$\pm 3\%$, 95\% confidence, $n \approx 1100$''
+in classical opinion polling.
+\end{example}
+
+\begin{problem}
+\label{prob:dice-clt}
+Roll a fair die $n = 100$ times and let $S$ be the sum of the
+outcomes. Use the CLT to estimate $\Prob(S \geq 380)$.
+\end{problem}
+
+\begin{proof}[Solution]
+Each outcome $X_i$ has $\E X_i = 7/2$ and $\Var X_i = 35/12$
+(\cref{ex:die-moments}). With $n = 100$, $\E S = 350$ and
+$\Var S = 100 \cdot 35/12 = 875/3$, so $\sigma_S = \sqrt{875/3} \approx 17.08$.
+The standardised threshold is
+\[
+  z = \frac{380 - 350}{17.08} \approx 1.756,
+\]
+and by \cref{thm:clt}, $\Prob(S \geq 380) \approx 1 - \Phi(1.756) \approx 1 - 0.9605 \approx 0.0395$.
+A continuity correction (using $379.5$ in place of $380$) gives
+$z \approx 1.726$ and the slightly larger $\approx 0.0422$, in
+better agreement with the exact (computer-evaluated) probability.
+\end{proof}
