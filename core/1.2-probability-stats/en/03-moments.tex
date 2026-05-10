@@ -8,10 +8,330 @@ Definitions of expectation, variance, covariance, and correlation, with their pr
 \end{ticket}
 
 \subsection*{Theory}
-% TODO
+
+Throughout this section $(\Omega, \mathcal{F}, \Prob)$ is a fixed
+probability space and~$X, Y$ are random variables on it
+(\cref{def:random-variable}). The general (Lebesgue) construction of
+expectation in $L^1$ is given in \cite[Ch.~II, \S~6]{Shiryaev1989}; we
+state the discrete and absolutely-continuous cases and quote the
+properties valid in both.
+
+\begin{definition}[Expectation]
+\label{def:expectation}
+The \emph{expectation} (\emph{mean}, \emph{mathematical expectation})
+of~$X$ is defined in the two cases below; in each, the displayed
+sum/integral with $|\cdot|$ in place of the integrand is required to
+be finite (\emph{absolute convergence}).
+
+\emph{Discrete case.} If $X$ takes countably many values
+$\{x_k\}_{k \geq 1}$ with probabilities $p_k = \Prob(X = x_k)$, then
+\[
+  \E X \;=\; \sum_{k \geq 1} x_k\, p_k.
+\]
+
+\emph{Absolutely continuous case.} If $X$ has density~$f_X$, i.e.\
+$F_X(x) = \int_{-\infty}^{x} f_X(t)\, dt$, then
+\[
+  \E X \;=\; \int_{\R} x\, f_X(x)\, dx.
+\]
+We say $X$ is \emph{integrable} if $\E |X| < \infty$, and write
+$X \in L^1$ for $\E |X| < \infty$ and $X \in L^2$ for $\E X^2 < \infty$.
+\end{definition}
+
+\begin{proposition}[Properties of expectation]
+\label{prop:exp-properties}
+For integrable random variables $X, Y$ and constants $a, b \in \R$:
+\begin{enumerate}[label=(\alph*)]
+  \item \emph{linearity:} $\E(aX + bY) = a\, \E X + b\, \E Y$;
+  \item \emph{monotonicity:} if $X \leq Y$ a.s., then $\E X \leq \E Y$;
+  \item \emph{constant rule:} $\E(c) = c$ for any constant~$c$;
+  \item \emph{triangle inequality:} $|\E X| \leq \E |X|$;
+  \item \emph{indicator rule:} for any event~$A$, $\E\mathbf{1}_A = \Prob(A)$.
+\end{enumerate}
+\end{proposition}
+\proofof{exp-properties}
+
+\begin{proposition}[Law of the unconscious statistician]
+\label{prop:lotus}
+Let $g \colon \R \to \R$ be Borel-measurable.
+\begin{itemize}
+  \item Discrete: $\E\, g(X) = \sum_k g(x_k)\, p_k$ whenever the series
+    converges absolutely.
+  \item Absolutely continuous: $\E\, g(X) = \int_{\R} g(x)\, f_X(x)\, dx$
+    whenever the integral converges absolutely.
+\end{itemize}
+\end{proposition}
+\proofof{lotus}
+
+\medskip
+\noindent\textbf{Variance.} Variance measures the average squared
+deviation from the mean and is the canonical scalar summary of
+spread.
+
+\begin{definition}[Variance and standard deviation]
+\label{def:variance}
+For $X \in L^2$, the \emph{variance} of~$X$ is
+\[
+  \Var X \;=\; \E\bigl[(X - \E X)^2\bigr],
+\]
+and the \emph{standard deviation} is $\sigma_X = \sqrt{\Var X}$.
+\end{definition}
+
+\begin{proposition}[Properties of variance]
+\label{prop:var-properties}
+For $X \in L^2$ and $a, b \in \R$:
+\begin{enumerate}[label=(\alph*)]
+  \item \emph{computational formula:} $\Var X = \E X^2 - (\E X)^2$;
+  \item \emph{non-negativity:} $\Var X \geq 0$, with $\Var X = 0$ iff $X$ is a.s.\ constant;
+  \item \emph{affine rescaling:} $\Var(aX + b) = a^2\, \Var X$;
+  \item \emph{shift invariance:} $\Var(X + b) = \Var X$.
+\end{enumerate}
+\end{proposition}
+\proofof{var-properties}
+
+\medskip
+\noindent\textbf{Covariance and correlation.} Covariance generalises
+variance to a pair $(X, Y)$ and detects linear co-movement.
+
+\begin{definition}[Covariance]
+\label{def:covariance}
+For $X, Y \in L^2$, the \emph{covariance} of~$X$ and~$Y$ is
+\[
+  \Cov(X, Y) \;=\; \E\bigl[(X - \E X)(Y - \E Y)\bigr] \;=\; \E(XY) - (\E X)(\E Y).
+\]
+The variables are \emph{uncorrelated} if $\Cov(X, Y) = 0$.
+\end{definition}
+
+\begin{proposition}[Properties of covariance]
+\label{prop:cov-properties}
+For $X, Y, Z \in L^2$ and $a, b, c \in \R$:
+\begin{enumerate}[label=(\alph*)]
+  \item $\Cov(X, X) = \Var X$;
+  \item \emph{symmetry:} $\Cov(X, Y) = \Cov(Y, X)$;
+  \item \emph{bilinearity:}
+        $\Cov(aX + bY, Z) = a\, \Cov(X, Z) + b\, \Cov(Y, Z)$;
+  \item \emph{constants drop out:} $\Cov(X, c) = 0$;
+  \item \emph{variance of a sum:} for $X_1, \dots, X_n \in L^2$,
+        \[
+          \Var\!\Bigl(\sum_{i=1}^n X_i\Bigr) = \sum_{i=1}^n \Var X_i + 2 \!\!\sum_{1 \leq i < j \leq n}\!\! \Cov(X_i, X_j).
+        \]
+\end{enumerate}
+\end{proposition}
+\proofof{cov-properties}
+
+\begin{theorem}[Cauchy--Schwarz]
+\label{thm:cauchy-schwarz}
+For any $X, Y \in L^2$,
+\[
+  |\E(XY)| \;\leq\; \sqrt{\E X^2 \cdot \E Y^2},
+\]
+with equality iff $Y = \alpha X$ a.s.\ for some $\alpha \in \R$
+(or one of $X, Y$ is a.s.~$0$). Consequently, replacing $X, Y$ by
+$X - \E X, Y - \E Y$,
+\[
+  |\Cov(X, Y)| \;\leq\; \sqrt{\Var X \cdot \Var Y}.
+\]
+\end{theorem}
+\proofof{cauchy-schwarz}
+
+\begin{definition}[Correlation coefficient]
+\label{def:correlation}
+For $X, Y \in L^2$ with $\Var X > 0$ and $\Var Y > 0$, the
+\emph{(Pearson) correlation coefficient} is
+\[
+  \rho(X, Y) \;=\; \frac{\Cov(X, Y)}{\sqrt{\Var X \cdot \Var Y}}.
+\]
+\end{definition}
+
+\begin{corollary}[Properties of $\rho$]
+\label{cor:rho-properties}
+$|\rho(X, Y)| \leq 1$, with $\rho(X, Y) = \pm 1$ iff $Y = aX + b$ a.s.\
+for some $a, b \in \R$ (with $\sgn a = \sgn \rho$). Correlation is
+invariant under positive affine rescaling: $\rho(\alpha X + \beta, \gamma Y + \delta) = \rho(X, Y)$
+when $\alpha, \gamma > 0$ (and equals $-\rho(X, Y)$ when
+$\alpha \gamma < 0$).
+\end{corollary}
+\proofof{rho-properties}
+
+\begin{remark}
+$\rho$ measures only the \emph{linear} part of dependence. Two
+variables can be uncorrelated yet strongly dependent — for instance,
+$X \sim \mathrm{Uniform}(-1, 1)$ and $Y = X^2$ have
+$\Cov(X, Y) = \E X^3 - \E X \cdot \E X^2 = 0$ but $Y$ is a
+deterministic function of~$X$. The role of correlation in linear
+prediction is taken up in \cref{sec:1.2.11-least-squares-gauss-markov}.
+\end{remark}
 
 \subsection*{Proofs}
-% TODO
+
+\begin{proof}[\Cref{prop:exp-properties}]
+\proofanchor{exp-properties}
+Linearity is immediate in both forms: in the discrete case via
+absolute convergence and rearrangement of double sums, in the
+continuous case via linearity of the Lebesgue integral.
+
+\emph{(b)} If $X \leq Y$ a.s., then $Y - X \geq 0$ a.s.; in the
+discrete case the sum $\sum (y_k - x_k) p_k$ is non-negative
+term-by-term, in the continuous case the integrand
+$(Y - X)(\omega) \geq 0$ a.s.\ gives a non-negative integral. By
+linearity, $\E Y - \E X = \E(Y - X) \geq 0$.
+
+\emph{(c)} The constant random variable $X \equiv c$ takes the single
+value~$c$ with probability~$1$, so $\E X = c \cdot 1 = c$.
+
+\emph{(d)} $X \leq |X|$ and $-X \leq |X|$ a.s., so by~(b),
+$\pm \E X \leq \E |X|$; hence $|\E X| \leq \E |X|$.
+
+\emph{(e)} $\mathbf{1}_A$ takes value~$1$ on~$A$ (probability $\Prob(A)$)
+and~$0$ on $\Omega \setminus A$, so by the discrete formula
+$\E \mathbf{1}_A = 1 \cdot \Prob(A) + 0 \cdot \Prob(\Omega \setminus A) = \Prob(A)$.
+\end{proof}
+
+\begin{proof}[\Cref{prop:lotus}]
+\proofanchor{lotus}
+The discrete case is immediate: $g(X)$ takes value $g(x_k)$
+on the event $\{X = x_k\}$, so by the discrete formula in
+\cref{def:expectation}, $\E g(X) = \sum_k g(x_k) \Prob(X = x_k)$.
+
+For the continuous case, one verifies the identity for indicator
+functions $g = \mathbf{1}_B$ (where it reduces to
+$\Prob(X \in B) = \int_B f_X$, the defining property of the density),
+extends by linearity to simple functions, and to general
+non-negative Borel~$g$ by the monotone convergence theorem.
+Decomposing $g = g^+ - g^-$ then handles signed integrands. The
+absolute-convergence assumption guarantees both halves are finite.
+For full details see \cite[Ch.~II, \S~6]{Shiryaev1989}.
+\end{proof}
+
+\begin{proof}[\Cref{prop:var-properties}]
+\proofanchor{var-properties}
+\emph{(a)} Expand the square and apply linearity:
+$\E[(X - \E X)^2] = \E X^2 - 2\, \E X \cdot \E X + (\E X)^2 = \E X^2 - (\E X)^2$.
+
+\emph{(b)} $(X - \E X)^2 \geq 0$ a.s., so by monotonicity of expectation
+its mean is non-negative. Equality $\Var X = 0$ forces
+$(X - \E X)^2 = 0$ a.s., i.e.\ $X = \E X$ almost surely.
+
+\emph{(c, d)} Set $Y = aX + b$ and use linearity:
+$\E Y = a\, \E X + b$, and $Y - \E Y = a(X - \E X)$, so
+$\Var Y = \E[a^2 (X - \E X)^2] = a^2\, \Var X$. Setting $a = 1$
+gives shift invariance.
+\end{proof}
+
+\begin{proof}[\Cref{prop:cov-properties}]
+\proofanchor{cov-properties}
+\emph{(a, b)} Direct from \cref{def:covariance}.
+
+\emph{(c)} Linearity of expectation applied to the expansion of
+$(aX + bY - (a \E X + b \E Y))(Z - \E Z)$.
+
+\emph{(d)} $\Cov(X, c) = \E[(X - \E X)(c - c)] = 0$.
+
+\emph{(e)} Apply (c) repeatedly:
+\[
+  \Var\!\Bigl(\sum_i X_i\Bigr) = \Cov\!\Bigl(\sum_i X_i,\, \sum_j X_j\Bigr) = \sum_{i, j} \Cov(X_i, X_j).
+\]
+Split the double sum into the diagonal ($i = j$, contributing
+$\Var X_i$) and off-diagonal terms; pair $(i, j)$ with $(j, i)$ by
+symmetry to merge into a single sum over $i < j$ with a factor of
+two.
+\end{proof}
+
+\begin{proof}[\Cref{thm:cauchy-schwarz}]
+\proofanchor{cauchy-schwarz}
+If $\E X^2 = 0$, then $X = 0$ a.s.\ (\cref{prop:var-properties}\,(b)
+applied with $\E X = 0$, since $X \geq 0$ in $L^2$ would give
+$\E X^2 \geq (\E X)^2$); then $XY = 0$ a.s.\ and the inequality
+holds with equality. Likewise if $\E Y^2 = 0$. Otherwise consider, for $t \in \R$,
+\[
+  0 \leq \E\bigl[(tX - Y)^2\bigr] = t^2\, \E X^2 - 2t\, \E(XY) + \E Y^2.
+\]
+This is a non-negative quadratic in~$t$, so its discriminant is
+non-positive: $4 (\E XY)^2 - 4\, \E X^2 \cdot \E Y^2 \leq 0$, giving
+$(\E XY)^2 \leq \E X^2 \cdot \E Y^2$. Equality in the discriminant
+corresponds to a real root $t = t_0$ of $\E[(tX - Y)^2]$, which
+forces $Y = t_0 X$ a.s. The covariance inequality follows by
+applying this to the centred variables $X - \E X$, $Y - \E Y$.
+\end{proof}
+
+\begin{proof}[\Cref{cor:rho-properties}]
+\proofanchor{rho-properties}
+$|\rho(X, Y)| \leq 1$ is the covariance Cauchy--Schwarz inequality
+(\cref{thm:cauchy-schwarz}), divided through by
+$\sqrt{\Var X \cdot \Var Y}$. Equality $|\rho| = 1$ corresponds to
+$Y - \E Y = \alpha (X - \E X)$ a.s., i.e.\ $Y = \alpha X + (\E Y - \alpha \E X)$ a.s.
+Affine invariance follows from
+$\Cov(\alpha X + \beta, \gamma Y + \delta) = \alpha \gamma \Cov(X, Y)$
+(\cref{prop:cov-properties}\,(c, d)) and
+$\Var(\alpha X + \beta) = \alpha^2 \Var X$
+(\cref{prop:var-properties}\,(c)): the $\alpha^2$ and $\gamma^2$
+under the square root cancel the $\alpha \gamma$ in the numerator
+when $\alpha \gamma > 0$.
+\end{proof}
 
 \subsection*{Examples}
-% TODO
+
+\begin{example}[Fair die]
+\label{ex:die-moments}
+$X \in \{1, \dots, 6\}$ uniformly. Then
+$\E X = \tfrac{1}{6}(1 + 2 + 3 + 4 + 5 + 6) = 7/2$ and
+$\E X^2 = \tfrac{1}{6}(1 + 4 + 9 + 16 + 25 + 36) = 91/6$, so
+$\Var X = 91/6 - 49/4 = 35/12$ and $\sigma_X = \sqrt{35/12} \approx 1.708$.
+\end{example}
+
+\begin{example}[Number of heads in $n$ coin flips]
+\label{ex:binomial-moments}
+Toss a coin $n$ times independently, with probability~$p$ of heads;
+let $X_i = \mathbf{1}_{\{\text{flip } i \text{ is heads}\}}$ and
+$S_n = X_1 + \cdots + X_n$. Each $X_i$ is Bernoulli with
+$\E X_i = p$ and $\Var X_i = p(1 - p)$. By linearity (regardless of
+independence!), $\E S_n = np$. The flips are independent, hence
+pairwise uncorrelated (\cref{prop:cov-properties} setting), so by
+\cref{prop:cov-properties}\,(e), $\Var S_n = n p (1 - p)$. The same
+$\Var S_n$ formula will be revisited in \cref{sec:1.2.04-independence}
+in the framework of independence proper.
+\end{example}
+
+\begin{example}[Computing covariance and correlation]
+\label{ex:cov-pair}
+Let $(X, Y)$ be uniform on the four points
+$\{(0, 0), (1, 0), (1, 1), (2, 1)\}$. Direct calculation:
+$\E X = 1$, $\E Y = 1/2$,
+$\E XY = \tfrac{1}{4}(0 + 0 + 1 + 2) = 3/4$,
+so $\Cov(X, Y) = 3/4 - 1 \cdot 1/2 = 1/4$. Also
+$\Var X = \tfrac{1}{4}(1 + 0 + 0 + 1) = 1/2$ and
+$\Var Y = \tfrac{1}{4}\bigl(\tfrac{1}{4} \cdot 4\bigr) = 1/4$,
+giving $\rho(X, Y) = (1/4) / \sqrt{1/2 \cdot 1/4} = 1/\sqrt{2} \approx 0.707$.
+\end{example}
+
+\begin{example}[Uncorrelated but dependent: $Y = X^2$]
+\label{ex:uncorrelated-dependent}
+Let $X$ be uniform on $\{-1, 0, 1\}$ and $Y = X^2$. Then $\E X = 0$
+and $\E XY = \E X^3 = 0$ (odd function on a symmetric distribution),
+so $\Cov(X, Y) = 0$ — yet $Y$ is a deterministic function of~$X$. This
+illustrates that uncorrelatedness is strictly weaker than
+independence; correlation captures only the linear part of the
+relationship.
+\end{example}
+
+\begin{problem}
+\label{prob:variance-of-sum-correlated}
+Three random variables $X_1, X_2, X_3 \in L^2$ each have variance~$1$
+and pairwise correlation $\rho \in (-1, 1)$. Find $\Var(X_1 + X_2 + X_3)$
+and the value of~$\rho$ that minimises it. What is the smallest
+admissible~$\rho$?
+\end{problem}
+
+\begin{proof}[Solution]
+By \cref{prop:cov-properties}\,(e),
+$\Var(X_1 + X_2 + X_3) = 3 \cdot 1 + 2 \cdot 3 \cdot \rho = 3 + 6\rho$.
+This is decreasing in~$\rho$ and is minimised by taking~$\rho$ as
+small as possible. But variance is non-negative, so $3 + 6\rho \geq 0$,
+forcing $\rho \geq -1/2$. The bound is attained, e.g., by
+$X_1 = U_1 - U_2$, $X_2 = U_2 - U_3$, $X_3 = U_3 - U_1$ with
+$U_1, U_2, U_3$ uncorrelated and equal-variance: their pairwise
+covariance equals $-1$ in the unnormalised covariances, normalised to
+$\rho = -1/2$. A general fact: for an $n$-tuple, the smallest
+admissible common correlation is $-1/(n - 1)$ — beyond that, the
+$n \times n$ correlation matrix would fail to be positive semi-definite.
+\end{proof}
