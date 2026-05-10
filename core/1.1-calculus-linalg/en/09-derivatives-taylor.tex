@@ -8,10 +8,312 @@ Differentiation of functions. Application of the derivative to finding extrema. 
 \end{ticket}
 
 \subsection*{Theory}
-% TODO
+
+We work with real-valued functions of a single real variable defined
+on an open subset of~$\R$. Throughout, $x_0$ denotes a chosen interior
+point of the domain.
+
+\begin{definition}
+\label{def:derivative}
+A function $f$ is \emph{differentiable at~$x_0$} if the limit
+\[
+  f'(x_0) \;=\; \lim_{h \to 0} \frac{f(x_0 + h) - f(x_0)}{h}
+\]
+exists and is finite. Equivalently, there exists $A \in \R$ for which
+\[
+  f(x_0 + h) \;=\; f(x_0) + A \cdot h + o(h)
+  \qquad \text{as } h \to 0,
+\]
+in which case $A = f'(x_0)$. The function~$f$ is \emph{differentiable
+on an open set $U$} if it is differentiable at every $x_0 \in U$, and
+the resulting function $x \mapsto f'(x)$ is the \emph{derivative}.
+\end{definition}
+
+The standard differentiation rules — linearity, product, quotient,
+chain — are taken as known and follow directly from
+\cref{def:derivative} by manipulating difference quotients. We focus
+on what the derivative says about the function.
+
+\begin{proposition}[Differentiability implies continuity]
+\label{prop:diff-implies-cont}
+If~$f$ is differentiable at~$x_0$, then $f$ is continuous at~$x_0$.
+\end{proposition}
+\proofof{diff-implies-cont}
+
+\begin{definition}
+\label{def:local-extremum}
+A function~$f$ has a \emph{local maximum} (resp.\ \emph{local minimum})
+at~$x_0$ if there is a neighbourhood $U \ni x_0$ on which
+$f(x) \le f(x_0)$ (resp.\ $f(x) \ge f(x_0)$) for all $x \in U$. A
+\emph{local extremum} is either a local maximum or a local minimum.
+The extremum is \emph{strict} if equality only holds at $x = x_0$.
+\end{definition}
+
+\begin{theorem}[Fermat]
+\label{thm:fermat}
+If~$f$ has a local extremum at an interior point~$x_0$ and is
+differentiable at~$x_0$, then $f'(x_0) = 0$.
+\end{theorem}
+\proofof{fermat}
+
+\begin{theorem}[Rolle]
+\label{thm:rolle}
+Let~$f$ be continuous on $[a, b]$ and differentiable on $(a, b)$,
+with $f(a) = f(b)$. Then there exists $c \in (a, b)$ with
+$f'(c) = 0$.
+\end{theorem}
+\proofof{rolle}
+
+\begin{theorem}[Lagrange's mean-value theorem]
+\label{thm:lagrange-mvt}
+Let~$f$ be continuous on $[a, b]$ and differentiable on $(a, b)$.
+There exists $c \in (a, b)$ with
+\[
+  f(b) - f(a) \;=\; f'(c)\,(b - a).
+\]
+\end{theorem}
+\proofof{lagrange-mvt}
+
+\begin{theorem}[First-derivative test for extrema]
+\label{thm:first-deriv-test}
+Let~$f$ be continuous on a neighbourhood of~$x_0$ and differentiable
+on a punctured neighbourhood. If $f'(x) > 0$ for $x < x_0$ near~$x_0$
+and $f'(x) < 0$ for $x > x_0$ near~$x_0$, then~$f$ has a strict
+local maximum at~$x_0$. The mirror sign pattern gives a strict local
+minimum.
+\end{theorem}
+
+\begin{theorem}[Taylor's formula with Peano remainder]
+\label{thm:taylor-peano}
+Let~$f$ be $n$ times differentiable at~$x_0$. Then as $x \to x_0$,
+\[
+  f(x) \;=\; \sum_{k=0}^{n} \frac{f^{(k)}(x_0)}{k!}\,(x - x_0)^k \;+\; o\bigl((x - x_0)^n\bigr).
+\]
+\end{theorem}
+\proofof{taylor-peano}
+
+\begin{theorem}[Taylor's formula with Lagrange remainder]
+\label{thm:taylor-lagrange}
+Let~$f$ be $(n+1)$ times differentiable on an open interval
+containing $x_0$ and~$x$. There exists~$c$ strictly between $x_0$
+and~$x$ such that
+\[
+  f(x) \;=\; \sum_{k=0}^{n} \frac{f^{(k)}(x_0)}{k!}\,(x - x_0)^k
+  \;+\; \frac{f^{(n+1)}(c)}{(n+1)!}\,(x - x_0)^{n+1}.
+\]
+\end{theorem}
+\proofof{taylor-lagrange}
+
+\begin{corollary}[Second-derivative test]
+\label{cor:second-deriv-test}
+Suppose~$f$ is twice differentiable at~$x_0$ with $f'(x_0) = 0$.
+\begin{itemize}
+  \item If $f''(x_0) > 0$, then~$f$ has a strict local minimum at~$x_0$.
+  \item If $f''(x_0) < 0$, then~$f$ has a strict local maximum at~$x_0$.
+  \item If $f''(x_0) = 0$, the test is inconclusive.
+\end{itemize}
+\end{corollary}
+\proofof{second-deriv-test}
+
+\begin{remark}
+The proofs below use only \cref{thm:rolle,thm:lagrange-mvt} and
+the Cauchy generalized MVT (essentially Rolle applied to a
+two-component auxiliary function). Comprehensive treatment, including
+Taylor with the integral form of the remainder and consequences for
+real-analytic functions, is in \cite{Zorich1981}.
+\end{remark}
 
 \subsection*{Proofs}
-% TODO
+
+\begin{proof}[\Cref{prop:diff-implies-cont}]
+\proofanchor{diff-implies-cont}
+For $h \neq 0$,
+\[
+  f(x_0 + h) - f(x_0) \;=\; \frac{f(x_0 + h) - f(x_0)}{h} \cdot h.
+\]
+The right-hand side has limit $f'(x_0) \cdot 0 = 0$ as $h \to 0$, so
+$f(x_0 + h) \to f(x_0)$, which is continuity at~$x_0$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:fermat}]
+\proofanchor{fermat}
+Suppose~$x_0$ is a local maximum (the minimum case is mirrored). For
+all~$h$ small enough, $f(x_0 + h) \le f(x_0)$, so
+$f(x_0 + h) - f(x_0) \le 0$. Therefore
+\[
+  \frac{f(x_0 + h) - f(x_0)}{h} \;\le\; 0 \text{ for } h > 0,
+  \qquad
+  \frac{f(x_0 + h) - f(x_0)}{h} \;\ge\; 0 \text{ for } h < 0.
+\]
+Both one-sided limits exist and equal $f'(x_0)$ by the assumed
+differentiability, so $f'(x_0) \le 0$ and $f'(x_0) \ge 0$
+simultaneously, giving $f'(x_0) = 0$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:rolle}]
+\proofanchor{rolle}
+Continuity on the compact interval $[a, b]$ gives $f$ a maximum
+and a minimum, attained at some $c_M, c_m \in [a, b]$. If both lie
+at the endpoints, $f(a) = f(b)$ forces the maximum to equal the
+minimum, so~$f$ is constant; then $f'(c) = 0$ for any $c \in (a, b)$.
+Otherwise at least one of $c_M, c_m$ is interior to $(a, b)$, and
+applying \cref{thm:fermat} at that point yields $f'(c) = 0$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:lagrange-mvt}]
+\proofanchor{lagrange-mvt}
+Apply \cref{thm:rolle} to the auxiliary function
+\[
+  g(x) \;=\; f(x) - f(a) - \frac{f(b) - f(a)}{b - a}\,(x - a),
+\]
+which satisfies $g(a) = 0 = g(b)$ and is continuous on $[a, b]$ /
+differentiable on $(a, b)$. Rolle gives some $c \in (a, b)$ with
+$g'(c) = 0$, i.e.\ $f'(c) = (f(b) - f(a))/(b - a)$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:taylor-peano}]
+\proofanchor{taylor-peano}
+Let $T_n(x) = \sum_{k=0}^{n} \frac{f^{(k)}(x_0)}{k!} (x - x_0)^k$ be
+the Taylor polynomial and $r_n(x) = f(x) - T_n(x)$. We must show
+$r_n(x) = o((x - x_0)^n)$ as $x \to x_0$.
+
+By construction $r_n(x_0) = 0$ and $r_n^{(k)}(x_0) = 0$ for
+$k = 0, 1, \dots, n$ (the $k$-th derivatives of $T_n$ and~$f$
+agree at $x_0$ up to order~$n$). Apply l'Hôpital-style reasoning:
+the ratio
+\[
+  \frac{r_n(x)}{(x - x_0)^n}
+\]
+is of the form $0/0$, and so are the ratios obtained by differentiating
+numerator and denominator $1, 2, \dots, n - 1$ times. After $n - 1$
+differentiations the ratio becomes
+\[
+  \frac{r_n^{(n-1)}(x)}{n!\,(x - x_0)/1} \;=\; \frac{r_n^{(n-1)}(x)}{n!\,(x - x_0)},
+\]
+whose limit as $x \to x_0$ is, by the very definition of the
+$n$-th derivative,
+$\frac{1}{n!}\bigl[r_n^{(n-1)}(x) - r_n^{(n-1)}(x_0)\bigr] / (x - x_0) \to r_n^{(n)}(x_0)/n! = 0$.
+Cauchy's MVT chained $n - 1$ times propagates this limit back, giving
+$r_n(x)/(x - x_0)^n \to 0$, that is $r_n(x) = o((x - x_0)^n)$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:taylor-lagrange}]
+\proofanchor{taylor-lagrange}
+Fix~$x \neq x_0$ and define on the interval between $x_0$ and~$x$:
+\[
+  g(t) \;=\; f(x) - \sum_{k=0}^{n} \frac{f^{(k)}(t)}{k!}\,(x - t)^k,
+  \qquad
+  h(t) \;=\; (x - t)^{n+1}.
+\]
+Both $g$ and $h$ are differentiable on the chosen interval; computing
+$g'$ telescopically (every term except the last cancels) gives
+\[
+  g'(t) \;=\; -\frac{f^{(n+1)}(t)}{n!}\,(x - t)^n,
+  \qquad
+  h'(t) \;=\; -(n+1)(x - t)^n.
+\]
+At the endpoints $t = x_0$ and $t = x$,
+\[
+  g(x_0) = f(x) - \sum_{k=0}^{n} \frac{f^{(k)}(x_0)}{k!}\,(x - x_0)^k,
+  \qquad
+  g(x) = 0,
+  \qquad
+  h(x_0) = (x - x_0)^{n+1},
+  \qquad
+  h(x) = 0.
+\]
+Cauchy's generalized MVT applied to $(g, h)$ provides~$c$ strictly
+between $x_0$ and~$x$ with
+\[
+  \frac{g(x_0) - g(x)}{h(x_0) - h(x)} \;=\; \frac{g'(c)}{h'(c)}
+  \;=\; \frac{-f^{(n+1)}(c)\,(x - c)^n / n!}{-(n+1)(x - c)^n}
+  \;=\; \frac{f^{(n+1)}(c)}{(n+1)!}.
+\]
+Equivalently
+$g(x_0) = \frac{f^{(n+1)}(c)}{(n+1)!}\,(x - x_0)^{n+1}$, which
+rearranges to the displayed Taylor formula.
+\end{proof}
+
+\begin{proof}[\Cref{cor:second-deriv-test}]
+\proofanchor{second-deriv-test}
+Apply Taylor with Peano remainder of order~$2$ at~$x_0$ using
+$f'(x_0) = 0$:
+\[
+  f(x) - f(x_0) \;=\; \tfrac{1}{2} f''(x_0)\,(x - x_0)^2 + o\bigl((x - x_0)^2\bigr).
+\]
+If $f''(x_0) > 0$, the leading $\tfrac{1}{2}f''(x_0)(x - x_0)^2$ is
+strictly positive for $x \neq x_0$ near~$x_0$ and dominates the
+$o((x - x_0)^2)$ term, so $f(x) > f(x_0)$ on a punctured
+neighbourhood — a strict local minimum. Symmetric reasoning gives
+the maximum case. When $f''(x_0) = 0$ both signs are possible
+($f(x) = x^4$ has a minimum, $f(x) = -x^4$ has a maximum, $f(x) = x^3$
+has neither — all with vanishing first and second derivatives at~$0$).
+\end{proof}
 
 \subsection*{Examples}
-% TODO
+
+\begin{example}[Extrema of a cubic]
+\label{ex:cubic-extrema}
+Let $f(x) = x^3 - 3x^2$. Then $f'(x) = 3x^2 - 6x = 3x(x - 2)$, so the
+critical points (where $f'$ vanishes) are $x = 0$ and $x = 2$.
+$f''(x) = 6x - 6$, giving $f''(0) = -6 < 0$ and $f''(2) = 6 > 0$.
+By \cref{cor:second-deriv-test}, $f$ has a strict local maximum at
+$x = 0$ (with $f(0) = 0$) and a strict local minimum at $x = 2$
+(with $f(2) = -4$).
+\end{example}
+
+\begin{example}[Taylor expansion of $e^x$]
+\label{ex:taylor-exp}
+Take $f(x) = e^x$. All derivatives are $f^{(k)}(x) = e^x$, so
+$f^{(k)}(0) = 1$. Taylor with Lagrange remainder
+(\cref{thm:taylor-lagrange}) at $x_0 = 0$ gives, for every
+$x \in \R$ and every~$n$,
+\[
+  e^x \;=\; \sum_{k=0}^{n} \frac{x^k}{k!} \;+\; \frac{e^c}{(n+1)!}\,x^{n+1}
+\]
+for some $c$ strictly between $0$ and~$x$. Bounding $e^c \le e^{|x|}$:
+\[
+  \Bigl| e^x - \sum_{k=0}^{n} \frac{x^k}{k!} \Bigr|
+  \;\le\; \frac{e^{|x|} \,|x|^{n+1}}{(n+1)!}.
+\]
+The right-hand side tends to~$0$ as $n \to \infty$ for any
+fixed~$x$, recovering the familiar series
+$e^x = \sum_{k=0}^{\infty} x^k / k!$.
+\end{example}
+
+\begin{example}[Taylor for limits]
+\label{ex:taylor-limit}
+Compute $\lim_{x \to 0} (\sin x - x) / x^3$. The Peano-remainder
+expansion $\sin x = x - x^3/6 + o(x^3)$ gives
+\[
+  \frac{\sin x - x}{x^3} \;=\; \frac{-x^3/6 + o(x^3)}{x^3}
+  \;=\; -\tfrac{1}{6} + o(1) \;\to\; -\tfrac{1}{6}.
+\]
+The same limit can be obtained by three applications of l'Hôpital,
+but Taylor expansion turns the calculation into one step.
+\end{example}
+
+\begin{problem}
+\label{prob:taylor-estimate-e}
+Use the Taylor polynomial of $e^x$ about $x_0 = 0$ to compute
+$e \approx \sum_{k=0}^{n} 1/k!$ for some $n$, and find an $n$ that
+guarantees four-decimal accuracy
+($|e - \sum_{k=0}^{n} 1/k!| < 5 \times 10^{-5}$).
+\end{problem}
+
+\begin{proof}[Solution]
+By \cref{ex:taylor-exp} at $x = 1$,
+\[
+  \Bigl| e - \sum_{k=0}^{n} \frac{1}{k!} \Bigr| \;\le\; \frac{e^1}{(n+1)!}
+  \;\le\; \frac{3}{(n+1)!},
+\]
+using the crude bound $e \le 3$. We need $(n+1)! \ge 3 / (5 \times 10^{-5}) = 60000$.
+Computing factorials: $7! = 5040$, $8! = 40320$, $9! = 362880$. So
+$(n+1)! \ge 60000$ first holds at $n + 1 = 9$, i.e.\ $n = 8$.
+
+The estimate is therefore
+$e \approx \sum_{k=0}^{8} 1/k! = 1 + 1 + 1/2 + 1/6 + 1/24 + 1/120 + 1/720 + 1/5040 + 1/40320 \approx 2.71828$,
+agreeing with $e = 2.71828\ldots$ to all five decimals shown. The
+bound $3/9! \approx 8.3 \times 10^{-6}$ is comfortably below the
+required tolerance.
+\end{proof}
