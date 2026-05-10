@@ -55,9 +55,11 @@ if $V = \spn(\vect{v}_1, \dots, \vect{v}_k)$ for some finite system.
 A \emph{basis} of a finite-dimensional vector space~$V$ is a
 linearly independent system $\vect{e}_1, \dots, \vect{e}_n$ that
 spans~$V$. By the main lemma on linear dependence
-(\cref{thm:main-lemma}) all bases of~$V$ contain the same number of
-vectors; this common number is the \emph{dimension} of~$V$, denoted
-$\dim V$.
+(\cref{thm:main-lemma}; see also \cref{rem:main-lemma-abstract})
+all bases of~$V$ contain the same number of vectors; this common
+number is the \emph{dimension} of~$V$, denoted $\dim V$. Existence of
+a basis for any finitely generated~$V$ is established below in
+\cref{thm:basis-exists}.
 \end{definition}
 
 \begin{theorem}[Existence of a basis]
@@ -67,6 +69,14 @@ finite spanning system contains a basis as a subsystem; any linearly
 independent system can be extended to a basis.
 \end{theorem}
 \proofof{basis-exists}
+
+\begin{corollary}[Subspace of a finitely generated space]
+\label{cor:subspace-fg}
+If $V$ is finitely generated and $U \subseteq V$ is a subspace, then
+$U$ is also finitely generated, $\dim U \le \dim V$, and any basis
+of~$U$ extends to a basis of~$V$.
+\end{corollary}
+\proofof{subspace-fg}
 
 \begin{theorem}[Coordinates in a basis]
 \label{thm:coordinates}
@@ -196,6 +206,19 @@ main lemma no linearly independent system in~$V$ can exceed
 $\dim V$ vectors.
 \end{proof}
 
+\begin{proof}[\Cref{cor:subspace-fg}]
+\proofanchor{subspace-fg}
+Any linearly independent system in~$U$ is linearly independent in~$V$
+and so, by the main lemma (\cref{thm:main-lemma}), has size at most
+$\dim V$. Choose a linearly independent system~$B$ in~$U$ of maximal
+size (a maximum exists by the bound). By maximality, every
+$\vect{u} \in U$ is expressible through~$B$: otherwise
+$B \cup \{\vect{u}\}$ would be a strictly larger independent system.
+Thus~$B$ is a basis of~$U$ and $\dim U = |B| \le \dim V$. Extension
+of~$B$ to a basis of~$V$ is the second half of
+\cref{thm:basis-exists}.
+\end{proof}
+
 \begin{proof}[\Cref{thm:coordinates}]
 \proofanchor{coordinates}
 \emph{Existence:} since $\{\vect{e}_i\}$ spans~$V$, every $\vect{v}$
@@ -227,10 +250,10 @@ coordinate vectors of $\vect{e}'_1, \dots, \vect{e}'_n$ in the
 basis~$\{\vect{e}_i\}$. The bijective coordinate map
 (\cref{thm:coordinates}) sends linearly independent systems to
 linearly independent systems, so the columns of~$\mat{T}$ are
-linearly independent and $\rank \mat{T} = n$, hence~$\mat{T}$ is
-invertible by \cref{thm:cofactor-inverse}. Multiplying
-$\vect{x} = \mat{T}\vect{x}'$ by $\mat{T}^{-1}$ gives the second
-form.
+linearly independent and $\rank \mat{T} = n$; by
+\cref{thm:ero-inverse} this is equivalent to~$\mat{T}$ being
+invertible. Multiplying $\vect{x} = \mat{T}\vect{x}'$ by
+$\mat{T}^{-1}$ gives the second form.
 \end{proof}
 
 \begin{proof}[\Cref{thm:subspace-kernel}]
@@ -243,7 +266,8 @@ and contains~$\vect{0}$, hence is a subspace.
 dimension~$k$. If $k = n$ take $\mat{A} = \mat{0}_{1 \times n}$, whose
 kernel is all of~$\F^n$. Assume $k < n$.
 
-Define a bilinear pairing on~$\F^n$ by
+Define a function
+$\langle \cdot, \cdot \rangle\colon \F^n \times \F^n \to \F$ by
 $\langle \vect{v}, \vect{w} \rangle = \sum_{i=1}^{n} v_i w_i$ and let
 \[
   U^{\circ} \;=\; \{\vect{v} \in \F^n : \langle \vect{v}, \vect{u} \rangle = 0
