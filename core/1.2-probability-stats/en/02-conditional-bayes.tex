@@ -8,10 +8,236 @@ Conditional probability; total probability formula; Bayes' theorem.
 \end{ticket}
 
 \subsection*{Theory}
-% TODO
+
+Fix a probability space $(\Omega, \mathcal{F}, \Prob)$. Conditioning is
+the formal way to update a probability measure when partial
+information about the outcome becomes available.
+
+\begin{definition}
+\label{def:conditional-probability}
+For events $A, B \in \mathcal{F}$ with $\Prob(B) > 0$, the
+\emph{conditional probability of~$A$ given~$B$} is
+\[
+  \Prob(A \mid B) \;=\; \frac{\Prob(A \cap B)}{\Prob(B)}.
+\]
+The map $A \mapsto \Prob(A \mid B)$ is undefined when $\Prob(B) = 0$.
+\end{definition}
+
+The intuition is to renormalise mass so that $B$ becomes the new
+``sure event''. The next proposition makes this precise.
+
+\begin{proposition}[Conditional measure is a probability measure]
+\label{prop:cond-is-measure}
+If $\Prob(B) > 0$, then $\Prob_B := \Prob(\cdot \mid B)$ is a
+probability measure on $(\Omega, \mathcal{F})$ — that is, it satisfies
+the Kolmogorov axioms (P1)–(P3) of \cref{def:prob-measure}. Moreover
+$\Prob_B(B) = 1$ and $\Prob_B(A) = 0$ for every $A \subseteq \Omega \setminus B$.
+\end{proposition}
+\proofof{cond-is-measure}
+
+A consequence is that all the elementary properties of $\Prob$
+(\cref{prop:prob-elementary}) and the continuity \cref{thm:prob-continuity}
+hold verbatim for $\Prob(\cdot \mid B)$, e.g.\ $\Prob(A^c \mid B) = 1 - \Prob(A \mid B)$.
+
+\begin{proposition}[Multiplication rule]
+\label{prop:multiplication-rule}
+For any events $A_1, \dots, A_n$ with $\Prob(A_1 \cap \cdots \cap A_{n-1}) > 0$,
+\[
+  \Prob(A_1 \cap A_2 \cap \cdots \cap A_n)
+  = \Prob(A_1)\, \Prob(A_2 \mid A_1)\, \Prob(A_3 \mid A_1 \cap A_2) \cdots \Prob(A_n \mid A_1 \cap \cdots \cap A_{n-1}).
+\]
+In particular, $\Prob(A \cap B) = \Prob(A) \Prob(B \mid A) = \Prob(B) \Prob(A \mid B)$ when
+both right-hand sides are defined.
+\end{proposition}
+\proofof{multiplication-rule}
+
+\medskip
+\noindent\textbf{Partitions and the law of total probability.}
+A finite or countable family $\{H_i\}_{i \in I}$ of events is a
+\emph{partition} of $\Omega$ if the $H_i$ are pairwise disjoint and
+$\bigsqcup_{i} H_i = \Omega$. We allow some $H_i$ to have probability
+zero; the formulas below ignore those terms by convention
+($\Prob(A \mid H_i) \cdot \Prob(H_i)$ is read as~$0$ whenever
+$\Prob(H_i) = 0$).
+
+\begin{theorem}[Law of total probability]
+\label{thm:total-probability}
+Let $\{H_i\}_{i \in I}$ be a finite or countable partition of $\Omega$.
+For every event $A \in \mathcal{F}$,
+\[
+  \Prob(A) \;=\; \sum_{i \in I} \Prob(A \cap H_i) \;=\; \sum_{i \in I} \Prob(A \mid H_i)\, \Prob(H_i).
+\]
+\end{theorem}
+\proofof{total-probability}
+
+The hypotheses $H_i$ are usefully thought of as competing
+\emph{causes} or \emph{scenarios}, and the formula decomposes the
+probability of an observable~$A$ into contributions from each
+scenario. Bayes' theorem inverts this relationship — given that~$A$
+occurred, it computes the posterior probabilities of the causes.
+
+\begin{theorem}[Bayes]
+\label{thm:bayes}
+Let $\{H_i\}_{i \in I}$ be a finite or countable partition of $\Omega$
+and let $A \in \mathcal{F}$ with $\Prob(A) > 0$. Then for every
+$j \in I$ with $\Prob(H_j) > 0$,
+\[
+  \Prob(H_j \mid A) \;=\; \frac{\Prob(A \mid H_j)\, \Prob(H_j)}{\sum_{i \in I} \Prob(A \mid H_i)\, \Prob(H_i)}.
+\]
+\end{theorem}
+\proofof{bayes}
+
+The denominator is just $\Prob(A)$ rewritten via
+\cref{thm:total-probability}. In Bayesian language, $\Prob(H_j)$ is
+the \emph{prior} probability of hypothesis~$H_j$,
+$\Prob(A \mid H_j)$ is the \emph{likelihood} of the
+observation~$A$ under~$H_j$, and $\Prob(H_j \mid A)$ is the
+\emph{posterior}. The two-event special case ($I = \{1, 2\}$ with
+$H_1 = H$, $H_2 = H^c$) reads
+\[
+  \Prob(H \mid A) \;=\; \frac{\Prob(A \mid H)\, \Prob(H)}{\Prob(A \mid H)\, \Prob(H) + \Prob(A \mid H^c)\, \Prob(H^c)}.
+\]
+
+\begin{remark}
+Conditioning is also the bridge to \emph{independence}, examined in
+\cref{sec:1.2.04-independence}: events $A$ and~$B$ are independent
+iff $\Prob(A \mid B) = \Prob(A)$ (assuming $\Prob(B) > 0$). For a
+fully measure-theoretic treatment of conditioning, including
+conditioning on a $\sigma$-algebra rather than a single positive-mass
+event, see \cite[Ch.~II, \S~7]{Shiryaev1989}.
+\end{remark}
 
 \subsection*{Proofs}
-% TODO
+
+\begin{proof}[\Cref{prop:cond-is-measure}]
+\proofanchor{cond-is-measure}
+Set $c = 1/\Prob(B) > 0$ and write
+$\Prob_B(A) = c \cdot \Prob(A \cap B)$.
+
+\emph{(P1)} $\Prob(A \cap B) \geq 0$ and $c > 0$, so $\Prob_B(A) \geq 0$.
+Also $\Prob_B(A) = c \Prob(A \cap B) \leq c \Prob(B) = 1$ by
+monotonicity (\cref{prop:prob-elementary}\,(d)).
+
+\emph{(P2)} $\Prob_B(\Omega) = c \Prob(\Omega \cap B) = c \Prob(B) = 1$.
+
+\emph{(P3)} For pairwise disjoint $A_1, A_2, \dots$, the sets
+$A_n \cap B$ are also pairwise disjoint, so by $\sigma$-additivity
+of~$\Prob$,
+\[
+  \Prob_B\Bigl(\bigsqcup_n A_n\Bigr) = c\, \Prob\Bigl(\bigsqcup_n (A_n \cap B)\Bigr) = c\, \sum_n \Prob(A_n \cap B) = \sum_n \Prob_B(A_n).
+\]
+The two final claims follow directly:
+$\Prob_B(B) = c \Prob(B) = 1$, and $A \subseteq B^c \Rightarrow A \cap B = \varnothing \Rightarrow \Prob_B(A) = 0$.
+\end{proof}
+
+\begin{proof}[\Cref{prop:multiplication-rule}]
+\proofanchor{multiplication-rule}
+Induction on~$n$. For $n = 2$, the formula is the definition rewritten:
+$\Prob(A_2 \mid A_1) = \Prob(A_1 \cap A_2) / \Prob(A_1)$.
+
+For the step, assume the formula holds for $n - 1$ events. By the
+$n = 2$ case applied to $C = A_1 \cap \cdots \cap A_{n-1}$ and~$A_n$,
+\[
+  \Prob(C \cap A_n) = \Prob(C) \cdot \Prob(A_n \mid C).
+\]
+Substituting the inductive expansion of $\Prob(C)$ gives the claim.
+The hypothesis $\Prob(A_1 \cap \cdots \cap A_{n-1}) > 0$ ensures every
+intermediate conditional is well-defined (each prefix
+$\Prob(A_1 \cap \cdots \cap A_k) \geq \Prob(A_1 \cap \cdots \cap A_{n-1}) > 0$
+for $k \leq n - 1$ by monotonicity).
+\end{proof}
+
+\begin{proof}[\Cref{thm:total-probability}]
+\proofanchor{total-probability}
+Since $\{H_i\}$ partitions $\Omega$, the events $A \cap H_i$ are
+pairwise disjoint with union $A \cap \Omega = A$. By
+$\sigma$-additivity of~$\Prob$ (extended by $\varnothing$ in the
+finite case), $\Prob(A) = \sum_i \Prob(A \cap H_i)$. For each~$i$ with
+$\Prob(H_i) > 0$, $\Prob(A \cap H_i) = \Prob(A \mid H_i) \Prob(H_i)$ by
+\cref{def:conditional-probability}; the convention
+$\Prob(A \mid H_i) \Prob(H_i) = 0$ when $\Prob(H_i) = 0$ matches
+$\Prob(A \cap H_i) \leq \Prob(H_i) = 0$, so the second equality holds
+term-by-term.
+\end{proof}
+
+\begin{proof}[\Cref{thm:bayes}]
+\proofanchor{bayes}
+By \cref{def:conditional-probability} applied in two directions,
+$\Prob(H_j \cap A) = \Prob(H_j \mid A) \Prob(A) = \Prob(A \mid H_j) \Prob(H_j)$.
+Solve for $\Prob(H_j \mid A)$ and substitute
+\cref{thm:total-probability} for $\Prob(A)$ in the denominator.
+\end{proof}
 
 \subsection*{Examples}
-% TODO
+
+\begin{example}[Two cards from a deck]
+\label{ex:two-cards}
+Draw two cards in succession, without replacement, from a shuffled
+$52$-card deck. Let $A_i$ be the event ``card~$i$ is an ace''. Then
+$\Prob(A_1) = 4/52$ and $\Prob(A_2 \mid A_1) = 3/51$ (one ace
+removed from a $51$-card deck), so by the multiplication rule
+(\cref{prop:multiplication-rule}),
+\[
+  \Prob(A_1 \cap A_2) = \frac{4}{52} \cdot \frac{3}{51} = \frac{12}{2652} = \frac{1}{221} \approx 0.0045.
+\]
+\end{example}
+
+\begin{example}[Total probability: two urns]
+\label{ex:two-urns}
+Urn~$1$ has $3$ white and $7$ black balls; urn~$2$ has $6$ white and
+$4$ black. A fair coin selects an urn, then a ball is drawn
+uniformly. Let $H_i$ be ``urn $i$ is chosen'' and $W$ ``the drawn
+ball is white''. Then $\Prob(H_1) = \Prob(H_2) = 1/2$,
+$\Prob(W \mid H_1) = 3/10$, $\Prob(W \mid H_2) = 6/10$, and
+\[
+  \Prob(W) = \tfrac{1}{2} \cdot \tfrac{3}{10} + \tfrac{1}{2} \cdot \tfrac{6}{10} = \tfrac{9}{20}.
+\]
+\end{example}
+
+\begin{example}[Bayes: medical test with rare disease]
+\label{ex:medical-test}
+A disease has prevalence $\Prob(D) = 0.01$ in a population. A test
+has sensitivity $\Prob(T \mid D) = 0.99$ (true-positive rate) and
+specificity $1 - \Prob(T \mid D^c) = 0.95$ (so the false-positive
+rate is $0.05$). Conditional on a positive test, what is the
+probability of disease?
+
+By Bayes' theorem (\cref{thm:bayes}, two-event form),
+\[
+  \Prob(D \mid T) = \frac{\Prob(T \mid D)\, \Prob(D)}{\Prob(T \mid D)\, \Prob(D) + \Prob(T \mid D^c)\, \Prob(D^c)}
+  = \frac{0.99 \cdot 0.01}{0.99 \cdot 0.01 + 0.05 \cdot 0.99}
+  = \frac{0.0099}{0.0594} \approx 0.167.
+\]
+A positive test on a high-accuracy assay still leaves a roughly
+$83\%$ chance the patient is healthy — the prior $\Prob(D) = 0.01$
+dominates, an instance of the \emph{base-rate fallacy}.
+\end{example}
+
+\begin{problem}[Monty Hall]
+\label{prob:monty-hall}
+A prize is hidden behind one of three doors, chosen uniformly at
+random. The contestant picks door~$1$. The host (who knows where the
+prize is) opens one of the remaining doors that does \emph{not} hide
+the prize and offers the contestant a switch. Should the contestant
+stay or switch?
+\end{problem}
+
+\begin{proof}[Solution]
+Let $H_i$ be the event ``the prize is behind door~$i$''. Then
+$\Prob(H_1) = \Prob(H_2) = \Prob(H_3) = 1/3$. Suppose the host opens
+door~$3$; let $A$ denote that observation. Compute
+$\Prob(A \mid H_i)$ under the standard host protocol (open a
+non-prize, non-chosen door uniformly when there is a choice):
+$\Prob(A \mid H_1) = 1/2$ (host picks randomly between doors $2$
+and~$3$), $\Prob(A \mid H_2) = 1$ (only door~$3$ is non-prize and
+non-chosen), $\Prob(A \mid H_3) = 0$. By Bayes,
+\[
+  \Prob(H_1 \mid A) = \frac{\tfrac{1}{2} \cdot \tfrac{1}{3}}{\tfrac{1}{2} \cdot \tfrac{1}{3} + 1 \cdot \tfrac{1}{3} + 0} = \frac{1}{3},
+  \qquad
+  \Prob(H_2 \mid A) = \frac{1 \cdot \tfrac{1}{3}}{\tfrac{1}{2} \cdot \tfrac{1}{3} + 1 \cdot \tfrac{1}{3}} = \frac{2}{3}.
+\]
+Switching to door~$2$ doubles the win probability from $1/3$ to
+$2/3$. The information transferred by the host's action is the
+identity of a \emph{specific} non-prize door — non-trivial when the
+host's choice is constrained by the contestant's pick.
+\end{proof}
