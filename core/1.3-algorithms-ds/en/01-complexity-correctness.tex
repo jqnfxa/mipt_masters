@@ -8,10 +8,262 @@ Algorithm analysis. Time and memory complexity. Asymptotics; big-O notation. Pro
 \end{ticket}
 
 \subsection*{Theory}
-% TODO
+
+An \emph{algorithm} is a finite, deterministic procedure that, given an
+input from a specified domain, produces an output in a finite number of
+elementary steps. Studying an algorithm has two facets:
+\emph{correctness} (does it always produce the right answer?) and
+\emph{complexity} (how fast and how memory-efficient is it?). The
+standard reference for both is \cite{CLRS2013}.
+
+\subsubsection*{Cost model}
+
+We use the \emph{Random-Access Machine (RAM)} model: each
+arithmetic operation, comparison, memory read, and memory write on a
+machine word costs one time unit; memory cells store integers of a
+size that does not depend on the input. In this model the
+\emph{running time} of an algorithm on an input is the number of
+elementary operations executed.
+
+\begin{definition}[Time and space complexity]
+\label{def:complexity}
+Let $A$ be an algorithm and let $\mathcal{I}_n$ denote the set of
+admissible inputs of \emph{size}~$n$ (a problem-specific measure;
+typically the number of input elements or the number of bits).
+\begin{itemize}
+  \item The \emph{worst-case time complexity} is
+        $T_A(n) = \max_{x \in \mathcal{I}_n} t_A(x)$,
+        where $t_A(x)$ is the number of elementary operations executed
+        on input~$x$.
+  \item The \emph{best-case time complexity} is
+        $\min_{x \in \mathcal{I}_n} t_A(x)$.
+  \item The \emph{average-case time complexity} (with respect to a
+        distribution~$\mu_n$ on~$\mathcal{I}_n$) is $\E_{x \sim \mu_n}\, t_A(x)$.
+  \item The \emph{space (memory) complexity} $S_A(n)$ is the maximum
+        number of memory cells used by~$A$ on inputs of size~$n$,
+        excluding cells holding the input itself.
+\end{itemize}
+Unless stated otherwise, ``complexity'' means \emph{worst-case}
+complexity.
+\end{definition}
+
+\subsubsection*{Asymptotic notation}
+
+Asymptotic notation suppresses constant factors and lower-order terms,
+focusing on growth rate as $n \to \infty$.
+
+\begin{definition}[Big-O, big-$\Omega$, big-$\Theta$, little-$o$, little-$\omega$]
+\label{def:asymptotic}
+Let $f, g \colon \N \to [0, \infty)$. We write
+\begin{align*}
+  f(n) &= O(g(n))      &&\Leftrightarrow&& \exists\, C > 0,\, n_0 \in \N \;\;\forall n \geq n_0\colon\; f(n) \leq C\, g(n);\\
+  f(n) &= \Omega(g(n)) &&\Leftrightarrow&& \exists\, c > 0,\, n_0 \in \N \;\;\forall n \geq n_0\colon\; f(n) \geq c\, g(n);\\
+  f(n) &= \Theta(g(n)) &&\Leftrightarrow&& f(n) = O(g(n)) \text{ and } f(n) = \Omega(g(n));\\
+  f(n) &= o(g(n))      &&\Leftrightarrow&& \forall\, \varepsilon > 0\;\; \exists\, n_0\;\;\forall n \geq n_0\colon\; f(n) \leq \varepsilon\, g(n);\\
+  f(n) &= \omega(g(n)) &&\Leftrightarrow&& \forall\, K > 0\;\; \exists\, n_0\;\;\forall n \geq n_0\colon\; f(n) \geq K\, g(n).
+\end{align*}
+\end{definition}
+
+\begin{remark}
+The notation $f(n) = O(g(n))$ is an abuse: ``$=$'' here is set
+membership in the class $O(g)$ of all functions dominated by~$g$ up
+to a constant. In particular it is not symmetric: $O(n) = O(n^2)$
+is read left-to-right.
+\end{remark}
+
+\begin{proposition}[Properties of $O$]
+\label{prop:big-o-rules}
+For non-negative $f, f_1, f_2, g, g_1, g_2$ and $c > 0$:
+\begin{enumerate}[label=(\alph*)]
+  \item \emph{constant absorption:} $c \cdot f(n) = O(f(n))$;
+  \item \emph{transitivity:} if $f = O(g)$ and $g = O(h)$, then $f = O(h)$;
+  \item \emph{sum:} if $f_1 = O(g_1)$ and $f_2 = O(g_2)$, then $f_1 + f_2 = O(\max\{g_1, g_2\}) = O(g_1 + g_2)$;
+  \item \emph{product:} if $f_1 = O(g_1)$ and $f_2 = O(g_2)$, then $f_1 \cdot f_2 = O(g_1 \cdot g_2)$;
+  \item \emph{logs and powers:} for any constants $a, b > 0$,
+        $\log_a n = \Theta(\log_b n)$, and $\log^k n = o(n^\varepsilon)$
+        for every $k > 0$ and every $\varepsilon > 0$.
+\end{enumerate}
+\end{proposition}
+\proofof{big-o-rules}
+
+\subsubsection*{Master Theorem (statement)}
+
+Many divide-and-conquer algorithms have running times satisfying a
+recurrence of the form $T(n) = a\, T(n/b) + f(n)$ with $a \geq 1$,
+$b > 1$. The following result resolves the asymptotics of~$T$ in
+three regimes.
+
+\begin{theorem}[Master Theorem]
+\label{thm:master}
+Let $a \geq 1$, $b > 1$ be constants and $f \colon \N \to [0, \infty)$.
+Suppose $T(n) = a\, T(n/b) + f(n)$ for $n \geq 1$ (with $T(1) = \Theta(1)$
+and $n/b$ understood as $\lfloor n/b \rfloor$ or $\lceil n/b \rceil$).
+Set $\alpha = \log_b a$. Then
+\begin{enumerate}[label=(\alph*)]
+  \item if $f(n) = O(n^{\alpha - \varepsilon})$ for some $\varepsilon > 0$,
+        then $T(n) = \Theta(n^\alpha)$;
+  \item if $f(n) = \Theta(n^\alpha)$,
+        then $T(n) = \Theta(n^\alpha \log n)$;
+  \item if $f(n) = \Omega(n^{\alpha + \varepsilon})$ for some $\varepsilon > 0$
+        and $a\, f(n/b) \leq c\, f(n)$ for some $c < 1$ and all
+        sufficiently large~$n$, then $T(n) = \Theta(f(n))$.
+\end{enumerate}
+\end{theorem}
+
+A proof of \cref{thm:master} is in \cite[Ch.~4]{CLRS2013}; we
+will use it as a black box.
+
+\subsubsection*{Correctness via loop invariants}
+
+A common rigorous technique for proving partial correctness of an
+iterative algorithm is the \emph{loop invariant}: a property~$I$ that
+holds before the loop body executes and is preserved by each iteration,
+and from which the postcondition follows when the loop terminates.
+
+\begin{theorem}[Loop invariant principle]
+\label{thm:loop-invariant}
+Let a loop have entry condition~$P$ (precondition) and termination
+condition~$\neg B$, with body~$S$. Suppose~$I$ is a property such that:
+\begin{enumerate}[label=(\alph*)]
+  \item \emph{initialization:} $P \Rightarrow I$ holds before the first
+        iteration;
+  \item \emph{maintenance:} if $I \wedge B$ holds before an iteration
+        of~$S$, then $I$ holds after it;
+  \item \emph{termination:} the loop eventually exits (i.e., $\neg B$
+        holds after finitely many iterations).
+\end{enumerate}
+Then $I \wedge \neg B$ holds when the loop exits. If the desired
+postcondition~$Q$ follows from $I \wedge \neg B$, the algorithm is
+\emph{partially correct}; combined with~(c) it is \emph{totally
+correct}.
+\end{theorem}
+\proofof{loop-invariant}
+
+To prove termination one usually exhibits a \emph{loop variant}: a
+non-negative integer-valued expression $V$ that strictly decreases on
+each iteration. Since a strictly decreasing sequence in~$\N$ is
+finite, the loop must exit.
 
 \subsection*{Proofs}
-% TODO
+
+\begin{proof}[\Cref{prop:big-o-rules}]
+\proofanchor{big-o-rules}
+\emph{(a)} With constant $C = c$ and $n_0 = 1$, $c f(n) \leq C f(n)$
+trivially.
+
+\emph{(b)} If $f(n) \leq C_1 g(n)$ for $n \geq n_1$ and
+$g(n) \leq C_2 h(n)$ for $n \geq n_2$, then for
+$n \geq \max\{n_1, n_2\}$ we have $f(n) \leq C_1 C_2 h(n)$.
+
+\emph{(c)} For $n$ beyond the witnesses,
+$f_1(n) + f_2(n) \leq C_1 g_1(n) + C_2 g_2(n) \leq (C_1 + C_2) \max\{g_1(n), g_2(n)\}$.
+The equivalence with $O(g_1 + g_2)$ holds because
+$\max\{g_1, g_2\} \leq g_1 + g_2 \leq 2 \max\{g_1, g_2\}$ for
+non-negative arguments.
+
+\emph{(d)} For $n$ beyond the witnesses,
+$f_1(n) f_2(n) \leq C_1 C_2 g_1(n) g_2(n)$.
+
+\emph{(e)} Change of base: $\log_a n = \log_b n / \log_b a$, a
+constant ratio, so the two are $\Theta$ of each other. For
+$\log^k n = o(n^\varepsilon)$, take logarithms and use
+$\lim_{n \to \infty} (k \log \log n) / (\varepsilon \log n) = 0$, hence
+$k \log \log n - \varepsilon \log n \to -\infty$, so
+$\log^k n / n^\varepsilon = e^{k \log\log n - \varepsilon \log n} \to 0$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:loop-invariant}]
+\proofanchor{loop-invariant}
+We prove $I$ holds at the entry to every iteration by induction on the
+iteration index~$k \geq 0$. The base case $k = 0$ is~(a). For the step,
+if $I$ holds entering iteration~$k$ and the loop body executes (so
+$B$ also held), maintenance~(b) yields $I$ after, which is the entry
+of iteration~$k + 1$.
+
+By~(c) the loop exits after some iteration $k^* < \infty$. At exit,
+the entry condition was $I$ and the test gave $\neg B$, so
+$I \wedge \neg B$ holds. The conclusion about partial / total
+correctness is then by definition.
+\end{proof}
 
 \subsection*{Examples}
-% TODO
+
+\begin{example}[Linear search]
+\label{ex:linear-search}
+Given an array $A[1..n]$ and a target $v$, scan from left to right
+and return the first index~$i$ with $A[i] = v$, or ``not found'' if
+none exists.
+
+\emph{Worst case.} The target is absent or in the last position; the
+loop performs~$n$ comparisons, so $T(n) = \Theta(n)$.
+
+\emph{Best case.} The target is at $A[1]$; one comparison, $\Theta(1)$.
+
+\emph{Loop invariant.} ``At the start of iteration~$i$, $v \neq A[j]$
+for all $j < i$.'' Initialization ($i = 1$) is vacuous; maintenance is
+the body's check; on exit either we returned~$i$ (then $A[i] = v$ and
+the invariant says it is the first such occurrence) or $i = n + 1$
+(then $v \neq A[j]$ for all $j \leq n$, so the answer ``not found''
+is correct).
+\end{example}
+
+\begin{example}[Binary search and the master theorem]
+\label{ex:binary-search}
+On a sorted array $A[1..n]$, binary search for~$v$ compares $v$ with
+the middle element and recurses on one half. The running time
+satisfies $T(n) = T(n/2) + \Theta(1)$ for $n > 1$ and $T(1) = \Theta(1)$.
+Apply \cref{thm:master} with $a = 1$, $b = 2$, so
+$\alpha = \log_2 1 = 0$ and $f(n) = \Theta(1) = \Theta(n^0) = \Theta(n^\alpha)$.
+Case~(b) of the master theorem gives $T(n) = \Theta(\log n)$.
+\end{example}
+
+\begin{example}[Mergesort and the master theorem]
+\label{ex:mergesort}
+Mergesort splits an $n$-element array into two halves, sorts each
+recursively, and merges the sorted halves in time $\Theta(n)$. Its
+running time satisfies $T(n) = 2 T(n/2) + \Theta(n)$. Apply
+\cref{thm:master} with $a = 2$, $b = 2$, $\alpha = 1$,
+$f(n) = \Theta(n) = \Theta(n^\alpha)$. Case~(b) gives
+$T(n) = \Theta(n \log n)$. The space complexity is $\Theta(n)$ for
+the auxiliary merge buffer.
+\end{example}
+
+\begin{example}[Insertion sort: a full correctness proof]
+\label{ex:insertion-sort}
+Insertion sort processes $A[1..n]$ left to right; on the $j$-th
+iteration it inserts the new element $A[j]$ into the already-sorted
+prefix $A[1..j-1]$ by shifting larger elements right by one position.
+The running time is $\Theta(n^2)$ in the worst case (a reverse-sorted
+input).
+
+\emph{Loop invariant.} ``At the start of the iteration with index~$j$
+(for $j = 2, 3, \dots, n + 1$), the subarray $A[1..j-1]$ is a sorted
+permutation of the original $A[1..j-1]$.''
+
+\emph{Initialization} ($j = 2$): the prefix $A[1..1]$ is trivially
+sorted and equal to itself.
+
+\emph{Maintenance.} Assume the invariant holds at iteration~$j$. The
+body shifts each element of $A[1..j-1]$ that exceeds the saved value
+$A[j]$ one position to the right, then deposits $A[j]$ in the
+resulting gap. Each shift operates within the original
+$\{A[1], \dots, A[j]\}$, so $A[1..j]$ is a permutation of the original;
+the shifts preserve the sorted order of the smaller elements, and
+the inserted element is placed exactly between the largest element
+$\leq A[j]$ and the smallest element $> A[j]$. Hence $A[1..j]$ is
+sorted.
+
+\emph{Termination.} The variant $V = n + 1 - j$ strictly decreases
+by~$1$ each outer iteration; once $V = 0$ the loop exits with
+$j = n + 1$. By the invariant, $A[1..n]$ is then a sorted
+permutation of the original, which is the postcondition.
+\end{example}
+
+\begin{problem}[Hierarchy of common growth rates]
+Order the following functions by asymptotic growth (slowest to
+fastest), with $\Theta$-equivalent functions grouped:
+$1$, $\log\log n$, $\log n$, $\sqrt{n}$, $n$, $n \log n$, $n^2$,
+$n^{\log_2 3}$, $2^n$, $n!$. Justify each strict inequality using
+\cref{prop:big-o-rules} or by computing
+$\lim_{n \to \infty} f(n)/g(n)$ via L'Hôpital or Stirling.
+\end{problem}
