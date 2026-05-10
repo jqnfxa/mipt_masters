@@ -8,10 +8,304 @@
 \end{ticket}
 
 \subsection*{Теория}
-% TODO
+
+Работаем на вещественной прямой, используя пространство
+\[
+  L^1(\R) \;=\; \Bigl\{ f \colon \R \to \C \;:\; f \text{ измерима},\; \|f\|_1 := \int_{\R} |f(x)|\, dx < \infty \Bigr\}.
+\]
+Функцию из $L^1(\R)$ называют \emph{абсолютно интегрируемой}.
+Подробное изложение всех результатов раздела~--- в
+\cite[Т.~II, гл.~XVIII, \S~3]{Zorich1981} и
+\cite[гл.~VIII]{KolmogorovFomin}.
+
+\subsubsection*{Определение и базовая регулярность}
+
+\begin{definition}[Преобразование Фурье]
+\label{def:fourier-transform}
+Для $f \in L^1(\R)$ \emph{преобразованием Фурье} функции~$f$
+называется функция $\hat f \colon \R \to \C$, заданная равенством
+\[
+  \hat f(\xi) \;=\; \int_{\R} f(x)\, e^{-i \xi x}\, dx, \qquad \xi \in \R.
+\]
+Обозначаем также $\mathcal{F}\{f\}(\xi) = \hat f(\xi)$.
+\end{definition}
+
+\begin{remark}
+В выбранной нормировке множителя $2\pi$ нет в прямом преобразовании;
+эта константа возникает в формуле обращения
+(\cref{thm:fourier-inversion}). В других учебниках множитель
+расщепляют симметрично как $1/\sqrt{2\pi}$ перед обоими
+преобразованиями.
+\end{remark}
+
+\begin{proposition}[Ограниченность]
+\label{prop:ft-bounded}
+Для всякой $f \in L^1(\R)$ и каждого $\xi \in \R$
+$|\hat f(\xi)| \leq \|f\|_1$. В частности, $\hat f$ ограничено
+числом~$\|f\|_1$.
+\end{proposition}
+\proofof{ft-bounded}
+
+\begin{theorem}[Непрерывность преобразования Фурье]
+\label{thm:ft-continuous}
+Для всякой $f \in L^1(\R)$ функция $\hat f$ равномерно непрерывна
+на~$\R$.
+\end{theorem}
+\proofof{ft-continuous}
+
+\begin{theorem}[Лемма Римана--Лебега на $\R$]
+\label{thm:rl-line}
+Для всякой $f \in L^1(\R)$
+\[
+  \hat f(\xi) \;\to\; 0 \qquad \text{при } |\xi| \to \infty.
+\]
+\end{theorem}
+\proofof{rl-line}
+
+\subsubsection*{Алгебраические свойства}
+
+\begin{proposition}[Линейность, сдвиг, модуляция, растяжение]
+\label{prop:ft-algebra}
+Пусть $f, g \in L^1(\R)$, $\alpha, \beta \in \C$,
+$a \in \R \setminus \{0\}$, $h \in \R$. Тогда для каждого $\xi \in \R$
+\begin{enumerate}[label=(\alph*)]
+  \item \emph{линейность:} $\widehat{\alpha f + \beta g}(\xi) = \alpha \hat f(\xi) + \beta \hat g(\xi)$;
+  \item \emph{сдвиг по аргументу:} если $f_h(x) = f(x - h)$, то $\widehat{f_h}(\xi) = e^{-i \xi h} \hat f(\xi)$;
+  \item \emph{модуляция:} если $g(x) = e^{i \omega x} f(x)$ при некотором $\omega \in \R$, то $\hat g(\xi) = \hat f(\xi - \omega)$;
+  \item \emph{растяжение:} если $g(x) = f(a x)$, то $\hat g(\xi) = \tfrac{1}{|a|}\, \hat f\!\bigl(\tfrac{\xi}{a}\bigr)$.
+\end{enumerate}
+\end{proposition}
+\proofof{ft-algebra}
+
+\subsubsection*{Правила дифференцирования}
+
+Две ключевые для этого билета формулы переводят гладкость в убывание и
+обратно: дифференцирование~$f$ соответствует умножению $\hat f$ на
+$i\xi$, а умножение~$f$ на~$x$~--- дифференцированию $\hat f$.
+
+\begin{theorem}[Преобразование Фурье производной]
+\label{thm:ft-of-derivative}
+Пусть $f \in L^1(\R)$ всюду дифференцируема, $f' \in L^1(\R)$ и
+$f(x) \to 0$ при $|x| \to \infty$. Тогда
+\[
+  \widehat{f'}(\xi) \;=\; i \xi \, \hat f(\xi), \qquad \xi \in \R.
+\]
+В общем случае: если~$f$ дифференцируема $k$ раз,
+$f^{(j)} \in L^1(\R)$ при $j = 0, 1, \dots, k$ и
+$f^{(j)}(x) \to 0$ при $|x| \to \infty$ для $j = 0, \dots, k - 1$, то
+$\widehat{f^{(k)}}(\xi) = (i\xi)^k \, \hat f(\xi)$. В частности,
+$|\xi|^k\, |\hat f(\xi)| \leq \|f^{(k)}\|_1$, то есть более гладкая
+$f$ даёт быстрее убывающее $\hat f$.
+\end{theorem}
+\proofof{ft-of-derivative}
+
+\begin{theorem}[Производная преобразования Фурье]
+\label{thm:derivative-of-ft}
+Пусть $f \in L^1(\R)$ и $x \mapsto x\, f(x) \in L^1(\R)$. Тогда
+$\hat f$ непрерывно дифференцируема на~$\R$ и
+\[
+  (\hat f)'(\xi) \;=\; \widehat{(- i x\, f)}(\xi) \;=\; -i \int_{\R} x\, f(x)\, e^{-i \xi x}\, dx.
+\]
+В общем случае: если $x^j f(x) \in L^1(\R)$ при $j = 0, 1, \dots, k$,
+то $\hat f \in C^k(\R)$ и
+$(\hat f)^{(k)}(\xi) = \widehat{(-i x)^k f}(\xi)$. Более быстро
+убывающая~$f$ даёт более гладкое~$\hat f$.
+\end{theorem}
+\proofof{derivative-of-ft}
+
+\subsubsection*{Формула обращения (формулировка)}
+
+\begin{theorem}[Формула обращения Фурье]
+\label{thm:fourier-inversion}
+Пусть $f \in L^1(\R)$ и $\hat f \in L^1(\R)$. Тогда для почти каждого
+$x$
+\[
+  f(x) \;=\; \frac{1}{2\pi} \int_{\R} \hat f(\xi)\, e^{i \xi x}\, d\xi,
+\]
+причём равенство выполнено в каждой точке непрерывности~$f$. В этом
+билете доказательство не приводим~--- см.\
+\cite[Т.~II, гл.~XVIII, \S~3]{Zorich1981}; теорему используем лишь для
+интерпретации примеров.
+\end{theorem}
 
 \subsection*{Доказательства}
-% TODO
+
+\begin{proof}[\Cref{prop:ft-bounded}]
+\proofanchor{ft-bounded}
+Применим неравенство треугольника к интегралу:
+\[
+  |\hat f(\xi)| \;=\; \Bigl| \int_{\R} f(x)\, e^{-i \xi x}\, dx \Bigr|
+  \;\leq\; \int_{\R} |f(x)|\, |e^{-i \xi x}|\, dx
+  \;=\; \int_{\R} |f(x)|\, dx
+  \;=\; \|f\|_1.
+\]
+\end{proof}
+
+\begin{proof}[\Cref{thm:ft-continuous}]
+\proofanchor{ft-continuous}
+Для $\xi, \eta \in \R$
+\[
+  \hat f(\xi) - \hat f(\eta)
+  \;=\; \int_{\R} f(x)\, \bigl(e^{-i \xi x} - e^{-i \eta x}\bigr)\, dx,
+\]
+откуда
+\[
+  |\hat f(\xi) - \hat f(\eta)|
+  \;\leq\; \int_{\R} |f(x)|\, |e^{-i \xi x} - e^{-i \eta x}|\, dx.
+\]
+Подынтегральная функция мажорируется $2 |f(x)| \in L^1(\R)$ и
+поточечно стремится к нулю при $|\xi - \eta| \to 0$. По теореме
+Лебега о мажорированной сходимости
+$|\hat f(\xi) - \hat f(\eta)| \to 0$ при $|\xi - \eta| \to 0$, причём
+оценка зависит от $|\xi - \eta|$ только через подынтегральную
+мажоранту,~--- значит, сходимость равномерна по~$\xi$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:rl-line}]
+\proofanchor{rl-line}
+Сначала возьмём $f = \mathbf{1}_{[a, b]}$. Прямое вычисление даёт
+\[
+  \hat f(\xi) = \int_a^b e^{-i \xi x}\, dx = \frac{e^{-i \xi a} - e^{-i \xi b}}{i \xi}, \qquad \xi \neq 0,
+\]
+так что $|\hat f(\xi)| \leq 2/|\xi| \to 0$ при $|\xi| \to \infty$. По
+линейности то же выполнено для всякой ступенчатой функции с конечным
+числом значений на ограниченном интервале.
+
+Для произвольной $f \in L^1(\R)$ и $\varepsilon > 0$ выберем
+ступенчатую функцию~$\varphi$ с компактным носителем, для которой
+$\|f - \varphi\|_1 < \varepsilon/2$,~--- это возможно благодаря
+плотности ступенчатых функций с компактным носителем в $L^1(\R)$. По
+\cref{prop:ft-bounded}
+$|\hat f(\xi) - \hat \varphi(\xi)| \leq \|f - \varphi\|_1 < \varepsilon/2$.
+Возьмём $\Lambda > 0$ так, чтобы $|\hat \varphi(\xi)| < \varepsilon/2$
+при $|\xi| \geq \Lambda$. Тогда при таких~$\xi$
+$|\hat f(\xi)| \leq |\hat \varphi(\xi)| + \varepsilon/2 < \varepsilon$.
+\end{proof}
+
+\begin{proof}[\Cref{prop:ft-algebra}]
+\proofanchor{ft-algebra}
+\emph{(а)} Линейность интеграла.
+
+\emph{(б)} Замена $y = x - h$, $dy = dx$:
+\[
+  \widehat{f_h}(\xi) = \int_{\R} f(x - h)\, e^{-i \xi x}\, dx
+                     = \int_{\R} f(y)\, e^{-i \xi (y + h)}\, dy
+                     = e^{-i \xi h}\, \hat f(\xi).
+\]
+
+\emph{(в)} Прямой подсчёт:
+$\hat g(\xi) = \int e^{i \omega x} f(x) e^{-i \xi x}\, dx
+= \int f(x) e^{-i (\xi - \omega) x}\, dx = \hat f(\xi - \omega)$.
+
+\emph{(г)} Замена $y = a x$, $dy = a\, dx$. При $a > 0$
+\[
+  \hat g(\xi) = \int_{\R} f(a x) e^{-i \xi x}\, dx
+              = \frac{1}{a} \int_{\R} f(y) e^{-i (\xi/a) y}\, dy
+              = \frac{1}{a}\, \hat f(\xi/a).
+\]
+При $a < 0$ замена меняет местами пределы интегрирования, и получается
+$\hat g(\xi) = -\tfrac{1}{a}\, \hat f(\xi/a) = \tfrac{1}{|a|}\, \hat f(\xi/a)$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:ft-of-derivative}]
+\proofanchor{ft-of-derivative}
+Для $R > 0$ применим интегрирование по частям на $[-R, R]$ при
+$u = e^{-i\xi x}$, $dv = f'(x)\, dx$:
+\[
+  \int_{-R}^{R} f'(x) e^{-i\xi x}\, dx
+  = \bigl[f(x) e^{-i\xi x}\bigr]_{-R}^{R}
+    + i\xi \int_{-R}^{R} f(x) e^{-i\xi x}\, dx.
+\]
+Граничный член равен $f(R) e^{-i\xi R} - f(-R) e^{i\xi R}$, его
+модуль не превосходит $|f(R)| + |f(-R)|$, а это по условию стремится
+к нулю при $R \to \infty$. Оба интеграла стремятся к
+$\widehat{f'}(\xi)$ и $\hat f(\xi)$ соответственно (поскольку
+$f, f' \in L^1$). Переходя к пределу при $R \to \infty$, получаем
+$\widehat{f'}(\xi) = i\xi\, \hat f(\xi)$. По индукции
+$\widehat{f^{(k)}}(\xi) = (i\xi)^k \hat f(\xi)$, и
+\cref{prop:ft-bounded}, применённая к~$f^{(k)}$, даёт
+$|\xi|^k |\hat f(\xi)| = |\widehat{f^{(k)}}(\xi)| \leq \|f^{(k)}\|_1$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:derivative-of-ft}]
+\proofanchor{derivative-of-ft}
+Положим $F(\xi, x) = f(x) e^{-i \xi x}$, тогда
+$\hat f(\xi) = \int_{\R} F(\xi, x)\, dx$. Частная производная
+$\partial_\xi F(\xi, x) = -i x\, f(x)\, e^{-i \xi x}$ существует при
+любых $(\xi, x)$ и мажорируется функцией $|x f(x)|$, лежащей в
+$L^1(\R)$ по условию. Применима формула Лейбница для дифференцирования
+интеграла, зависящего от параметра, см.\
+\cite[Т.~II, гл.~XVII]{Zorich1981}, и она даёт
+\[
+  (\hat f)'(\xi) \;=\; \int_{\R} \partial_\xi F(\xi, x)\, dx
+                 \;=\; -i \int_{\R} x\, f(x)\, e^{-i \xi x}\, dx
+                 \;=\; \widehat{(- i x\, f)}(\xi).
+\]
+Правая часть~--- преобразование Фурье $L^1$-функции, а значит,
+непрерывна по~$\xi$ согласно \cref{thm:ft-continuous}; следовательно,
+$\hat f \in C^1(\R)$. Общий случай $C^k$ доказывается по индукции при
+выполнении условия $x^j f(x) \in L^1$.
+\end{proof}
 
 \subsection*{Примеры}
-% TODO
+
+\begin{example}[Индикатор интервала]
+\label{ex:ft-indicator}
+Пусть $f = \mathbf{1}_{[-1, 1]}$. Тогда $f \in L^1$, и при $\xi \neq 0$
+\[
+  \hat f(\xi) = \int_{-1}^{1} e^{-i \xi x}\, dx
+              = \frac{e^{-i \xi} - e^{i \xi}}{-i\xi}
+              = \frac{2 \sin \xi}{\xi}.
+\]
+В точке $\xi = 0$ имеем $\hat f(0) = 2 = \lim_{\xi \to 0} (2 \sin \xi)/\xi$.
+Преобразование вещественно, чётно, непрерывно и стремится к нулю на
+бесконечности~--- что согласуется с
+\cref{thm:ft-continuous,thm:rl-line}. Заметим, однако, что
+$\hat f \notin L^1(\R)$, поскольку $|2 \sin \xi / \xi|$ не абсолютно
+интегрируемо (осциллирующий хвост порядка $1/\xi$); поэтому формулу
+обращения нужно применять в подходящем смысле.
+\end{example}
+
+\begin{example}[Двусторонняя экспонента]
+\label{ex:ft-double-exp}
+Пусть $f(x) = e^{-|x|}$. Тогда $f \in L^1$, $\|f\|_1 = 2$ и
+\begin{align*}
+  \hat f(\xi)
+  &= \int_{-\infty}^{0} e^{x}\, e^{-i\xi x}\, dx + \int_{0}^{\infty} e^{-x}\, e^{-i\xi x}\, dx \\
+  &= \frac{1}{1 - i\xi} + \frac{1}{1 + i\xi}
+   = \frac{2}{1 + \xi^2}.
+\end{align*}
+И $f$, и $\hat f$ интегрируемы; формула обращения восстанавливает~$f$
+из $\hat f$ поточечно. Преобразование убывает как $\xi^{-2}$~---
+согласуется с тем, что~$f$ принадлежит лишь классу $C^0$ (одна
+обобщённая производная в~$L^1$ даёт дополнительный множитель $1/\xi$ в
+\cref{thm:ft-of-derivative}).
+\end{example}
+
+\begin{example}[Гауссиана: самосопряжённая функция]
+\label{ex:ft-gaussian}
+Пусть $f(x) = e^{-x^2/2}$. Тогда $f \in L^1$ и можно показать, что
+$\hat f(\xi) = \sqrt{2\pi}\, e^{-\xi^2/2}$. Изящное доказательство
+опирается на правила дифференцирования: $f'(x) = -x f(x)$, поэтому,
+применяя $\mathcal{F}$ к обеим частям и пользуясь
+\cref{thm:ft-of-derivative,thm:derivative-of-ft},
+\[
+  i \xi\, \hat f(\xi) \;=\; \widehat{f'}(\xi) \;=\; \widehat{-x f}(\xi) \;=\; -i\, (\hat f)'(\xi),
+\]
+то есть $(\hat f)'(\xi) = -\xi\, \hat f(\xi)$. Это то же
+дифференциальное уравнение первого порядка, которому удовлетворяет
+сама~$f$ (с заменой $x$ на $\xi$); следовательно,
+$\hat f(\xi) = C\, e^{-\xi^2/2}$ при некоторой константе~$C$.
+В точке $\xi = 0$:
+$C = \hat f(0) = \int_{\R} e^{-x^2/2}\, dx = \sqrt{2\pi}$. Итог:
+$\hat f(\xi) = \sqrt{2\pi}\, e^{-\xi^2/2}$~--- гауссиана с точностью
+до постоянного множителя является собственным преобразованием Фурье.
+\end{example}
+
+\begin{problem}[Соответствие гладкость~--- убывание]
+Пусть $f \in L^1(\R)$, $f \in C^k(\R)$, $f, f', \dots, f^{(k)} \in L^1(\R)$
+и $f^{(j)}(x) \to 0$ при $|x| \to \infty$ для $j = 0, \dots, k - 1$.
+Докажите, что $\hat f(\xi) = o(|\xi|^{-k})$ при $|\xi| \to \infty$.
+(Указание: воспользуйтесь \cref{thm:ft-of-derivative} вместе с
+\cref{thm:rl-line}.)
+\end{problem}
