@@ -8,10 +8,236 @@ Standard distributions in statistical data analysis. Pearson's chi-squared distr
 \end{ticket}
 
 \subsection*{Theory}
-% TODO
+
+The Gaussian families of \cref{sec:1.2.06-standard-distributions}
+admit three derived families that organise classical statistical
+inference: chi-squared, Fisher–Snedecor, and Student. Each is
+defined as a particular function of independent standard normals,
+and each plays a specific role in tests built around the sample
+mean and sample variance.
+
+\begin{definition}[Chi-squared distribution]
+\label{def:chi-squared}
+Let $Z_1, \dots, Z_n$ be i.i.d.\ $\mathcal{N}(0, 1)$ random variables.
+The distribution of
+\[
+  \chi^2 \;=\; Z_1^2 + Z_2^2 + \cdots + Z_n^2
+\]
+is the \emph{chi-squared distribution with $n$ degrees of freedom},
+denoted $\chi^2_n$. Its density on $(0, \infty)$ is
+\[
+  f_{\chi^2_n}(x) \;=\; \frac{1}{2^{n/2}\, \Gamma(n/2)}\, x^{n/2 - 1}\, e^{-x/2},
+\]
+where $\Gamma$ is Euler's gamma function. The mean is $n$ and
+variance is $2n$.
+\end{definition}
+
+\begin{proposition}[Closure of $\chi^2$ under independent sums]
+\label{prop:chi2-closure}
+If $U \sim \chi^2_m$ and $V \sim \chi^2_n$ are independent, then
+$U + V \sim \chi^2_{m+n}$.
+\end{proposition}
+\proofof{chi2-closure}
+
+\begin{definition}[Fisher–Snedecor $F$ distribution]
+\label{def:f-distribution}
+Let $U \sim \chi^2_m$ and $V \sim \chi^2_n$ be independent. The
+distribution of
+\[
+  F \;=\; \frac{U / m}{V / n}
+\]
+is the \emph{Fisher–Snedecor distribution} with $(m, n)$ degrees of
+freedom, denoted $F_{m, n}$. Its density on $(0, \infty)$ is
+\[
+  f_{F_{m,n}}(x) \;=\; \frac{\Gamma\bigl((m+n)/2\bigr)}{\Gamma(m/2)\, \Gamma(n/2)}\, \Bigl(\frac{m}{n}\Bigr)^{m/2}\, \frac{x^{m/2 - 1}}{(1 + m x/n)^{(m+n)/2}}.
+\]
+The mean is $n/(n - 2)$ for $n > 2$.
+\end{definition}
+
+\begin{definition}[Student's $t$ distribution]
+\label{def:t-distribution}
+Let $Z \sim \mathcal{N}(0, 1)$ and $V \sim \chi^2_n$ be independent.
+The distribution of
+\[
+  T \;=\; \frac{Z}{\sqrt{V / n}}
+\]
+is \emph{Student's $t$ distribution with $n$ degrees of freedom},
+denoted $t_n$. It is symmetric about~$0$ with density
+\[
+  f_{t_n}(x) \;=\; \frac{\Gamma\bigl((n+1)/2\bigr)}{\sqrt{n \pi}\, \Gamma(n/2)}\, \Bigl(1 + \frac{x^2}{n}\Bigr)^{-(n+1)/2}.
+\]
+$\E T = 0$ for $n > 1$ and $\Var T = n/(n - 2)$ for $n > 2$.
+\end{definition}
+
+\begin{proposition}[Asymptotic behaviour]
+\label{prop:asymptotics-chi2-f-t}
+As $n \to \infty$, $t_n \xrightarrow{d} \mathcal{N}(0, 1)$ and
+$F_{m, n} \xrightarrow{d} \chi^2_m / m$ (in distribution); as both
+$m, n \to \infty$ with $m / n \to c > 0$, $F_{m, n}$ concentrates
+near $1$.
+\end{proposition}
+\proofof{asymptotics-chi2-f-t}
+
+\medskip
+\noindent\textbf{Why these distributions?} They emerge from the
+following key fact about i.i.d.\ Gaussian samples, which is the
+main statistical use case.
+
+\begin{theorem}[Sample mean and variance from a normal sample]
+\label{thm:sample-mean-variance}
+Let $X_1, \dots, X_n$ be i.i.d.\ $\mathcal{N}(\mu, \sigma^2)$. Define
+\[
+  \bar X = \frac{1}{n} \sum_{i=1}^{n} X_i, \qquad
+  S^2 = \frac{1}{n - 1} \sum_{i=1}^{n} (X_i - \bar X)^2.
+\]
+Then $\bar X$ and $S^2$ are independent random variables, with
+\[
+  \bar X \sim \mathcal{N}\Bigl(\mu, \frac{\sigma^2}{n}\Bigr) \qquad \text{and} \qquad
+  \frac{(n - 1) S^2}{\sigma^2} \sim \chi^2_{n - 1}.
+\]
+Consequently,
+\[
+  \frac{\bar X - \mu}{S / \sqrt n} \sim t_{n - 1}.
+\]
+\end{theorem}
+\proofof{sample-mean-variance}
+
+The independence of $\bar X$ and $S^2$ — peculiar to the Gaussian
+distribution — together with the chi-squared scaling of $S^2$, is
+what makes Student's $t$-distribution the exact small-sample
+distribution of the standardised sample mean when~$\sigma$ is
+unknown. This underpins all of \cref{sec:1.2.12-hypothesis-testing}.
 
 \subsection*{Proofs}
-% TODO
+
+\begin{proof}[\Cref{def:chi-squared}, density and moments]
+\proofanchor{chi-squared}
+For $n = 1$ and $Z \sim \mathcal{N}(0, 1)$, $W = Z^2$ has density
+$f_W(w) = w^{-1/2} e^{-w/2}/\sqrt{2 \pi}$ on $(0, \infty)$ — change
+of variables from $Z = \pm \sqrt w$ on $\R$. This matches
+$f_{\chi^2_1}$ since $\Gamma(1/2) = \sqrt \pi$. For general~$n$, the
+density of a sum of independent variables is the convolution of
+their densities; one computes the convolution of $n$~copies of
+$f_{\chi^2_1}$ inductively, or uses characteristic functions: the
+characteristic function of $Z^2$ is
+$\varphi_{Z^2}(t) = (1 - 2it)^{-1/2}$ (Gaussian integral
+calculation), so
+\[
+  \varphi_{\chi^2_n}(t) = (1 - 2it)^{-n/2}
+\]
+by independence (\cref{prop:char-properties}\,(e)). Inverting via
+\cref{thm:char-uniqueness} recovers the stated density. The mean
+and variance follow by linearity:
+$\E \chi^2_n = n \cdot \E Z^2 = n$, and
+$\Var \chi^2_n = n \cdot \Var Z^2 = n \cdot (\E Z^4 - 1) = n \cdot 2 = 2n$
+(using $\E Z^4 = 3$ for standard normal).
+\end{proof}
+
+\begin{proof}[\Cref{prop:chi2-closure}]
+\proofanchor{chi2-closure}
+By \cref{prop:char-properties}\,(e),
+$\varphi_{U + V}(t) = \varphi_U(t) \varphi_V(t) = (1 - 2it)^{-m/2} (1 - 2it)^{-n/2} = (1 - 2it)^{-(m+n)/2}$,
+which is the characteristic function of $\chi^2_{m+n}$. By
+\cref{thm:char-uniqueness}, $U + V \sim \chi^2_{m+n}$. Equivalently,
+realise $U = Z_1^2 + \cdots + Z_m^2$ and
+$V = Z_{m+1}^2 + \cdots + Z_{m+n}^2$ on a common space where all
+$Z_i$ are i.i.d.\ standard normal; then $U + V$ is by definition
+$\chi^2_{m+n}$.
+\end{proof}
+
+\begin{proof}[\Cref{prop:asymptotics-chi2-f-t}]
+\proofanchor{asymptotics-chi2-f-t}
+For $T \sim t_n = Z / \sqrt{V/n}$ with $V \sim \chi^2_n$, the SLLN
+(\cref{thm:slln}) gives $V/n = (Z_1^2 + \cdots + Z_n^2)/n \to 1$
+a.s., so $\sqrt{V/n} \to 1$ a.s. By Slutsky's lemma
+\cite[Ch.~III, \S~1]{Shiryaev1989}, $T = Z / \sqrt{V/n}$ converges
+to $Z \sim \mathcal{N}(0, 1)$ in distribution.
+
+For $F_{m, n}$, fix $m$ and let $n \to \infty$. Then
+$V/n \to 1$ a.s.\ as before, so $F = (U/m) / (V/n) \to U/m$ in
+distribution, where $U \sim \chi^2_m$. The case
+$m, n \to \infty$ with $m/n \to c$ uses LLN on both numerator and
+denominator: $U/m \to 1$ and $V/n \to 1$, so $F \to 1$ in
+probability.
+\end{proof}
+
+\begin{proof}[\Cref{thm:sample-mean-variance}, sketch]
+\proofanchor{sample-mean-variance}
+Without loss of generality, $\mu = 0$ and $\sigma = 1$ (replace
+$X_i$ by $(X_i - \mu)/\sigma$). Write $\vect{X} = (X_1, \dots, X_n)\T \sim \mathcal{N}(\vect{0}, \mat{I}_n)$.
+
+\emph{Distribution of $\bar X$.} By \cref{ex:normal-sum},
+$\bar X = (1/n) \sum X_i \sim \mathcal{N}(0, 1/n)$.
+
+\emph{Independence and the chi-squared distribution of $(n-1) S^2$.}
+Decompose $\vect{X}$ orthogonally as $\vect{X} = \bar X \vect{1}/\sqrt n \cdot \sqrt n + (\vect{X} - \bar X \vect{1})$,
+where $\vect{1} = (1, \dots, 1)\T$. Set
+$\vect{Y} = (\sqrt n\, \bar X,\, X_1 - \bar X, \dots, X_n - \bar X)\T = \mat{Q} \vect{X}$
+for an orthogonal matrix~$\mat{Q}$ whose first row is
+$\vect{1}\T/\sqrt n$ and whose remaining rows form an orthonormal
+basis of the orthogonal complement of $\vect{1}$ in $\R^n$. Since
+$\mathcal{N}(\vect{0}, \mat{I}_n)$ is rotation-invariant, the
+components of $\vect{Y}$ are independent standard normals. The first
+component is $\sqrt n \bar X$; the squared norm of the remaining
+$n - 1$ components is $\sum_i (X_i - \bar X)^2 = (n-1) S^2$, and the
+remaining components are i.i.d.\ standard normal, so $(n - 1) S^2 \sim \chi^2_{n - 1}$.
+Independence of $\bar X$ from this norm follows because they are
+functions of disjoint, independent sets of components of~$\vect{Y}$.
+
+\emph{The $t$-distribution.} With independent
+$\bar X \sim \mathcal{N}(\mu, \sigma^2/n)$ and
+$(n-1) S^2 / \sigma^2 \sim \chi^2_{n-1}$, set $Z = (\bar X - \mu) \sqrt n / \sigma$
+($\sim \mathcal{N}(0, 1)$) and $V = (n-1) S^2/\sigma^2$. Then
+\[
+  \frac{\bar X - \mu}{S/\sqrt n} = \frac{\sigma Z/\sqrt n}{\sigma \sqrt{V/(n-1)}/\sqrt n} = \frac{Z}{\sqrt{V/(n-1)}} \sim t_{n - 1}
+\]
+by \cref{def:t-distribution}.
+\end{proof}
 
 \subsection*{Examples}
-% TODO
+
+\begin{example}[Confidence interval for a normal mean]
+\label{ex:t-confidence-interval}
+Let $X_1, \dots, X_n$ be i.i.d.\ $\mathcal{N}(\mu, \sigma^2)$ with
+$\sigma^2$ unknown. By \cref{thm:sample-mean-variance},
+$T = (\bar X - \mu)/(S/\sqrt n) \sim t_{n - 1}$. Hence for any
+$\alpha \in (0, 1)$, with $t_{\alpha/2, n-1}$ the upper-$(\alpha/2)$
+quantile of $t_{n - 1}$,
+\[
+  \Prob\Bigl(\bar X - t_{\alpha/2, n-1}\, \frac{S}{\sqrt n} \leq \mu \leq \bar X + t_{\alpha/2, n-1}\, \frac{S}{\sqrt n}\Bigr) = 1 - \alpha,
+\]
+giving a $100(1 - \alpha)\%$ confidence interval for~$\mu$. For
+$n = 10$ and $\alpha = 0.05$, $t_{0.025, 9} \approx 2.262$.
+\end{example}
+
+\begin{example}[Variance ratio test setup]
+\label{ex:f-test-setup}
+Two independent normal samples of sizes $m + 1$ and $n + 1$ with
+sample variances $S_1^2, S_2^2$. By
+\cref{thm:sample-mean-variance}, $m S_1^2/\sigma_1^2 \sim \chi^2_m$
+and $n S_2^2/\sigma_2^2 \sim \chi^2_n$, independent. Hence
+\[
+  \frac{S_1^2/\sigma_1^2}{S_2^2/\sigma_2^2} \sim F_{m, n}.
+\]
+Under the null $\sigma_1^2 = \sigma_2^2$, the ratio $S_1^2/S_2^2$
+follows $F_{m, n}$ — the basis of the variance-ratio
+$F$-test in \cref{sec:1.2.12-hypothesis-testing}.
+\end{example}
+
+\begin{problem}
+\label{prob:chi2-quantile}
+Suppose $X_1, \dots, X_5$ are i.i.d.\ $\mathcal{N}(0, 4)$. Find
+$\Prob(\sum_{i=1}^{5} X_i^2 \leq 12)$.
+\end{problem}
+
+\begin{proof}[Solution]
+$X_i / 2 \sim \mathcal{N}(0, 1)$, so $\sum (X_i/2)^2 = (\sum X_i^2)/4 \sim \chi^2_5$.
+Thus $\Prob(\sum X_i^2 \leq 12) = \Prob(\chi^2_5 \leq 3)$. From a
+$\chi^2_5$ table (or from
+$F_{\chi^2_5}(x) = \gamma(5/2, x/2)/\Gamma(5/2)$ with the lower
+incomplete gamma function $\gamma$),
+$\Prob(\chi^2_5 \leq 3) \approx 0.300$. The mean of $\chi^2_5$
+is~$5$, so $3$ sits roughly half a standard deviation
+($\sqrt{2 \cdot 5} \approx 3.16$) below the mean — consistent
+with a left-tail probability around $0.3$.
+\end{proof}
