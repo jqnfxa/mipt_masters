@@ -8,10 +8,275 @@ Strings and string operations. String representation. Length, concatenation. Sub
 \end{ticket}
 
 \subsection*{Theory}
-% TODO
+
+We work with strings over a finite alphabet~$\Sigma$ (e.g.\ ASCII or
+Unicode code points). The principal references are
+\cite[Ch.~32]{CLRS2013} and \cite{Skiena2014}.
+
+\subsubsection*{Strings and basic operations}
+
+\begin{definition}[String]
+\label{def:string}
+A \emph{string} (or \emph{word}) over~$\Sigma$ is a finite sequence
+$s = s_1 s_2 \dots s_n$ with $s_i \in \Sigma$. Its \emph{length} is
+$|s| = n$. The unique string of length~$0$ is the \emph{empty string},
+denoted $\varepsilon$. The set of all strings over~$\Sigma$ is
+$\Sigma^* = \bigcup_{n \geq 0} \Sigma^n$.
+\end{definition}
+
+\begin{definition}[Concatenation, prefix, suffix, substring]
+\label{def:string-ops}
+For $s = s_1 \dots s_m$ and $t = t_1 \dots t_n$:
+\begin{itemize}
+  \item the \emph{concatenation} $s t$ is the string of length $m + n$
+        equal to $s_1 \dots s_m t_1 \dots t_n$;
+  \item $u$ is a \emph{prefix} of~$s$ (written $u \sqsubseteq s$) if
+        $s = u v$ for some $v \in \Sigma^*$; \emph{proper} if $u \neq s$;
+  \item $u$ is a \emph{suffix} of~$s$ if $s = v u$ for some $v$;
+  \item $u$ is a \emph{substring} of~$s$ if $s = v u w$ for some $v, w$.
+\end{itemize}
+With concatenation, $\Sigma^*$ is the \emph{free monoid} on~$\Sigma$
+with identity $\varepsilon$.
+\end{definition}
+
+\subsubsection*{Representation and operation costs}
+
+Two common in-memory representations of a string of length~$n$:
+\begin{itemize}
+  \item \emph{Length-prefixed array.} Store the explicit length~$n$
+        alongside a contiguous array of $n$ characters. Computing
+        $|s|$ is~$\Theta(1)$.
+  \item \emph{Sentinel-terminated array (C-style).} Store the
+        characters followed by a reserved terminator (e.g.\ \texttt{\textbackslash 0}).
+        Computing $|s|$ requires scanning until the sentinel, costing
+        $\Theta(n)$.
+\end{itemize}
+
+\begin{proposition}[Costs of basic operations]
+\label{prop:string-ops-cost}
+For strings of length~$m$ and~$n$, in the RAM model
+(\cref{def:complexity}):
+\begin{enumerate}[label=(\alph*)]
+  \item \emph{indexing} $s_i$: $\Theta(1)$ in any array representation;
+  \item \emph{length} $|s|$: $\Theta(1)$ length-prefixed,
+        $\Theta(n)$ sentinel-terminated;
+  \item \emph{concatenation} $s t$ (returning a fresh string):
+        $\Theta(m + n)$ time and space, since each character is copied
+        once;
+  \item \emph{substring} $s_i \dots s_j$ (returning a fresh copy):
+        $\Theta(j - i + 1)$;
+  \item \emph{equality} $s = t$: $\Theta(\min\{m, n\})$ in the worst
+        case (compare character by character; mismatch in length is an
+        $O(1)$ shortcut if length is stored).
+\end{enumerate}
+\end{proposition}
+\proofof{string-ops-cost}
+
+\begin{remark}
+The cost of repeated concatenation matters in practice. Building a
+string of length~$n$ by $n$ successive single-character
+concatenations on immutable strings costs $\Theta(n^2)$ in total
+(each step copies the entire prefix); using a mutable buffer with
+amortised doubling brings this down to $\Theta(n)$.
+\end{remark}
+
+\subsubsection*{Substring search}
+
+\begin{definition}[Substring search]
+\label{def:substring-search}
+Given a \emph{text} $T = T[1..n]$ and a \emph{pattern} $P = P[1..m]$
+with $m \leq n$, find all \emph{shifts} $s \in \{0, 1, \dots, n - m\}$
+such that $T[s + 1 .. s + m] = P[1..m]$. We say $P$ \emph{occurs in}
+$T$ \emph{at shift~$s$}.
+\end{definition}
+
+\paragraph{Naive algorithm.} Try every shift $s = 0, 1, \dots, n - m$;
+for each, compare $P$ with $T[s+1..s+m]$ character by character,
+stopping at the first mismatch.
+
+\begin{proposition}[Naive search complexity]
+\label{prop:naive-search}
+The naive algorithm uses $\Theta(1)$ extra space and worst-case time
+$\Theta((n - m + 1)\, m)$, i.e.\ $\Theta(nm)$ when $m = O(n)$. The
+worst case is attained, e.g., on $T = a^n$ and $P = a^{m-1} b$.
+\end{proposition}
+\proofof{naive-search}
+
+\paragraph{Knuth--Morris--Pratt (KMP).} The KMP algorithm precomputes a
+\emph{prefix function} $\pi \colon \{1, \dots, m\} \to \{0, 1, \dots, m - 1\}$
+for the pattern, then scans the text once.
+
+\begin{definition}[Prefix function]
+\label{def:prefix-function}
+For a string $P[1..m]$, set
+\[
+  \pi(q) \;=\; \max\{ k \in \{0, 1, \dots, q - 1\} \;:\; P[1..k] = P[q - k + 1 .. q] \}.
+\]
+That is, $\pi(q)$ is the length of the longest \emph{proper} prefix of
+$P[1..q]$ that is also a suffix of $P[1..q]$.
+\end{definition}
+
+\begin{theorem}[KMP search]
+\label{thm:kmp}
+The Knuth--Morris--Pratt algorithm finds all occurrences of $P$ in $T$
+using:
+\begin{enumerate}[label=(\alph*)]
+  \item time $\Theta(m)$ to compute~$\pi$;
+  \item time $\Theta(n)$ to scan~$T$ given~$\pi$;
+  \item total time $\Theta(n + m)$ and extra space $\Theta(m)$.
+\end{enumerate}
+\end{theorem}
+\proofof{kmp}
+
+\paragraph{Rabin--Karp.} Pick a hash function $h$ on length-$m$
+strings supporting fast \emph{rolling}: $h(T[s+2..s+m+1])$ is computed
+from $h(T[s+1..s+m])$ in $O(1)$. Slide a window of length~$m$ over~$T$;
+on each match of $h$ with $h(P)$, verify by direct comparison.
+
+\begin{theorem}[Rabin--Karp]
+\label{thm:rabin-karp}
+With a polynomial rolling hash and a random prime modulus, the
+expected running time of Rabin--Karp is $\Theta(n + m)$, and the
+worst case is $\Theta(nm)$. Extra space is $\Theta(1)$.
+\end{theorem}
+
+We will not prove \cref{thm:rabin-karp}; the analysis depends on
+the choice of hash family and is treated in
+\cite[\S~32.2]{CLRS2013}.
 
 \subsection*{Proofs}
-% TODO
+
+\begin{proof}[\Cref{prop:string-ops-cost}]
+\proofanchor{string-ops-cost}
+\emph{(a)} Array indexing is one memory access by definition of the
+RAM model.
+
+\emph{(b)} Length-prefixed: the stored field is read in $\Theta(1)$.
+Sentinel-terminated: in the worst case the entire string is scanned;
+in the best case $|s| = 0$ and one access suffices.
+
+\emph{(c)} The result has $m + n$ characters, each of which must be
+written; writing fewer is impossible.
+
+\emph{(d)} Same as (c) for length $j - i + 1$.
+
+\emph{(e)} Compare characters left to right. The first mismatch ends
+the comparison; in the worst case the strings agree to the end of the
+shorter one, costing $\Theta(\min\{m, n\})$.
+\end{proof}
+
+\begin{proof}[\Cref{prop:naive-search}]
+\proofanchor{naive-search}
+There are $n - m + 1$ shifts. At each shift, the inner comparison
+loop runs at most~$m$ times before finding a mismatch or matching the
+whole pattern. The product gives the upper bound.
+
+For the matching example, take $T = \underbrace{aaaa\dots a}_{n}$ and
+$P = \underbrace{aa\dots a}_{m - 1}\, b$. At every shift~$s$, the
+inner loop matches the first $m - 1$ characters and only mismatches
+on the final $b$ — exactly~$m$ comparisons per shift. Hence the lower
+bound $(n - m + 1)\, m = \Theta(nm)$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:kmp}]
+\proofanchor{kmp}
+\emph{Algorithm sketch.} Maintain an index $q$ into~$P$ that records
+the length of the current matched prefix of~$P$. For each text
+character $T[i]$ ($i = 1, \dots, n$):
+\begin{itemize}
+  \item while $q > 0$ and $P[q + 1] \neq T[i]$, set $q \leftarrow \pi(q)$;
+  \item if $P[q + 1] = T[i]$, set $q \leftarrow q + 1$;
+  \item if $q = m$, report an occurrence at shift $i - m$ and set
+        $q \leftarrow \pi(q)$ to look for the next.
+\end{itemize}
+The prefix function $\pi$ is computed by the same rule applied to $P$
+itself in place of~$T$ (and pre-shifted by one): for $q = 2, \dots, m$
+let $k = \pi(q - 1)$, while $k > 0$ and $P[k + 1] \neq P[q]$ set
+$k \leftarrow \pi(k)$; if $P[k + 1] = P[q]$ set $k \leftarrow k + 1$;
+finally $\pi(q) = k$.
+
+\emph{Correctness.} Loop invariant for the search loop: ``after
+processing $T[1..i]$, $q$ equals the length of the longest prefix of
+$P$ that is also a suffix of $T[1..i]$.'' Initialization ($i = 0$,
+$q = 0$) is trivial. Maintenance: by definition of~$\pi$, the
+inner-while step replaces $q$ by the next-longest length-$k < q$
+such that $P[1..k]$ is a suffix of the current matched portion;
+\cref{def:prefix-function} guarantees that this enumerates every
+candidate length in decreasing order. The single-character extension
+$q \leftarrow q + 1$ preserves the invariant.
+
+When $q = m$, the matched prefix has length~$m$, i.e.\ $P$ itself is
+a suffix of $T[1..i]$, so $P$ occurs at shift~$i - m$.
+
+\emph{Running time.} Each iteration of the search loop performs at
+least one of: increment $q$, set $q \leftarrow 0$ via $\pi$, or skip
+($P[q + 1] = T[i]$, $q$ already 0). Use the potential function
+$\Phi = q$. The increment step costs~$1$ and raises $\Phi$ by~$1$,
+amortised cost~$2$. Each $\pi$-step inside the while loop costs~$1$
+and decreases $\Phi$ by at least~$1$, amortised cost~$0$ (the cost is
+paid by the previous deposit). Since $\Phi$ starts at $0$ and is
+never negative, the total work over the $n$ outer iterations is
+$O(n)$.
+
+The same amortised argument applied to the prefix-function
+construction over the $m$ characters of~$P$ shows it runs in $O(m)$.
+Total time $O(n + m)$, which matches the trivial lower bound
+$\Omega(n + m)$ (every character must be inspected at least once).
+\end{proof}
 
 \subsection*{Examples}
-% TODO
+
+\begin{example}[Naive search trace]
+\label{ex:naive-search}
+$T = \texttt{ababcabab}$, $P = \texttt{abab}$.
+\begin{itemize}
+  \item Shift $s = 0$: matches at $T[1..4] = \texttt{abab}$. \emph{Match.}
+  \item Shift $s = 1$: $P[1] = \texttt{a}$ vs $T[2] = \texttt{b}$, mismatch.
+  \item Shift $s = 2$: $P[1..2] = \texttt{ab}$ vs $T[3..4] = \texttt{ab}$,
+        $P[3] = \texttt{a}$ vs $T[5] = \texttt{c}$, mismatch.
+  \item Shift $s = 3$: mismatch on the first character.
+  \item Shift $s = 4$: $P[1] = \texttt{a}$ vs $T[5] = \texttt{c}$, mismatch.
+  \item Shift $s = 5$: matches at $T[6..9] = \texttt{abab}$. \emph{Match.}
+\end{itemize}
+Total occurrences: shifts $\{0, 5\}$.
+\end{example}
+
+\begin{example}[Computing the prefix function]
+\label{ex:prefix-function}
+$P = \texttt{ababaca}$, $m = 7$:
+\[
+  \begin{array}{r|ccccccc}
+    q       & 1 & 2 & 3 & 4 & 5 & 6 & 7 \\
+    \hline
+    P[q]    & a & b & a & b & a & c & a \\
+    \pi(q)  & 0 & 0 & 1 & 2 & 3 & 0 & 1
+  \end{array}
+\]
+For instance, $\pi(5) = 3$: the longest proper prefix of $\texttt{ababa}$
+that is also a suffix is $\texttt{aba}$. Then $\pi(6) = 0$ because no
+proper prefix of $\texttt{ababac}$ is a suffix. Finally $\pi(7) = 1$
+because $\texttt{a}$ is the longest proper prefix-and-suffix of
+$\texttt{ababaca}$.
+\end{example}
+
+\begin{example}[KMP run]
+\label{ex:kmp-run}
+With the pattern $P = \texttt{ababaca}$ above and text
+$T = \texttt{abababacaba}$, the KMP scan visits each character of~$T$
+exactly once, never re-comparing characters that the prefix function
+has already certified. The reader can check the algorithm reports an
+occurrence at shift~$3$ (so $P$ aligns to $T[4..10]$) and no others;
+the total number of character comparisons is~$11 + 7 = 18$, versus
+$33$ for the naive algorithm on the same input.
+\end{example}
+
+\begin{problem}[Cost of repeated string concatenation]
+Suppose strings are immutable: each concatenation produces a fresh
+copy whose contents come from copying both operands character by
+character. Let $f(n)$ be the worst-case time to build a string of
+length~$n$ by appending characters one at a time:
+$s_0 = \varepsilon$, $s_{k+1} = s_k \cdot c_{k+1}$. Show
+$f(n) = \Theta(n^2)$. Then explain how a doubling-buffer
+implementation reduces the amortised cost per append to~$\Theta(1)$
+and the total cost to~$\Theta(n)$.
+\end{problem}
