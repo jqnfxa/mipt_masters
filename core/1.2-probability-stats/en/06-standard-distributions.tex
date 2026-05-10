@@ -148,6 +148,7 @@ A short table of characteristic functions worth memorising:
     X & \varphi_X(t) \\ \hline
     \mathrm{Bernoulli}(p)        & 1 - p + p\, e^{it} \\
     \mathrm{Bin}(n, p)           & (1 - p + p\, e^{it})^n \\
+    \mathrm{Geom}(p)             & p\, e^{it} / \bigl(1 - (1 - p)\, e^{it}\bigr) \\
     \mathrm{Poisson}(\lambda)    & \exp\!\bigl(\lambda(e^{it} - 1)\bigr) \\
     \mathrm{Exp}(\lambda)        & \lambda / (\lambda - it) \\
     \mathcal{N}(\mu, \sigma^2)   & \exp\!\bigl(i \mu t - \tfrac{1}{2} \sigma^2 t^2\bigr) \\
@@ -249,16 +250,16 @@ $\E e^{it(X + Y)} = \E e^{itX} \E e^{itY}$.
 \begin{proof}[\Cref{thm:char-uniqueness} and \Cref{thm:levy-continuity}]
 \proofanchor{char-uniqueness}
 \proofanchor{levy-continuity}
-Both are standard consequences of Fourier-analytic arguments
-on~$\R$. Uniqueness follows from the Plancherel-type identity
-\[
-  \int_{\R} e^{-\sigma^2 t^2 / 2} \varphi_X(t)\, dt = \sqrt{2\pi/\sigma^2}\; \E\, e^{-X^2/(2\sigma^2)}
-\]
-(approximating an indicator of an interval by Gaussians and letting
-$\sigma \to 0$); inversion in the integrable case is the standard
-$L^1$ Fourier inversion. Lévy's theorem combines pointwise
-convergence with Helly's selection theorem and a tightness argument
-secured by continuity of $\varphi$ at~$0$. Full proofs are in
+Both are standard consequences of Fourier-analytic arguments on~$\R$.
+Uniqueness can be shown by smoothing: convolve the law of~$X$ with a
+mean-zero Gaussian of variance~$\sigma^2$, so that the smoothed law has
+integrable Fourier transform $e^{-\sigma^2 t^2 / 2} \varphi_X(t)$ and the
+$L^1$ inversion formula recovers it; letting $\sigma \to 0$, the smoothed
+law converges weakly to the law of~$X$, so $\varphi_X$ determines that
+law. Inversion under integrability is the standard $L^1$ Fourier
+inversion theorem. Lévy's theorem combines pointwise convergence with
+Helly's selection theorem and a tightness argument secured by continuity
+of~$\varphi$ at~$0$. Full proofs are in
 \cite[Ch.~II, \S~12]{Shiryaev1989} and \cite[Ch.~VIII]{Gnedenko2001}.
 \end{proof}
 

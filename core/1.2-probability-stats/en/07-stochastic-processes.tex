@@ -71,7 +71,7 @@ The FDDs of any stochastic process satisfy two
 \emph{Kolmogorov consistency conditions}:
 \begin{enumerate}[label=(C\arabic*)]
   \item \emph{permutation:} for any permutation~$\pi$ of
-        $\{1, \dots, n\}$ and Borel
+        $\{1, \dots, n\}$ and Borel rectangles
         $B_1, \dots, B_n \in \mathcal{B}(\R)$,
         \[
           \mu_{t_{\pi(1)}, \dots, t_{\pi(n)}}(B_{\pi(1)} \times \cdots \times B_{\pi(n)}) = \mu_{t_1, \dots, t_n}(B_1 \times \cdots \times B_n);
@@ -82,6 +82,11 @@ The FDDs of any stochastic process satisfy two
           \mu_{t_1, \dots, t_n, t_{n+1}}(B \times \R) = \mu_{t_1, \dots, t_n}(B).
         \]
 \end{enumerate}
+Rectangles form a $\pi$-system that generates~$\mathcal{B}(\R^n)$, so
+checking~(C1) on rectangles forces the equivalent identity
+$\mu_{t_{\pi(1)}, \dots, t_{\pi(n)}}(\pi \cdot B) = \mu_{t_1, \dots, t_n}(B)$
+to hold for every $B \in \mathcal{B}(\R^n)$ (where
+$\pi \cdot B = \{(x_{\pi(1)}, \dots, x_{\pi(n)}) : (x_1, \dots, x_n) \in B\}$).
 \end{proposition}
 \proofof{fdd-consistency}
 
