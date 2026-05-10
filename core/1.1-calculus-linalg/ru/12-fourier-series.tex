@@ -8,10 +8,333 @@
 \end{ticket}
 
 \subsection*{Теория}
-% TODO
+
+Рассматриваем $2\pi$-периодические функции $f \colon \R \to \R$;
+канонический контрольный отрезок~--- $[-\pi, \pi]$. Если не оговорено
+противное, $f$ предполагается интегрируемой по Риману на $[-\pi, \pi]$
+(в частности, $f \in L^1[-\pi, \pi]$). Подробное изложение
+см.\ в~\cite[Т.~II, гл.~XVIII]{Zorich1981}.
+
+\subsubsection*{Коэффициенты и частичные суммы}
+
+\begin{definition}
+\label{def:fourier-coeffs}
+\emph{(Вещественными) коэффициентами Фурье} функции~$f$ называются
+\[
+  a_n \;=\; \frac{1}{\pi} \int_{-\pi}^{\pi} f(x) \cos(nx)\, dx \quad (n \ge 0),
+  \qquad
+  b_n \;=\; \frac{1}{\pi} \int_{-\pi}^{\pi} f(x) \sin(nx)\, dx \quad (n \ge 1).
+\]
+Соответствующий \emph{тригонометрический ряд Фурье}~---
+\[
+  f(x) \;\sim\; \frac{a_0}{2} + \sum_{n=1}^{\infty} \bigl(a_n \cos(nx) + b_n \sin(nx)\bigr),
+\]
+а его $N$-я частичная сумма~---
+\[
+  S_N(x; f) \;=\; \frac{a_0}{2} + \sum_{n=1}^{N} \bigl(a_n \cos(nx) + b_n \sin(nx)\bigr).
+\]
+Знак $\sim$ обозначает лишь сопоставление коэффициентов и не
+утверждает сходимости.
+\end{definition}
+
+\begin{remark}
+Система $\bigl\{1/\sqrt{2}, \cos x, \sin x, \cos 2x, \sin 2x, \dots\bigr\}$
+ортогональна на $[-\pi, \pi]$: $\int \cos^2 = \int \sin^2 = \pi$ и
+$\int_{-\pi}^{\pi} 1 \cdot 1\, dx = 2\pi$. Нормировки в
+\cref{def:fourier-coeffs} в точности воспроизводят коэффициенты любого
+конечного тригонометрического многочлена по формуле $L^2$-проекции.
+\end{remark}
+
+\subsubsection*{Неравенство Бесселя и теорема Римана об осцилляции}
+
+\begin{theorem}[Неравенство Бесселя]
+\label{thm:bessel}
+Для любой $f \in L^2[-\pi, \pi]$
+\[
+  \frac{a_0^2}{2} + \sum_{n=1}^{\infty} \bigl(a_n^2 + b_n^2\bigr)
+  \;\le\; \frac{1}{\pi} \int_{-\pi}^{\pi} f(x)^2\, dx.
+\]
+\end{theorem}
+\proofof{bessel}
+
+\begin{theorem}[Теорема Римана об осцилляции]
+\label{thm:riemann-lebesgue}
+Если $f$ интегрируема по Риману на $[a, b]$, то
+\[
+  \int_{a}^{b} f(x) \cos(\lambda x)\, dx \;\to\; 0,
+  \qquad
+  \int_{a}^{b} f(x) \sin(\lambda x)\, dx \;\to\; 0
+  \quad \text{при } \lambda \to +\infty.
+\]
+В частности, коэффициенты Фурье $a_n, b_n$ всякой
+$2\pi$-периодической функции, интегрируемой по Риману, стремятся к
+нулю.
+\end{theorem}
+\proofof{riemann-lebesgue}
+
+\subsubsection*{Ядро Дирихле и интегральное представление}
+
+\begin{definition}
+\label{def:dirichlet-kernel}
+\emph{Ядром Дирихле} порядка~$N$ называется
+\[
+  D_N(t) \;=\; \frac{1}{2} + \sum_{n=1}^{N} \cos(nt).
+\]
+Оно чётно, $2\pi$-периодично, $D_N(0) = N + \tfrac12$ и
+$\int_{-\pi}^{\pi} D_N(t)\, dt = \pi$.
+\end{definition}
+
+\begin{lemma}[Замкнутая форма ядра Дирихле]
+\label{lem:dirichlet-closed}
+При $t \notin 2\pi\Z$
+\[
+  D_N(t) \;=\; \frac{\sin\bigl((N + \tfrac12)\, t\bigr)}{2 \sin(t/2)}.
+\]
+\end{lemma}
+\proofof{dirichlet-closed}
+
+\begin{theorem}[Интегральное представление частичных сумм]
+\label{thm:integral-rep}
+Для всякого $x$
+\[
+  S_N(x; f) \;=\; \frac{1}{\pi} \int_{-\pi}^{\pi} f(x + t)\, D_N(t)\, dt.
+\]
+В частности,
+\[
+  S_N(x; f) - f(x) \;=\; \frac{1}{\pi} \int_{-\pi}^{\pi} \bigl(f(x + t) - f(x)\bigr) D_N(t)\, dt.
+\]
+\end{theorem}
+\proofof{integral-rep}
+
+\subsubsection*{Поточечная сходимость}
+
+\begin{theorem}[Признак Дини]
+\label{thm:dini}
+Пусть~$f$ $2\pi$-периодична и интегрируема по Риману на $[-\pi, \pi]$.
+Зафиксируем $x \in \R$ и $S \in \R$. Если
+\[
+  \int_{0}^{\pi} \frac{|f(x + t) + f(x - t) - 2S|}{t}\, dt \;<\; \infty,
+\]
+то $S_N(x; f) \to S$ при $N \to \infty$.
+\end{theorem}
+\proofof{dini}
+
+\begin{corollary}[Поточечная сходимость в гладких точках]
+\label{cor:dini-holder}
+Если~$f$ удовлетворяет условию Гёльдера некоторого показателя
+$\alpha \in (0, 1]$ в точке~$x$, в частности если~$f$ дифференцируема
+в~$x$, то $S_N(x; f) \to f(x)$.
+\end{corollary}
+\proofof{dini-holder}
+
+\begin{corollary}[Разрывы первого рода]
+\label{cor:jump}
+Если~$f$ имеет в точке~$x$ односторонние пределы $f(x \pm)$ и
+односторонние производные, то
+\[
+  S_N(x; f) \;\to\; \frac{f(x+) + f(x-)}{2}.
+\]
+\end{corollary}
+\proofof{jump}
+
+\subsubsection*{Равномерная сходимость}
+
+\begin{theorem}[Равномерная сходимость для $C^1$-периодических функций]
+\label{thm:uniform-c1}
+Пусть $f \colon \R \to \R$ $2\pi$-периодична, непрерывна и кусочно $C^1$
+(так что~$f'$ ограничена и интегрируема по Риману на $[-\pi, \pi]$).
+Тогда $S_N(\,\cdot\,; f) \to f$ равномерно на~$\R$, и ряд Фурье~$f$
+сходится абсолютно.
+\end{theorem}
+\proofof{uniform-c1}
 
 \subsection*{Доказательства}
-% TODO
+
+\begin{proof}[\Cref{thm:bessel}]
+\proofanchor{bessel}
+Пусть $T_N$~--- тригонометрический многочлен $S_N(\cdot; f)$. Прямое
+раскрытие с использованием ортогональности даёт
+\[
+  \frac{1}{\pi} \int_{-\pi}^{\pi} T_N(x)^2\, dx
+  \;=\; \frac{a_0^2}{2} + \sum_{n=1}^{N} (a_n^2 + b_n^2),
+\]
+а аналогичное вычисление перекрёстного члена показывает, что
+$\tfrac{1}{\pi} \int f \, T_N\, dx$ равен той же величине. Поэтому
+\[
+  0 \;\le\; \frac{1}{\pi} \int_{-\pi}^{\pi} (f - T_N)^2\, dx
+  \;=\; \frac{1}{\pi} \int_{-\pi}^{\pi} f^2\, dx
+  - \Bigl(\frac{a_0^2}{2} + \sum_{n=1}^{N} (a_n^2 + b_n^2)\Bigr).
+\]
+Перенося и переходя к пределу при $N \to \infty$, получаем
+требуемое.
+\end{proof}
+
+\begin{proof}[\Cref{thm:riemann-lebesgue}]
+\proofanchor{riemann-lebesgue}
+Сначала возьмём $f = \mathbf{1}_{[c, d]}$ на $[a, b]$. Тогда
+$\int_{a}^{b} \mathbf{1}_{[c, d]} \cos(\lambda x)\, dx = (\sin(\lambda d) - \sin(\lambda c))/\lambda \to 0$,
+и аналогично для синусного интеграла. По линейности утверждение
+выполнено для любой ступенчатой функции на $[a, b]$.
+
+Пусть теперь $f$ интегрируема по Риману на $[a, b]$ и
+$\varepsilon > 0$. По определению интеграла Римана найдётся
+ступенчатая функция~$\varphi$ с
+$\int_a^b |f - \varphi|\, dx < \varepsilon/2$. Выберем $\Lambda > 0$
+так, чтобы $\bigl|\int_a^b \varphi(x) \cos(\lambda x)\, dx\bigr| < \varepsilon/2$
+при $\lambda \ge \Lambda$. Тогда при таких~$\lambda$
+\[
+  \Bigl|\int_a^b f \cos(\lambda x)\, dx\Bigr|
+  \;\le\; \int_a^b |f - \varphi|\, dx + \Bigl|\int_a^b \varphi \cos(\lambda x)\, dx\Bigr|
+  \;<\; \varepsilon.
+\]
+Аналогично для синусного интеграла. Утверждение о коэффициентах
+Фурье~--- частный случай при $a = -\pi$, $b = \pi$, $\lambda = n \in \N$.
+\end{proof}
+
+\begin{proof}[\Cref{lem:dirichlet-closed}]
+\proofanchor{dirichlet-closed}
+Умножим $D_N(t)$ на $2\sin(t/2)$ и воспользуемся тождеством
+произведения в сумму:
+$2 \sin(t/2) \cos(nt) = \sin((n + \tfrac12) t) - \sin((n - \tfrac12) t)$.
+Сумма телескопирует:
+\[
+  2 \sin(t/2)\, D_N(t) = \sin(t/2) + \sum_{n=1}^{N}\bigl[\sin((n + \tfrac12)t) - \sin((n - \tfrac12) t)\bigr]
+  = \sin\bigl((N + \tfrac12)t\bigr).
+\]
+Делим на $2\sin(t/2)$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:integral-rep}]
+\proofanchor{integral-rep}
+Подставляя определения~$a_n, b_n$ в $S_N(x; f)$ и пользуясь
+тождеством $\cos(nx)\cos(ny) + \sin(nx)\sin(ny) = \cos(n(y - x))$,
+получаем
+\[
+  S_N(x; f)
+  = \frac{1}{\pi} \int_{-\pi}^{\pi} f(y) \Bigl[\frac{1}{2} + \sum_{n=1}^{N} \cos(n(y - x))\Bigr] dy
+  = \frac{1}{\pi} \int_{-\pi}^{\pi} f(y)\, D_N(y - x)\, dy.
+\]
+Замена $t = y - x$ и $2\pi$-периодичность сохраняют отрезок
+$[-\pi, \pi]$. Вторая формула следует из
+$\frac{1}{\pi} \int_{-\pi}^{\pi} D_N(t)\, dt = 1$ (по определению~$D_N$).
+\end{proof}
+
+\begin{proof}[\Cref{thm:dini}]
+\proofanchor{dini}
+По \cref{thm:integral-rep}, чётности~$D_N$ и замене переменной
+$t \mapsto -t$ в интеграле по $[-\pi, 0]$
+\[
+  S_N(x; f) - S
+  = \frac{1}{\pi} \int_{0}^{\pi} \bigl(f(x+t) + f(x-t) - 2S\bigr) D_N(t)\, dt.
+\]
+Подставляя замкнутую форму (\cref{lem:dirichlet-closed}):
+\[
+  S_N(x; f) - S
+  = \frac{1}{\pi} \int_{0}^{\pi} \frac{f(x+t) + f(x-t) - 2S}{2\sin(t/2)} \sin\bigl((N + \tfrac12) t\bigr)\, dt.
+\]
+Положим $g(t) = (f(x+t) + f(x-t) - 2S)/(2\sin(t/2))$. Вблизи $t = 0$
+выполнено $2\sin(t/2) \sim t$, так что условие Дини обеспечивает
+$g \in L^1[0, \pi]$. На $[\delta, \pi]$ при произвольном $\delta > 0$
+функция~$g$~--- ограниченная, помноженная на функцию, интегрируемую по
+Риману, а значит, сама интегрируема. По
+\cref{thm:riemann-lebesgue}
+$\int_0^{\pi} g(t) \sin((N + \tfrac12) t)\, dt \to 0$.
+\end{proof}
+
+\begin{proof}[\Cref{cor:dini-holder}]
+\proofanchor{dini-holder}
+При $S = f(x)$ подынтегральное выражение в условии Дини
+оценивается величиной
+$|f(x+t) - f(x)|/t + |f(x-t) - f(x)|/t \le 2C\, t^{\alpha - 1}$,
+интегрируемой на $[0, \pi]$ для любого $\alpha > 0$. Применяем
+\cref{thm:dini}.
+\end{proof}
+
+\begin{proof}[\Cref{cor:jump}]
+\proofanchor{jump}
+Полагаем $S = (f(x+) + f(x-))/2$. Числитель разбивается на
+$(f(x+t) - f(x+)) + (f(x-t) - f(x-))$, каждое слагаемое стремится к
+нулю с ограниченным односторонним разностным отношением (по условию).
+Поэтому $|f(x+t) + f(x-t) - 2S|/t$ ограничено вблизи нуля, а значит,
+интегрируемо, и \cref{thm:dini} даёт $S_N(x; f) \to S$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:uniform-c1}]
+\proofanchor{uniform-c1}
+Интегрирование по частям (законно, поскольку~$f$ непрерывна и
+кусочно $C^1$, причём $f(\pi) = f(-\pi)$ по периодичности) даёт при
+$n \ge 1$
+\[
+  a_n(f) = -\frac{1}{n}\, b_n(f'), \qquad b_n(f) = \frac{1}{n}\, a_n(f').
+\]
+По неравенству Коши--Буняковского, применённому к
+$\sum (1/n) \cdot |a_n(f')|$, и неравенству Бесселя
+(\cref{thm:bessel}) для~$f'$
+\[
+  \sum_{n=1}^{\infty} \bigl(|a_n(f)| + |b_n(f)|\bigr)
+  \;\le\; 2 \sum_{n=1}^{\infty} \frac{1}{n} \sqrt{a_n(f')^2 + b_n(f')^2}
+  \;\le\; 2 \Bigl(\sum \frac{1}{n^2}\Bigr)^{1/2} \Bigl(\sum (a_n(f')^2 + b_n(f')^2)\Bigr)^{1/2} < \infty.
+\]
+Значит, ряд Фурье~$f$ сходится абсолютно и (по признаку Вейерштрасса,
+\cref{thm:weierstrass-m}) равномерно к непрерывной функции~$g$. По
+\cref{cor:dini-holder} (применимому, так как~$f$ дифференцируема
+односторонне в каждой точке) $g(x) = f(x)$ поточечно.
+\end{proof}
 
 \subsection*{Примеры}
-% TODO
+
+\begin{example}[Пилообразная функция]
+\label{ex:sawtooth}
+Пусть $f(x) = x$ на $(-\pi, \pi)$, продолженная $2\pi$-периодически
+(значение в точках $x = \pm\pi$ выберем произвольно). Функция
+нечётна, так что $a_n = 0$. Интегрирование по частям даёт
+\[
+  b_n = \frac{1}{\pi} \int_{-\pi}^{\pi} x \sin(nx)\, dx
+       = \frac{2}{\pi} \int_{0}^{\pi} x \sin(nx)\, dx
+       = \frac{2 (-1)^{n+1}}{n}.
+\]
+Поэтому
+$x = 2 \sum_{n=1}^{\infty} \frac{(-1)^{n+1}}{n} \sin(nx)$ при
+$x \in (-\pi, \pi)$. В точках $x = \pm\pi$ полусумма
+$(\pi + (-\pi))/2 = 0$ совпадает с предсказанием \cref{cor:jump}.
+\end{example}
+
+\begin{example}[Меандр: поточечная, но не равномерная сходимость]
+\label{ex:square}
+Пусть $f(x) = \operatorname{sgn}(x)$ на $(-\pi, \pi)$, продолженная
+периодически. Функция вновь нечётна, $a_n = 0$, и
+\[
+  b_n = \frac{2}{\pi} \int_{0}^{\pi} \sin(nx)\, dx
+       = \frac{2 (1 - (-1)^n)}{\pi n}
+       = \begin{cases} 4/(\pi n) & n \text{ нечётно},\\ 0 & n \text{ чётно}. \end{cases}
+\]
+Ряд Фурье
+$\frac{4}{\pi} \sum_{k = 0}^{\infty} \frac{\sin((2k+1) x)}{2k+1}$
+сходится к $\operatorname{sgn}(x)$ в каждой точке непрерывности и к
+$0 = \tfrac12(1 + (-1))$ при $x = 0, \pm\pi$ согласно \cref{cor:jump}.
+Сходимость не равномерна: частичные суммы превышают значение функции
+в окрестности скачка на постоянный коэффициент (явление Гиббса). Это
+согласуется с \cref{thm:uniform-c1}, условие непрерывности которой
+здесь не выполнено.
+\end{example}
+
+\begin{example}[Пример $C^0$, кусочно $C^1$: $x^2$]
+\label{ex:xsquared}
+Продолжим $f(x) = x^2$ с отрезка $[-\pi, \pi]$ периодически.
+Продолжение непрерывно (поскольку $\pi^2 = (-\pi)^2$) и кусочно $C^1$,
+поэтому применима \cref{thm:uniform-c1}. Функция чётна, так что
+$b_n = 0$; двукратное интегрирование по частям даёт
+$a_0 = \frac{2\pi^2}{3}$ и $a_n = \frac{4 (-1)^n}{n^2}$ при $n \ge 1$.
+Поэтому
+\[
+  x^2 \;=\; \frac{\pi^2}{3} + 4 \sum_{n=1}^{\infty} \frac{(-1)^n}{n^2}\, \cos(nx),
+  \qquad x \in [-\pi, \pi],
+\]
+с абсолютной и равномерной сходимостью.
+\end{example}
+
+\begin{problem}[Базельская сумма]
+Подставьте $x = \pi$ в равенство из \cref{ex:xsquared} и преобразуйте
+выражение, чтобы получить
+$\displaystyle \sum_{n=1}^{\infty} \frac{1}{n^2} \;=\; \frac{\pi^2}{6}$.
+\end{problem}
