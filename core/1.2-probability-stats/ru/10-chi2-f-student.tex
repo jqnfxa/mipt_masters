@@ -8,10 +8,147 @@
 \end{ticket}
 
 \subsection*{Теория}
-% TODO
+
+Из гауссовских семейств~\cref{sec:1.2.06-standard-distributions} вырастают три производных семейства, лежащих в основе классической математической статистики: хи-квадрат, Фишера--Снедекора и Стьюдента. Каждое из них определяется как функция от независимых стандартных нормальных величин и играет конкретную роль в критериях, построенных вокруг выборочного среднего и выборочной дисперсии.
+
+\begin{definition}[Распределение хи-квадрат]
+\label{def:chi-squared}
+Пусть $Z_1, \dots, Z_n$~--- независимы и одинаково распределены, $Z_i \sim \mathcal{N}(0, 1)$. Распределение случайной величины
+\[
+  \chi^2 \;=\; Z_1^2 + Z_2^2 + \cdots + Z_n^2
+\]
+называется \emph{распределением хи-квадрат с~$n$ степенями свободы} и обозначается $\chi^2_n$. Его плотность на $(0, \infty)$ задаётся формулой
+\[
+  f_{\chi^2_n}(x) \;=\; \frac{1}{2^{n/2}\, \Gamma(n/2)}\, x^{n/2 - 1}\, e^{-x/2},
+\]
+где~$\Gamma$~--- гамма-функция Эйлера. Математическое ожидание равно~$n$, дисперсия~--- $2n$.
+\end{definition}
+
+\begin{proposition}[Замкнутость~$\chi^2$ относительно сложения независимых величин]
+\label{prop:chi2-closure}
+Если $U \sim \chi^2_m$ и $V \sim \chi^2_n$ независимы, то $U + V \sim \chi^2_{m+n}$.
+\end{proposition}
+\proofof{chi2-closure}
+
+\begin{definition}[Распределение Фишера--Снедекора]
+\label{def:f-distribution}
+Пусть $U \sim \chi^2_m$ и $V \sim \chi^2_n$ независимы. Распределение случайной величины
+\[
+  F \;=\; \frac{U / m}{V / n}
+\]
+называется \emph{распределением Фишера--Снедекора с $(m, n)$ степенями свободы} и обозначается $F_{m, n}$. Его плотность на $(0, \infty)$ имеет вид
+\[
+  f_{F_{m,n}}(x) \;=\; \frac{\Gamma\bigl((m+n)/2\bigr)}{\Gamma(m/2)\, \Gamma(n/2)}\, \Bigl(\frac{m}{n}\Bigr)^{m/2}\, \frac{x^{m/2 - 1}}{(1 + m x/n)^{(m+n)/2}}.
+\]
+Математическое ожидание равно $n/(n - 2)$ при $n > 2$.
+\end{definition}
+
+\begin{definition}[Распределение Стьюдента]
+\label{def:t-distribution}
+Пусть $Z \sim \mathcal{N}(0, 1)$ и $V \sim \chi^2_n$ независимы. Распределение величины
+\[
+  T \;=\; \frac{Z}{\sqrt{V / n}}
+\]
+называется \emph{распределением Стьюдента с~$n$ степенями свободы} и обозначается $t_n$. Оно симметрично относительно нуля, плотность~---
+\[
+  f_{t_n}(x) \;=\; \frac{\Gamma\bigl((n+1)/2\bigr)}{\sqrt{n \pi}\, \Gamma(n/2)}\, \Bigl(1 + \frac{x^2}{n}\Bigr)^{-(n+1)/2}.
+\]
+$\E T = 0$ при $n > 1$ и $\Var T = n/(n - 2)$ при $n > 2$.
+\end{definition}
+
+\begin{proposition}[Асимптотическое поведение]
+\label{prop:asymptotics-chi2-f-t}
+При $n \to \infty$ имеем $t_n \xrightarrow{d} \mathcal{N}(0, 1)$ и $F_{m, n} \xrightarrow{d} \chi^2_m / m$ (по распределению); при $m, n \to \infty$ с $m / n \to c > 0$ распределение $F_{m, n}$ концентрируется около единицы.
+\end{proposition}
+\proofof{asymptotics-chi2-f-t}
+
+\medskip
+\noindent\textbf{Зачем нужны эти распределения?} Они возникают благодаря следующему ключевому факту о выборках из нормального закона~--- основному статистическому применению этих семейств.
+
+\begin{theorem}[Выборочные среднее и дисперсия для нормальной выборки]
+\label{thm:sample-mean-variance}
+Пусть $X_1, \dots, X_n$ независимы и одинаково распределены по закону $\mathcal{N}(\mu, \sigma^2)$. Положим
+\[
+  \bar X = \frac{1}{n} \sum_{i=1}^{n} X_i, \qquad
+  S^2 = \frac{1}{n - 1} \sum_{i=1}^{n} (X_i - \bar X)^2.
+\]
+Тогда $\bar X$ и $S^2$ независимы и
+\[
+  \bar X \sim \mathcal{N}\Bigl(\mu, \frac{\sigma^2}{n}\Bigr), \qquad
+  \frac{(n - 1) S^2}{\sigma^2} \sim \chi^2_{n - 1}.
+\]
+Как следствие,
+\[
+  \frac{\bar X - \mu}{S / \sqrt n} \sim t_{n - 1}.
+\]
+\end{theorem}
+\proofof{sample-mean-variance}
+
+Независимость $\bar X$ и $S^2$~--- свойство, специфическое для нормального закона,~--- вместе с распределением $\chi^2$ для $S^2$ и обеспечивает то, что распределение Стьюдента является \emph{точным} распределением стандартизованного выборочного среднего при неизвестной дисперсии~$\sigma^2$ при произвольном объёме выборки. На этом построены все процедуры из~\cref{sec:1.2.12-hypothesis-testing}.
 
 \subsection*{Доказательства}
-% TODO
+
+\begin{proof}[\Cref{def:chi-squared}, плотность и моменты]
+\proofanchor{chi-squared}
+При $n = 1$ и $Z \sim \mathcal{N}(0, 1)$ величина $W = Z^2$ имеет на $(0, \infty)$ плотность $f_W(w) = w^{-1/2} e^{-w/2}/\sqrt{2 \pi}$~--- замена переменных $Z = \pm \sqrt w$ на~$\R$. Это совпадает с $f_{\chi^2_1}$, поскольку $\Gamma(1/2) = \sqrt \pi$. Для произвольного~$n$ плотность суммы независимых величин~--- свёртка их плотностей; можно вычислить свёртку~$n$ копий $f_{\chi^2_1}$ по индукции или воспользоваться характеристической функцией: характеристическая функция $Z^2$ равна $\varphi_{Z^2}(t) = (1 - 2it)^{-1/2}$ (стандартный гауссов интеграл), откуда по~\cref{prop:char-properties}\,(e)
+\[
+  \varphi_{\chi^2_n}(t) = (1 - 2it)^{-n/2}.
+\]
+Обращение по~\cref{thm:char-uniqueness} восстанавливает указанную плотность. Математическое ожидание и дисперсия следуют из линейности: $\E \chi^2_n = n \cdot \E Z^2 = n$ и $\Var \chi^2_n = n \cdot \Var Z^2 = n \cdot (\E Z^4 - 1) = n \cdot 2 = 2n$ (использовано $\E Z^4 = 3$ для стандартного нормального закона).
+\end{proof}
+
+\begin{proof}[\Cref{prop:chi2-closure}]
+\proofanchor{chi2-closure}
+По~\cref{prop:char-properties}\,(e) $\varphi_{U + V}(t) = \varphi_U(t) \varphi_V(t) = (1 - 2it)^{-m/2} (1 - 2it)^{-n/2} = (1 - 2it)^{-(m+n)/2}$~--- характеристическая функция $\chi^2_{m+n}$. По~\cref{thm:char-uniqueness} $U + V \sim \chi^2_{m+n}$. Эквивалентным образом: можно реализовать $U = Z_1^2 + \cdots + Z_m^2$ и $V = Z_{m+1}^2 + \cdots + Z_{m+n}^2$ на одном пространстве с независимыми стандартными нормальными $Z_i$; тогда $U + V$ по определению есть $\chi^2_{m+n}$.
+\end{proof}
+
+\begin{proof}[\Cref{prop:asymptotics-chi2-f-t}]
+\proofanchor{asymptotics-chi2-f-t}
+Для $T \sim t_n = Z / \sqrt{V/n}$ с $V \sim \chi^2_n$ усиленный закон больших чисел (\cref{thm:slln}) даёт $V/n = (Z_1^2 + \cdots + Z_n^2)/n \to 1$ почти наверное, поэтому $\sqrt{V/n} \to 1$ почти наверное. По лемме Слуцкого~\cite[гл.~III, \S~1]{Shiryaev1989} $T = Z / \sqrt{V/n} \xrightarrow{d} Z \sim \mathcal{N}(0, 1)$.
+
+Для $F_{m, n}$ зафиксируем~$m$ и устремим $n \to \infty$. Тогда, как и выше, $V/n \to 1$ почти наверное, и $F = (U/m) / (V/n) \xrightarrow{d} U/m$, где $U \sim \chi^2_m$. Случай $m, n \to \infty$ при $m/n \to c$ использует ЗБЧ для числителя и знаменателя одновременно: $U/m \to 1$ и $V/n \to 1$, так что $F \to 1$ по вероятности.
+\end{proof}
+
+\begin{proof}[\Cref{thm:sample-mean-variance}, набросок]
+\proofanchor{sample-mean-variance}
+Без ограничения общности $\mu = 0$ и $\sigma = 1$ (заменим~$X_i$ на $(X_i - \mu)/\sigma$). Запишем $\vect{X} = (X_1, \dots, X_n)\T \sim \mathcal{N}(\vect{0}, \mat{I}_n)$.
+
+\emph{Распределение~$\bar X$.} По~\cref{ex:normal-sum} $\bar X = (1/n) \sum X_i \sim \mathcal{N}(0, 1/n)$.
+
+\emph{Независимость и хи-квадрат-распределение $(n-1) S^2$.} Разложим~$\vect{X}$ ортогонально: $\vect{X} = \bar X \vect{1}/\sqrt n \cdot \sqrt n + (\vect{X} - \bar X \vect{1})$, где $\vect{1} = (1, \dots, 1)\T$. Положим $\vect{Y} = (\sqrt n\, \bar X,\, X_1 - \bar X, \dots, X_n - \bar X)\T = \mat{Q} \vect{X}$, где~$\mat{Q}$~--- ортогональная матрица, первой строкой которой служит $\vect{1}\T/\sqrt n$, а остальные строки образуют ортонормированный базис ортогонального дополнения~$\vect{1}$ в~$\R^n$. Поскольку распределение $\mathcal{N}(\vect{0}, \mat{I}_n)$ инвариантно относительно поворотов, компоненты~$\vect{Y}$ независимы и стандартно нормальны. Первая компонента~--- $\sqrt n \bar X$; квадрат нормы остальных $n - 1$ компонент равен $\sum_i (X_i - \bar X)^2 = (n-1) S^2$, причём эти компоненты независимы и стандартно нормальны, откуда $(n - 1) S^2 \sim \chi^2_{n - 1}$. Независимость $\bar X$ от этой нормы вытекает из того, что они~--- функции от непересекающихся независимых наборов компонент~$\vect{Y}$.
+
+\emph{Распределение Стьюдента.} При независимых $\bar X \sim \mathcal{N}(\mu, \sigma^2/n)$ и $(n-1) S^2 / \sigma^2 \sim \chi^2_{n-1}$ положим $Z = (\bar X - \mu) \sqrt n / \sigma \sim \mathcal{N}(0, 1)$ и $V = (n-1) S^2/\sigma^2$. Тогда
+\[
+  \frac{\bar X - \mu}{S/\sqrt n} = \frac{\sigma Z/\sqrt n}{\sigma \sqrt{V/(n-1)}/\sqrt n} = \frac{Z}{\sqrt{V/(n-1)}} \sim t_{n - 1}
+\]
+по~\cref{def:t-distribution}.
+\end{proof}
 
 \subsection*{Примеры}
-% TODO
+
+\begin{example}[Доверительный интервал для среднего нормальной выборки]
+\label{ex:t-confidence-interval}
+Пусть $X_1, \dots, X_n$~--- независимы и одинаково распределены, $X_i \sim \mathcal{N}(\mu, \sigma^2)$ при неизвестной~$\sigma^2$. По~\cref{thm:sample-mean-variance} $T = (\bar X - \mu)/(S/\sqrt n) \sim t_{n - 1}$, поэтому при любом $\alpha \in (0, 1)$ и обозначении $t_{\alpha/2, n-1}$ для верхней $(\alpha/2)$-квантили распределения $t_{n - 1}$
+\[
+  \Prob\Bigl(\bar X - t_{\alpha/2, n-1}\, \frac{S}{\sqrt n} \leq \mu \leq \bar X + t_{\alpha/2, n-1}\, \frac{S}{\sqrt n}\Bigr) = 1 - \alpha,
+\]
+что и даёт $100(1 - \alpha)\%$-доверительный интервал для~$\mu$. При $n = 10$ и $\alpha = 0{,}05$ имеем $t_{0{,}025, 9} \approx 2{,}262$.
+\end{example}
+
+\begin{example}[Постановка критерия о равенстве дисперсий]
+\label{ex:f-test-setup}
+Имеются две независимые нормальные выборки объёмов $m + 1$ и $n + 1$ с выборочными дисперсиями $S_1^2, S_2^2$. По~\cref{thm:sample-mean-variance} $m S_1^2/\sigma_1^2 \sim \chi^2_m$ и $n S_2^2/\sigma_2^2 \sim \chi^2_n$ независимы, поэтому
+\[
+  \frac{S_1^2/\sigma_1^2}{S_2^2/\sigma_2^2} \sim F_{m, n}.
+\]
+При нулевой гипотезе $\sigma_1^2 = \sigma_2^2$ отношение $S_1^2/S_2^2$ распределено по закону $F_{m, n}$~--- основа $F$-критерия для проверки равенства дисперсий из~\cref{sec:1.2.12-hypothesis-testing}.
+\end{example}
+
+\begin{problem}
+\label{prob:chi2-quantile}
+Пусть $X_1, \dots, X_5$~--- независимы и одинаково распределены, $X_i \sim \mathcal{N}(0, 4)$. Найдите $\Prob(\sum_{i=1}^{5} X_i^2 \leq 12)$.
+\end{problem}
+
+\begin{proof}[Решение]
+$X_i / 2 \sim \mathcal{N}(0, 1)$, поэтому $\sum (X_i/2)^2 = (\sum X_i^2)/4 \sim \chi^2_5$. Итак, $\Prob(\sum X_i^2 \leq 12) = \Prob(\chi^2_5 \leq 3)$. По таблице $\chi^2_5$ (или используя $F_{\chi^2_5}(x) = \gamma(5/2, x/2)/\Gamma(5/2)$ с нижней неполной гамма-функцией~$\gamma$) $\Prob(\chi^2_5 \leq 3) \approx 0{,}300$. Среднее $\chi^2_5$ равно~$5$, и~$3$ находится примерно на пол-стандартного отклонения ($\sqrt{2 \cdot 5} \approx 3{,}16$) ниже среднего~--- что согласуется с левохвостовой вероятностью около~$0{,}3$.
+\end{proof}
