@@ -8,10 +8,420 @@ Eigenvectors and eigenvalues of a linear operator. Eigenspaces of a linear opera
 \end{ticket}
 
 \subsection*{Theory}
-% TODO
+
+We continue to work with finite-dimensional vector spaces over a
+field~$\F$. Let $T \colon V \to V$ be a linear operator
+(\cref{def:linear-map}) and let $I \colon V \to V$ denote the identity
+operator.
+
+\begin{definition}
+\label{def:eigenvector-value-space}
+A nonzero vector $\vect{v} \in V$ is an \emph{eigenvector} of~$T$ if
+$T\vect{v} = \lambda \vect{v}$ for some scalar $\lambda \in \F$. The
+scalar~$\lambda$ is the corresponding \emph{eigenvalue}. For each
+$\lambda \in \F$ the \emph{eigenspace} is
+\[
+  V_\lambda \;=\; \ker(T - \lambda I) \;=\; \{\vect{v} \in V : T\vect{v} = \lambda\vect{v}\}.
+\]
+$V_\lambda$ is a subspace of~$V$ that contains~$\vect{0}$; the nonzero
+elements of $V_\lambda$ are exactly the eigenvectors with
+eigenvalue~$\lambda$. The scalar~$\lambda$ is an eigenvalue of~$T$ iff
+$V_\lambda \neq \{\vect{0}\}$.
+\end{definition}
+
+\begin{definition}
+\label{def:char-poly}
+For a square matrix $\mat{A} \in \F^{n \times n}$, the
+\emph{characteristic polynomial} is
+\[
+  p_{\mat{A}}(\lambda) \;=\; \det(\lambda \mat{I}_n - \mat{A}) \;\in\; \F[\lambda],
+\]
+a monic polynomial of degree~$n$. Similar matrices have equal
+characteristic polynomials: for any invertible $\mat{T}$,
+\[
+  \det(\lambda \mat{I} - \mat{T}^{-1}\mat{A}\mat{T})
+  = \det(\mat{T}^{-1}(\lambda \mat{I} - \mat{A})\mat{T})
+  = \det(\lambda \mat{I} - \mat{A}).
+\]
+Hence we may write $p_T(\lambda)$ unambiguously for the characteristic
+polynomial of an operator~$T$, computed in any basis.
+\end{definition}
+
+\begin{theorem}[Eigenvalues are roots of the characteristic polynomial]
+\label{thm:eigvals-roots}
+A scalar $\lambda \in \F$ is an eigenvalue of~$T$ if and only if
+$p_T(\lambda) = 0$.
+\end{theorem}
+\proofof{eigvals-roots}
+
+\begin{theorem}[Eigenvectors with distinct eigenvalues are independent]
+\label{thm:distinct-eig-li}
+Let $\vect{v}_1, \dots, \vect{v}_k$ be eigenvectors of~$T$ with
+pairwise distinct eigenvalues $\lambda_1, \dots, \lambda_k$. Then
+$\vect{v}_1, \dots, \vect{v}_k$ are linearly independent.
+\end{theorem}
+\proofof{distinct-eig-li}
+
+\begin{corollary}[Eigenspaces form a direct sum]
+\label{cor:eigspaces-direct-sum}
+For pairwise distinct eigenvalues $\lambda_1, \dots, \lambda_k$ of~$T$
+the sum $V_{\lambda_1} + \dots + V_{\lambda_k}$ is direct, that is,
+$V_{\lambda_1} \oplus \dots \oplus V_{\lambda_k}$.
+\end{corollary}
+
+\begin{definition}
+\label{def:diagonalizable}
+An operator $T \colon V \to V$ is \emph{diagonalizable} if $V$ has a
+basis consisting of eigenvectors of~$T$. Equivalently, the matrix
+of~$T$ in such a basis is diagonal, with the eigenvalues on the
+diagonal.
+\end{definition}
+
+\begin{theorem}[Diagonalizability criterion]
+\label{thm:diag-criterion}
+Let $\lambda_1, \dots, \lambda_k$ be all the distinct eigenvalues
+of~$T$ in~$\F$. The following are equivalent:
+\begin{enumerate}[label=(\alph*)]
+  \item $T$ is diagonalizable;
+  \item $V = V_{\lambda_1} \oplus \dots \oplus V_{\lambda_k}$;
+  \item $\dim V = \dim V_{\lambda_1} + \dots + \dim V_{\lambda_k}$.
+\end{enumerate}
+\end{theorem}
+\proofof{diag-criterion}
+
+\begin{corollary}
+\label{cor:distinct-implies-diag}
+If $T$ has $\dim V$ pairwise distinct eigenvalues, then $T$ is
+diagonalizable.
+\end{corollary}
+
+\medskip
+
+\noindent\textbf{Self-adjoint operators on a Euclidean space.}
+We now specialize to $\F = \R$ and add geometric structure.
+
+\begin{definition}
+\label{def:euclidean-space}
+A \emph{Euclidean space} is a finite-dimensional real vector
+space~$V$ equipped with an \emph{inner product}
+$\langle \cdot, \cdot \rangle \colon V \times V \to \R$~--- a
+symmetric bilinear form that is positive definite
+($\langle \vect{v}, \vect{v} \rangle > 0$ for $\vect{v} \neq \vect{0}$).
+The associated norm is $\|\vect{v}\| = \sqrt{\langle \vect{v}, \vect{v} \rangle}$.
+Vectors $\vect{u}, \vect{v}$ are \emph{orthogonal} if
+$\langle \vect{u}, \vect{v} \rangle = 0$. A basis $\{\vect{e}_i\}$ is
+\emph{orthonormal} if $\langle \vect{e}_i, \vect{e}_j \rangle = \delta_{ij}$.
+For a subspace $W \subseteq V$, the \emph{orthogonal complement} is
+$W^{\perp} = \{\vect{v} \in V : \langle \vect{v}, \vect{w} \rangle = 0
+\text{ for all } \vect{w} \in W\}$, and one always has
+$V = W \oplus W^{\perp}$.
+\end{definition}
+
+\begin{definition}
+\label{def:self-adjoint}
+A linear operator $T \colon V \to V$ on a Euclidean space~$V$ is
+\emph{self-adjoint} (or \emph{symmetric}) if
+\[
+  \langle T\vect{u}, \vect{v} \rangle \;=\; \langle \vect{u}, T\vect{v} \rangle
+  \quad \text{for all } \vect{u}, \vect{v} \in V.
+\]
+In any orthonormal basis the matrix of a self-adjoint operator is
+symmetric ($\mat{A}\T = \mat{A}$), and conversely every real symmetric
+matrix represents a self-adjoint operator in any orthonormal basis.
+\end{definition}
+
+\begin{theorem}[Eigenvalues of a self-adjoint operator are real]
+\label{thm:self-adj-eig-real}
+Every root of the characteristic polynomial of a self-adjoint operator
+on a Euclidean space is real. In particular, every self-adjoint
+operator has at least one (real) eigenvalue.
+\end{theorem}
+\proofof{self-adj-eig-real}
+
+\begin{theorem}[Eigenvectors with distinct eigenvalues are orthogonal]
+\label{thm:self-adj-orthog}
+Let $T$ be self-adjoint with $T\vect{v}_1 = \lambda_1 \vect{v}_1$ and
+$T\vect{v}_2 = \lambda_2 \vect{v}_2$, $\lambda_1 \neq \lambda_2$. Then
+$\langle \vect{v}_1, \vect{v}_2 \rangle = 0$.
+\end{theorem}
+\proofof{self-adj-orthog}
+
+\begin{theorem}[Spectral theorem for self-adjoint operators]
+\label{thm:spectral}
+Every self-adjoint operator $T$ on a finite-dimensional Euclidean
+space~$V$ admits an orthonormal basis of eigenvectors. Equivalently,
+for every real symmetric matrix~$\mat{A}$ there exist an orthogonal
+matrix~$\mat{Q}$ ($\mat{Q}\T \mat{Q} = \mat{I}$) and a real diagonal
+matrix~$\mat{D}$ such that $\mat{A} = \mat{Q}\mat{D}\mat{Q}\T$.
+\end{theorem}
+\proofof{spectral}
+
+\begin{remark}
+For deeper treatment of the spectral theorem (including the complex
+Hermitian case and normal operators), and for the Jordan canonical
+form that classifies non-diagonalizable operators, see
+\cite{Beklemishev2025}.
+\end{remark}
 
 \subsection*{Proofs}
-% TODO
+
+\begin{proof}[\Cref{thm:eigvals-roots}]
+\proofanchor{eigvals-roots}
+$\lambda$ is an eigenvalue iff there exists $\vect{v} \neq \vect{0}$
+with $(T - \lambda I)\vect{v} = \vect{0}$, iff $\ker(T - \lambda I) \neq \{\vect{0}\}$,
+iff $T - \lambda I$ is not invertible, iff
+$\det(\lambda I - T) = 0$ (\cref{thm:cofactor-inverse} and the
+identity $\det(\lambda I - T) = (-1)^n \det(T - \lambda I)$, which
+have the same roots). The last condition is $p_T(\lambda) = 0$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:distinct-eig-li}]
+\proofanchor{distinct-eig-li}
+Induction on~$k$. The case $k = 1$ is immediate ($\vect{v}_1 \neq \vect{0}$
+is linearly independent on its own).
+
+Assume the statement for $k - 1$ vectors. Suppose
+$c_1 \vect{v}_1 + \dots + c_k \vect{v}_k = \vect{0}$. Apply~$T$ to
+both sides:
+\[
+  c_1 \lambda_1 \vect{v}_1 + \dots + c_k \lambda_k \vect{v}_k = \vect{0}.
+\]
+Subtract $\lambda_k$ times the original relation:
+\[
+  c_1 (\lambda_1 - \lambda_k) \vect{v}_1 + \dots + c_{k-1}(\lambda_{k-1} - \lambda_k) \vect{v}_{k-1} = \vect{0}.
+\]
+By the inductive hypothesis the vectors $\vect{v}_1, \dots, \vect{v}_{k-1}$
+are linearly independent, so each $c_i (\lambda_i - \lambda_k) = 0$.
+Since $\lambda_i \neq \lambda_k$ for $i < k$, this forces
+$c_1 = \dots = c_{k-1} = 0$. Returning to the original relation,
+$c_k \vect{v}_k = \vect{0}$ and $\vect{v}_k \neq \vect{0}$ give
+$c_k = 0$.
+
+The same argument shows that
+\cref{cor:eigspaces-direct-sum} holds: a relation
+$\vect{u}_1 + \dots + \vect{u}_k = \vect{0}$ with
+$\vect{u}_i \in V_{\lambda_i}$ forces every $\vect{u}_i = \vect{0}$
+(replace $\vect{v}_i$ by~$\vect{u}_i$ throughout).
+\end{proof}
+
+\begin{proof}[\Cref{thm:diag-criterion}]
+\proofanchor{diag-criterion}
+$(a) \Leftrightarrow (b)$. If~$T$ is diagonalizable, the basis of
+eigenvectors splits according to eigenvalues; the vectors with
+eigenvalue~$\lambda_i$ lie in~$V_{\lambda_i}$ and span it (any element of
+$V_{\lambda_i}$ is a linear combination of basis eigenvectors with
+eigenvalue~$\lambda_i$ only, by the unique-decomposition argument from
+\cref{cor:eigspaces-direct-sum}). Hence
+$V = \sum V_{\lambda_i}$, and the sum is direct by the corollary, so
+$V = \bigoplus V_{\lambda_i}$. Conversely, if
+$V = \bigoplus V_{\lambda_i}$, take a basis of each~$V_{\lambda_i}$;
+their union is a basis of~$V$ by
+\cref{thm:direct-sum-equiv}\,(d), and consists of eigenvectors of~$T$.
+
+$(b) \Leftrightarrow (c)$. By the same theorem applied to the
+linearly independent system of subspaces $\{V_{\lambda_i}\}$ (which is
+linearly independent by \cref{cor:eigspaces-direct-sum}), the
+direct sum has dimension equal to the sum of dimensions; this equals
+$\dim V$ iff the direct sum is all of~$V$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:self-adj-eig-real}]
+\proofanchor{self-adj-eig-real}
+Extend~$V$ to its complexification $V_{\C} = V \oplus iV$ with the
+Hermitian inner product
+$\langle \vect{u}_1 + i\vect{v}_1, \vect{u}_2 + i\vect{v}_2 \rangle_{\C}
+= \bigl(\langle \vect{u}_1, \vect{u}_2 \rangle + \langle \vect{v}_1, \vect{v}_2 \rangle\bigr)
++ i\bigl(\langle \vect{v}_1, \vect{u}_2 \rangle - \langle \vect{u}_1, \vect{v}_2 \rangle\bigr)$.
+The operator~$T$ extends to a $\C$-linear operator
+$T_{\C} \colon V_{\C} \to V_{\C}$, again satisfying
+$\langle T_{\C}\vect{x}, \vect{y} \rangle_{\C} = \langle \vect{x}, T_{\C}\vect{y} \rangle_{\C}$.
+The characteristic polynomial of $T_\C$ over~$\C$ coincides with that
+of~$T$ over~$\R$.
+
+By the fundamental theorem of algebra $p_{T_\C}$ has at least one
+complex root~$\lambda$. Pick a nonzero
+$\vect{v} \in V_{\C}$ with $T_{\C}\vect{v} = \lambda \vect{v}$. Then
+\[
+  \lambda \langle \vect{v}, \vect{v} \rangle_{\C}
+  = \langle T_{\C}\vect{v}, \vect{v} \rangle_{\C}
+  = \langle \vect{v}, T_{\C}\vect{v} \rangle_{\C}
+  = \overline{\lambda} \langle \vect{v}, \vect{v} \rangle_{\C}.
+\]
+Since $\langle \vect{v}, \vect{v} \rangle_{\C} > 0$,
+$\lambda = \overline{\lambda}$, that is, $\lambda \in \R$.
+
+Thus every root of $p_T$ is real, so $p_T$ has at least one real
+root, and $T$ has a (real) eigenvalue and a corresponding nonzero
+real eigenvector.
+\end{proof}
+
+\begin{proof}[\Cref{thm:self-adj-orthog}]
+\proofanchor{self-adj-orthog}
+Self-adjointness gives
+\[
+  \lambda_1 \langle \vect{v}_1, \vect{v}_2 \rangle
+  = \langle \lambda_1 \vect{v}_1, \vect{v}_2 \rangle
+  = \langle T\vect{v}_1, \vect{v}_2 \rangle
+  = \langle \vect{v}_1, T\vect{v}_2 \rangle
+  = \langle \vect{v}_1, \lambda_2 \vect{v}_2 \rangle
+  = \lambda_2 \langle \vect{v}_1, \vect{v}_2 \rangle.
+\]
+Hence $(\lambda_1 - \lambda_2) \langle \vect{v}_1, \vect{v}_2 \rangle = 0$,
+and $\lambda_1 \neq \lambda_2$ forces
+$\langle \vect{v}_1, \vect{v}_2 \rangle = 0$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:spectral}]
+\proofanchor{spectral}
+Induction on $n = \dim V$.
+
+\emph{Base $n = 1$.} Any nonzero~$\vect{v}_1 \in V$ is automatically an
+eigenvector ($T\vect{v}_1 = \lambda \vect{v}_1$ for the unique
+$\lambda \in \R$ with $T\vect{v}_1 = \lambda \vect{v}_1$); normalize
+to~$\vect{v}_1 / \|\vect{v}_1\|$.
+
+\emph{Step $n - 1 \Rightarrow n$.} By
+\cref{thm:self-adj-eig-real} pick a real eigenvector $\vect{e}_1$
+with eigenvalue~$\lambda_1$, normalized so $\|\vect{e}_1\| = 1$. Set
+$W = \vect{e}_1^{\perp} = \{\vect{w} \in V : \langle \vect{w}, \vect{e}_1 \rangle = 0\}$,
+a subspace of dimension $n - 1$.
+
+\emph{Claim:} $T(W) \subseteq W$. Indeed, for $\vect{w} \in W$,
+\[
+  \langle T\vect{w}, \vect{e}_1 \rangle
+  = \langle \vect{w}, T\vect{e}_1 \rangle
+  = \lambda_1 \langle \vect{w}, \vect{e}_1 \rangle = 0,
+\]
+so $T\vect{w} \in W$.
+
+The restriction $T|_W \colon W \to W$ inherits self-adjointness from~$T$.
+By the inductive hypothesis $W$ has an orthonormal basis
+$\vect{e}_2, \dots, \vect{e}_n$ of eigenvectors of $T|_W$. Together
+with $\vect{e}_1$ this is an orthonormal basis of~$V$ consisting of
+eigenvectors of~$T$.
+
+The matrix form of the statement follows: if $\vect{e}_1, \dots, \vect{e}_n$
+is the orthonormal eigenbasis with $T\vect{e}_i = \lambda_i \vect{e}_i$,
+arrange these vectors as the columns of~$\mat{Q}$. Then
+$\mat{Q}\T \mat{Q} = \mat{I}$ (orthonormality), and
+$\mat{A}\mat{Q} = \mat{Q}\mat{D}$ with
+$\mat{D} = \diag(\lambda_1, \dots, \lambda_n)$, so
+$\mat{A} = \mat{Q}\mat{D}\mat{Q}\T$.
+\end{proof}
 
 \subsection*{Examples}
-% TODO
+
+\begin{example}[Diagonalizable: distinct real eigenvalues]
+\label{ex:diag-distinct}
+Take $\mat{A} = \begin{pmatrix} 2 & 1 \\ 1 & 2 \end{pmatrix}$ as the
+matrix of $T \colon \R^2 \to \R^2$ in the standard basis. The
+characteristic polynomial is
+$p_T(\lambda) = (2 - \lambda)^2 - 1 = \lambda^2 - 4\lambda + 3 = (\lambda - 1)(\lambda - 3)$,
+so the eigenvalues are $\lambda_1 = 1$ and $\lambda_2 = 3$.
+
+For $\lambda = 1$: $(\mat{A} - \mat{I})\vect{v} = \vect{0}$ becomes
+$x + y = 0$, giving eigenvector $(1, -1)$. For $\lambda = 3$:
+$(\mat{A} - 3\mat{I})\vect{v} = \vect{0}$ becomes $-x + y = 0$,
+giving eigenvector $(1, 1)$.
+
+The eigenvectors are linearly independent (\cref{thm:distinct-eig-li}),
+so they form a basis of~$\R^2$ and $T$ is diagonalizable
+(\cref{cor:distinct-implies-diag}). In this basis the matrix is
+$\diag(1, 3)$, recovering the result of \cref{prob:operator-similarity}.
+\end{example}
+
+\begin{example}[Not diagonalizable: a Jordan block]
+\label{ex:not-diag}
+For $\mat{A} = \begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix}$ the
+characteristic polynomial is $(1 - \lambda)^2$, so $\lambda = 1$ is the
+only eigenvalue, with algebraic multiplicity~$2$. The eigenspace
+$V_1$ is the kernel of
+$\mat{A} - \mat{I} = \begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix}$,
+which is $\spn\bigl((1, 0)\T\bigr)$ of dimension~$1$. Since
+$\dim V_1 = 1 \neq 2 = \dim \R^2$, the criterion in
+\cref{thm:diag-criterion}\,(c) fails and $\mat{A}$ is not
+diagonalizable.
+\end{example}
+
+\begin{example}[Self-adjoint: orthogonal eigenvectors]
+\label{ex:self-adj}
+The matrix $\mat{A} = \begin{pmatrix} 3 & 1 \\ 1 & 3 \end{pmatrix}$ is
+real symmetric, hence (in the standard inner product on~$\R^2$)
+self-adjoint. The characteristic polynomial
+$(3 - \lambda)^2 - 1 = (\lambda - 2)(\lambda - 4)$ gives eigenvalues
+$2$ and~$4$.
+
+For $\lambda = 2$: $(\mat{A} - 2\mat{I})\vect{v} = \vect{0}$ gives
+$\vect{v}_1 = (1, -1)$. For $\lambda = 4$: $(\mat{A} - 4\mat{I})\vect{v} = \vect{0}$
+gives $\vect{v}_2 = (1, 1)$. Inner product: $\langle \vect{v}_1, \vect{v}_2 \rangle = 1 - 1 = 0$,
+in agreement with \cref{thm:self-adj-orthog}. Normalizing,
+$\vect{e}_1 = \tfrac{1}{\sqrt{2}}(1, -1)$ and
+$\vect{e}_2 = \tfrac{1}{\sqrt{2}}(1, 1)$ form an orthonormal eigenbasis,
+illustrating \cref{thm:spectral}.
+\end{example}
+
+\begin{problem}
+\label{prob:spectral-3x3}
+The matrix
+\[
+  \mat{A} = \begin{pmatrix}
+    1 & 1 & 0 \\
+    1 & 1 & 0 \\
+    0 & 0 & 2
+  \end{pmatrix}
+\]
+is real symmetric. Find its eigenvalues, the eigenspaces, and an
+orthonormal basis of $\R^3$ consisting of eigenvectors. Verify the
+spectral decomposition $\mat{A} = \mat{Q}\mat{D}\mat{Q}\T$.
+\end{problem}
+
+\begin{proof}[Solution]
+The characteristic polynomial expands along the third row to
+\[
+  p_{\mat{A}}(\lambda) = (2 - \lambda)\bigl[(1 - \lambda)^2 - 1\bigr]
+  = (2 - \lambda) \cdot \lambda \cdot (\lambda - 2)
+  = -\lambda(\lambda - 2)^2.
+\]
+The eigenvalues are $\lambda = 0$ (algebraic multiplicity~$1$) and
+$\lambda = 2$ (algebraic multiplicity~$2$).
+
+\emph{$V_0$.} Solve $\mat{A}\vect{v} = \vect{0}$: the first two rows
+give $x + y = 0$, the third gives $z = 0$. Hence $V_0 = \spn\bigl((1, -1, 0)\T\bigr)$,
+$\dim V_0 = 1$.
+
+\emph{$V_2$.} Solve $(\mat{A} - 2\mat{I})\vect{v} = \vect{0}$, i.e.\
+$-x + y = 0$, $x - y = 0$, $0 = 0$. So $x = y$ and $z$ is free,
+giving $V_2 = \spn\bigl((1, 1, 0)\T,\, (0, 0, 1)\T\bigr)$,
+$\dim V_2 = 2$.
+
+The total $\dim V_0 + \dim V_2 = 1 + 2 = 3 = \dim \R^3$, confirming
+diagonalizability (\cref{thm:diag-criterion}). The three chosen
+eigenvectors are pairwise orthogonal (the cross-eigenspace pairs vanish
+by \cref{thm:self-adj-orthog}; within $V_2$ the vectors $(1, 1, 0)$
+and $(0, 0, 1)$ are visibly orthogonal). Normalizing,
+\[
+  \vect{e}_1 = \tfrac{1}{\sqrt{2}}(1, -1, 0)\T,\quad
+  \vect{e}_2 = \tfrac{1}{\sqrt{2}}(1, 1, 0)\T,\quad
+  \vect{e}_3 = (0, 0, 1)\T
+\]
+is an orthonormal eigenbasis with eigenvalues $0, 2, 2$.
+
+\emph{Spectral decomposition.} Set
+\[
+  \mat{Q} = \begin{pmatrix}
+    1/\sqrt{2} & 1/\sqrt{2} & 0 \\
+    -1/\sqrt{2} & 1/\sqrt{2} & 0 \\
+    0 & 0 & 1
+  \end{pmatrix}, \qquad
+  \mat{D} = \diag(0, 2, 2).
+\]
+Direct multiplication gives
+\[
+  \mat{Q}\mat{D}\mat{Q}\T = \begin{pmatrix}
+    1 & 1 & 0 \\
+    1 & 1 & 0 \\
+    0 & 0 & 2
+  \end{pmatrix} = \mat{A},
+\]
+matching \cref{thm:spectral}.
+\end{proof}
