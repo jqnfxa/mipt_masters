@@ -187,9 +187,12 @@ and
 \[
   p_{i, i-1} = \frac{i}{N}, \qquad p_{i, i+1} = \frac{N - i}{N}, \qquad p_{i, j} = 0 \text{ otherwise}.
 \]
-A direct calculation shows that the binomial distribution
-$\pi(i) = \binom{N}{i} 2^{-N}$ is stationary. The Ehrenfest model
-illustrates how a deterministic-looking deterministic-feel Boltzmann
+A short detailed-balance check confirms that the binomial
+distribution $\pi(i) = \binom{N}{i} 2^{-N}$ is stationary:
+\[
+  \pi(i)\, p_{i, i+1} = \binom{N}{i} 2^{-N} \cdot \frac{N - i}{N} = \binom{N}{i+1} 2^{-N} \cdot \frac{i + 1}{N} = \pi(i + 1)\, p_{i+1, i}.
+\]
+The Ehrenfest model illustrates how a Boltzmann-style
 ``equilibrium'' arises from a mixing Markov chain on a finite
 state space.
 \end{example}

@@ -237,7 +237,7 @@ exceeds a threshold, and identify it.
 
 \begin{proof}[Solution]
 The likelihood is $p^S (1 - p)^{n - S}$, so the likelihood ratio
-$L(\vect{x}) = (3/4)^S (1/4)^{n - S} / ((1/2)^n) = 2^n (3/4)^S (1/4)^{n - S} (1/(1))^n = 3^S / 2^{n}$ —
+$L(\vect{x}) = (3/4)^S (1/4)^{n - S} / (1/2)^n = 2^n \cdot 3^S / 4^n = 3^S / 2^n$ —
 strictly increasing in~$S$. The Neyman--Pearson lemma
 (\cref{thm:neyman-pearson}) therefore gives the MP test: reject
 when $S > c$ for some integer threshold~$c$. Choose $c$ so that

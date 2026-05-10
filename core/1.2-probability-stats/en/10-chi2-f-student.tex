@@ -170,19 +170,26 @@ $X_i$ by $(X_i - \mu)/\sigma$). Write $\vect{X} = (X_1, \dots, X_n)\T \sim \math
 $\bar X = (1/n) \sum X_i \sim \mathcal{N}(0, 1/n)$.
 
 \emph{Independence and the chi-squared distribution of $(n-1) S^2$.}
-Decompose $\vect{X}$ orthogonally as $\vect{X} = \bar X \vect{1}/\sqrt n \cdot \sqrt n + (\vect{X} - \bar X \vect{1})$,
-where $\vect{1} = (1, \dots, 1)\T$. Set
-$\vect{Y} = (\sqrt n\, \bar X,\, X_1 - \bar X, \dots, X_n - \bar X)\T = \mat{Q} \vect{X}$
-for an orthogonal matrix~$\mat{Q}$ whose first row is
-$\vect{1}\T/\sqrt n$ and whose remaining rows form an orthonormal
-basis of the orthogonal complement of $\vect{1}$ in $\R^n$. Since
-$\mathcal{N}(\vect{0}, \mat{I}_n)$ is rotation-invariant, the
-components of $\vect{Y}$ are independent standard normals. The first
-component is $\sqrt n \bar X$; the squared norm of the remaining
-$n - 1$ components is $\sum_i (X_i - \bar X)^2 = (n-1) S^2$, and the
-remaining components are i.i.d.\ standard normal, so $(n - 1) S^2 \sim \chi^2_{n - 1}$.
-Independence of $\bar X$ from this norm follows because they are
-functions of disjoint, independent sets of components of~$\vect{Y}$.
+Decompose $\vect{X}$ orthogonally as
+$\vect{X} = \bar X\, \vect{1} + (\vect{X} - \bar X \vect{1})$,
+where $\vect{1} = (1, \dots, 1)\T \in \R^n$. Let $\mat{Q}$ be an
+orthogonal $n \times n$ matrix whose first row is $\vect{1}\T/\sqrt n$
+and whose remaining $n - 1$ rows $\vect{q}_2\T, \dots, \vect{q}_n\T$
+are an orthonormal basis of $\vect{1}^{\perp}$, and set
+$\vect{Y} = \mat{Q} \vect{X} \in \R^n$. Then $Y_1 = \sqrt n\, \bar X$,
+and $\vect{Y} \sim \mathcal{N}(\vect{0}, \mat{I}_n)$ by rotation
+invariance, so the components $Y_1, \dots, Y_n$ are i.i.d.\ standard
+normals. Since orthogonal transformations preserve norms,
+\[
+  \sum_{j = 2}^{n} Y_j^2 \;=\; \|\vect{Y}\|^2 - Y_1^2 \;=\; \|\vect{X}\|^2 - n \bar X^2 \;=\; \sum_{i = 1}^{n} (X_i - \bar X)^2 \;=\; (n - 1) S^2.
+\]
+This is a sum of $n - 1$ i.i.d.\ squared standard normals, hence
+$(n - 1) S^2 \sim \chi^2_{n - 1}$ by \cref{def:chi-squared}.
+Finally, $\bar X = Y_1 / \sqrt n$ is a function of $Y_1$ alone, and
+$(n - 1) S^2 = \sum_{j \geq 2} Y_j^2$ is a function of
+$Y_2, \dots, Y_n$ alone; these two groups of variables are
+independent (different components of an i.i.d.\ Gaussian vector),
+so $\bar X$ and $S^2$ are independent.
 
 \emph{The $t$-distribution.} With independent
 $\bar X \sim \mathcal{N}(\mu, \sigma^2/n)$ and
