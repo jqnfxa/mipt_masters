@@ -8,10 +8,316 @@ Series. Numerical and functional series. Convergence tests (d'Alembert, Cauchy, 
 \end{ticket}
 
 \subsection*{Theory}
-% TODO
+
+We work over the real numbers throughout this section; statements
+about absolute convergence carry over verbatim to complex series by
+$|z| = \sqrt{z\bar{z}}$.
+
+\begin{definition}
+\label{def:series-convergence}
+A \emph{numerical series} is a formal sum
+$\sum_{n=1}^{\infty} a_n$ associated with a sequence $(a_n)$ of real
+numbers. Its \emph{partial sums} are
+$S_N = \sum_{n=1}^{N} a_n$. The series \emph{converges} (to the
+\emph{sum}~$S$) if $\lim_{N \to \infty} S_N = S$, and \emph{diverges}
+otherwise.
+\end{definition}
+
+\begin{proposition}[Necessary condition]
+\label{prop:necessary}
+If $\sum a_n$ converges, then $a_n \to 0$ as $n \to \infty$.
+\end{proposition}
+\proofof{necessary}
+
+\begin{theorem}[Cauchy criterion]
+\label{thm:series-cauchy}
+$\sum a_n$ converges if and only if for every $\varepsilon > 0$ there
+exists~$N$ such that
+$\bigl|\sum_{n=p+1}^{q} a_n\bigr| < \varepsilon$ for all $q > p \ge N$.
+\end{theorem}
+
+This is just the Cauchy criterion for the sequence $(S_N)$ in the
+complete space~$\R$; we will use it without further proof.
+
+\begin{definition}
+\label{def:abs-cond-convergence}
+$\sum a_n$ \emph{converges absolutely} if $\sum |a_n|$ converges.
+A convergent series that does not converge absolutely is said to
+\emph{converge conditionally}.
+\end{definition}
+
+\begin{theorem}[Absolute implies convergent]
+\label{thm:abs-implies-conv}
+If $\sum |a_n|$ converges, then $\sum a_n$ converges, and
+$\bigl|\sum a_n\bigr| \le \sum |a_n|$.
+\end{theorem}
+\proofof{abs-implies-conv}
+
+\medskip
+
+\noindent\textbf{Convergence tests for series of nonnegative terms.}
+
+\begin{theorem}[d'Alembert's ratio test]
+\label{thm:dalembert}
+Let $a_n \neq 0$ for all~$n$ and assume the limit
+$q = \lim_{n \to \infty} \bigl|\tfrac{a_{n+1}}{a_n}\bigr|$ exists in
+$[0, +\infty]$. Then
+\begin{enumerate}[label=(\alph*)]
+  \item if $q < 1$, $\sum a_n$ converges absolutely;
+  \item if $q > 1$ (including $q = +\infty$), $\sum a_n$ diverges
+        (in fact $a_n \not\to 0$);
+  \item if $q = 1$, the test is inconclusive.
+\end{enumerate}
+\end{theorem}
+\proofof{dalembert}
+
+\begin{theorem}[Cauchy's root test]
+\label{thm:cauchy-root}
+Let $q = \limsup_{n \to \infty} \sqrt[n]{|a_n|} \in [0, +\infty]$.
+\begin{enumerate}[label=(\alph*)]
+  \item if $q < 1$, $\sum a_n$ converges absolutely;
+  \item if $q > 1$, $\sum a_n$ diverges;
+  \item if $q = 1$, the test is inconclusive.
+\end{enumerate}
+\end{theorem}
+\proofof{cauchy-root}
+
+\begin{theorem}[Cauchy--Maclaurin integral test]
+\label{thm:integral-test}
+Let $f \colon [1, +\infty) \to [0, +\infty)$ be a nonincreasing
+nonnegative function and set $a_n = f(n)$. The series
+$\sum_{n=1}^{\infty} a_n$ and the improper integral
+$\int_1^{+\infty} f(x)\, dx$ converge or diverge together. Moreover,
+\[
+  \int_{1}^{N+1} f(x)\, dx \;\le\; \sum_{n=1}^{N} a_n \;\le\; a_1 + \int_{1}^{N} f(x)\, dx.
+\]
+\end{theorem}
+\proofof{integral-test}
+
+\medskip
+
+\noindent\textbf{Alternating series.}
+
+\begin{theorem}[Leibniz's test]
+\label{thm:leibniz}
+Let $(a_n)$ be a nonincreasing sequence of nonnegative numbers with
+$a_n \to 0$. Then the alternating series
+$\sum_{n=1}^{\infty} (-1)^{n+1} a_n$ converges, and the truncation
+error satisfies
+\[
+  |S - S_N| \;\le\; a_{N+1}.
+\]
+\end{theorem}
+\proofof{leibniz}
+
+\medskip
+
+\noindent\textbf{Functional series and uniform convergence.}
+
+\begin{definition}
+\label{def:functional-series}
+Let $D \subseteq \R$ and $f_n \colon D \to \R$ for $n = 1, 2, \dots$.
+The \emph{functional series} $\sum f_n$ converges \emph{pointwise on
+$D$} if $\sum f_n(x)$ converges for every $x \in D$, and converges
+\emph{uniformly on $D$} if
+$\sup_{x \in D} \bigl|S(x) - S_N(x)\bigr| \to 0$ as $N \to \infty$,
+where $S_N(x) = \sum_{n=1}^{N} f_n(x)$ and $S(x)$ is the pointwise
+sum.
+\end{definition}
+
+\begin{theorem}[Weierstrass $M$-test]
+\label{thm:weierstrass-m}
+If there exist constants $M_n \ge 0$ such that $|f_n(x)| \le M_n$ for
+every $x \in D$ and every~$n$, and if $\sum M_n$ converges, then
+$\sum f_n$ converges uniformly (and absolutely) on~$D$.
+\end{theorem}
+\proofof{weierstrass-m}
+
+\begin{remark}
+Uniform convergence is the right notion to swap a series with limits,
+derivatives, or integrals (continuity of the sum, term-by-term
+integration, etc.). These applications appear in
+\cref{sec:1.1.12-fourier-series,sec:1.1.13-fourier-transform}. For
+deeper treatment of all results in this section see \cite{Zorich1981}.
+\end{remark}
 
 \subsection*{Proofs}
-% TODO
+
+\begin{proof}[\Cref{prop:necessary}]
+\proofanchor{necessary}
+If $S_N \to S$, then $a_N = S_N - S_{N-1} \to S - S = 0$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:abs-implies-conv}]
+\proofanchor{abs-implies-conv}
+Apply the Cauchy criterion (\cref{thm:series-cauchy}) to both series.
+For $q > p$, the triangle inequality gives
+\[
+  \Bigl| \sum_{n=p+1}^{q} a_n \Bigr| \;\le\; \sum_{n=p+1}^{q} |a_n|.
+\]
+If $\sum |a_n|$ converges, the right-hand side is below~$\varepsilon$
+for $p, q \ge N$, so the left is too, and $\sum a_n$ converges.
+Passing to the limit $q \to \infty$ in
+$|\sum_{n=1}^{q} a_n| \le \sum_{n=1}^{q} |a_n|$ yields the
+inequality on the sums.
+\end{proof}
+
+\begin{proof}[\Cref{thm:dalembert}]
+\proofanchor{dalembert}
+\emph{(a) $q < 1$.} Pick $q'$ with $q < q' < 1$. By definition of the
+limit, there exists~$N$ with
+$\bigl|\tfrac{a_{n+1}}{a_n}\bigr| \le q'$ for all $n \ge N$. By
+induction $|a_{N+k}| \le q'^k |a_N|$, so $\sum_{n \ge N} |a_n|$ is
+dominated by the convergent geometric series
+$|a_N| \sum_k q'^k = |a_N|/(1 - q')$. Hence $\sum |a_n|$ converges.
+
+\emph{(b) $q > 1$.} Pick $q'$ with $1 < q' < q$. There is~$N$ with
+$|a_{n+1}/a_n| \ge q'$ for $n \ge N$, so $|a_n| \ge q'^{n - N}|a_N|$
+for $n \ge N$. Since $q' > 1$, this lower bound diverges, so
+$a_n \not\to 0$ and the series diverges by
+\cref{prop:necessary}.
+
+\emph{(c) $q = 1$.} The harmonic series $\sum 1/n$ has $q = 1$ and
+diverges, while $\sum 1/n^2$ has $q = 1$ and converges (see the
+examples), so no general conclusion is possible.
+\end{proof}
+
+\begin{proof}[\Cref{thm:cauchy-root}]
+\proofanchor{cauchy-root}
+\emph{(a) $q < 1$.} Pick $q'$ with $q < q' < 1$. By the definition
+of the limit superior, there exists~$N$ with $\sqrt[n]{|a_n|} \le q'$
+for all $n \ge N$, i.e.\ $|a_n| \le q'^n$. The geometric series
+$\sum q'^n$ converges, so by comparison $\sum |a_n|$ converges.
+
+\emph{(b) $q > 1$.} There are infinitely many~$n$ with
+$\sqrt[n]{|a_n|} > 1$, i.e.\ $|a_n| > 1$. Hence $a_n \not\to 0$, and
+the series diverges by \cref{prop:necessary}.
+
+\emph{(c) $q = 1$.} Same examples as for d'Alembert show
+inconclusiveness.
+\end{proof}
+
+\begin{proof}[\Cref{thm:integral-test}]
+\proofanchor{integral-test}
+Since $f$ is nonincreasing, for each integer $n \ge 1$ and
+$x \in [n, n+1]$ we have $f(n+1) \le f(x) \le f(n)$. Integrating,
+\[
+  a_{n+1} = f(n+1) \;\le\; \int_n^{n+1} f(x)\, dx \;\le\; f(n) = a_n.
+\]
+Summing for $n = 1, \dots, N - 1$:
+\[
+  \sum_{n=2}^{N} a_n \;\le\; \int_1^{N} f(x)\, dx \;\le\; \sum_{n=1}^{N-1} a_n.
+\]
+Adding $a_1$ to both sides of the right inequality and rewriting
+the left gives the bracket displayed in the statement (with $N$
+replaced by $N - 1$). Both partial sums and the partial integrals are
+nondecreasing in~$N$ and bounded by each other up to a constant; they
+therefore converge or diverge together.
+\end{proof}
+
+\begin{proof}[\Cref{thm:leibniz}]
+\proofanchor{leibniz}
+Write $S_N = \sum_{n=1}^{N} (-1)^{n+1} a_n$. The even-indexed
+partial sums satisfy
+\[
+  S_{2k+2} - S_{2k} = a_{2k+1} - a_{2k+2} \ge 0,
+\]
+so $(S_{2k})$ is nondecreasing. The odd-indexed sums satisfy
+\[
+  S_{2k+1} - S_{2k-1} = -a_{2k} + a_{2k+1} \le 0,
+\]
+so $(S_{2k+1})$ is nonincreasing. Since $S_{2k} \le S_{2k+1}$ (because
+$S_{2k+1} - S_{2k} = a_{2k+1} \ge 0$), each $S_{2k}$ is bounded above
+by~$S_1 = a_1$ and each $S_{2k+1}$ is bounded below by $S_2 = a_1 - a_2 \ge 0$.
+Two monotone bounded sequences converge; call their limits
+$L$ and $L'$. From $S_{2k+1} - S_{2k} = a_{2k+1} \to 0$, $L = L'$, and
+$S_N \to L$.
+
+For the truncation bound, both $L \in [S_{N}, S_{N+1}]$ when $N$ is
+even and $L \in [S_{N+1}, S_N]$ when $N$ is odd; in either case
+$|S - S_N| \le |S_{N+1} - S_N| = a_{N+1}$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:weierstrass-m}]
+\proofanchor{weierstrass-m}
+Apply the uniform Cauchy criterion: $\sum f_n$ converges uniformly
+iff for every $\varepsilon > 0$ there exists~$N$ such that
+$\sup_{x \in D} \bigl|\sum_{n=p+1}^{q} f_n(x)\bigr| < \varepsilon$
+for all $q > p \ge N$. Bound the supremum by the corresponding
+$M$-tail:
+\[
+  \Bigl| \sum_{n=p+1}^{q} f_n(x) \Bigr|
+  \;\le\; \sum_{n=p+1}^{q} |f_n(x)|
+  \;\le\; \sum_{n=p+1}^{q} M_n.
+\]
+Convergence of $\sum M_n$ makes the right-hand side smaller than
+$\varepsilon$ uniformly in~$x$ for $p, q$ large.
+\end{proof}
 
 \subsection*{Examples}
-% TODO
+
+\begin{example}[Geometric series]
+\label{ex:geometric}
+For $q \in \R$, the geometric series $\sum_{n=0}^{\infty} q^n$
+converges iff $|q| < 1$, in which case the sum is $1/(1 - q)$. Indeed
+$S_N = (1 - q^{N+1})/(1 - q) \to 1/(1 - q)$ when $|q| < 1$, and
+$|q|^{N+1} \not\to 0$ when $|q| \ge 1$. The series converges
+absolutely throughout $|q| < 1$.
+\end{example}
+
+\begin{example}[Harmonic series and the $p$-series]
+\label{ex:p-series}
+For $p > 0$ apply the integral test to $f(x) = 1/x^p$:
+$\int_1^{\infty} x^{-p}\, dx$ converges iff $p > 1$. Hence
+$\sum_{n=1}^{\infty} 1/n^p$ converges iff $p > 1$. In particular the
+harmonic series $\sum 1/n$ ($p = 1$) diverges, and $\sum 1/n^2$
+converges.
+
+The d'Alembert and Cauchy root tests are both inconclusive on
+$p$-series ($\lim |a_{n+1}/a_n| = 1$ and
+$\lim \sqrt[n]{1/n^p} = 1$), illustrating the case $q = 1$.
+\end{example}
+
+\begin{example}[$\sum 1/n!$ via d'Alembert]
+\label{ex:factorial-series}
+For $a_n = 1/n!$,
+$\bigl|a_{n+1}/a_n\bigr| = 1/(n+1) \to 0 < 1$, so by
+\cref{thm:dalembert}\,(a) the series converges absolutely. (In
+fact the sum is $e - 1$, but only convergence concerns us here.)
+\end{example}
+
+\begin{example}[Conditional convergence]
+\label{ex:alt-harmonic}
+The alternating harmonic series
+$\sum_{n=1}^{\infty} (-1)^{n+1}/n$ has $a_n = 1/n \downarrow 0$
+monotonically, so it converges by \cref{thm:leibniz} (its sum is
+$\ln 2$). However $\sum |a_n| = \sum 1/n$ diverges. The series
+therefore converges \emph{conditionally}, not absolutely.
+\end{example}
+
+\begin{problem}
+\label{prob:series-classify}
+For each $\alpha > 0$ classify the series
+\[
+  \sum_{n=1}^{\infty} \frac{(-1)^n}{n^{\alpha}}
+\]
+as absolutely convergent, conditionally convergent, or divergent.
+\end{problem}
+
+\begin{proof}[Solution]
+The absolute series is the $p$-series $\sum 1/n^{\alpha}$, which
+by \cref{ex:p-series} converges iff $\alpha > 1$.
+
+\emph{$\alpha > 1$.} Absolute convergence holds, hence convergence
+(\cref{thm:abs-implies-conv}). The series converges absolutely.
+
+\emph{$0 < \alpha \le 1$.} Absolute convergence fails. Apply Leibniz
+to $a_n = 1/n^{\alpha}$: the sequence is nonnegative, monotonically
+decreasing (since $\alpha > 0$), and tends to~$0$. Hence the
+alternating series $\sum (-1)^n/n^{\alpha}$ converges by
+\cref{thm:leibniz}. As absolute convergence fails, the convergence
+is \emph{conditional}.
+
+Summary: absolutely convergent iff $\alpha > 1$, conditionally
+convergent iff $0 < \alpha \le 1$, never divergent for $\alpha > 0$.
+\end{proof}
