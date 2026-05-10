@@ -8,10 +8,313 @@ Functions of several variables. Partial derivatives. Gradient and its geometric 
 \end{ticket}
 
 \subsection*{Theory}
-% TODO
+
+We work with real-valued functions $f \colon U \to \R$ defined on an
+open set $U \subseteq \R^n$. Vectors in $\R^n$ are columns; we write
+$\langle \cdot, \cdot \rangle$ and $\|\cdot\|$ for the standard inner
+product and Euclidean norm. Let $\vect{e}_1, \dots, \vect{e}_n$ be the
+standard basis of $\R^n$.
+
+\begin{definition}
+\label{def:partial-derivative}
+The \emph{partial derivative} of~$f$ with respect to~$x_i$ at the
+point $\vect{x} \in U$ is
+\[
+  \frac{\partial f}{\partial x_i}(\vect{x})
+  \;=\; \lim_{t \to 0} \frac{f(\vect{x} + t\vect{e}_i) - f(\vect{x})}{t},
+\]
+provided the limit exists. It is the ordinary derivative at $t = 0$ of
+the single-variable function $t \mapsto f(\vect{x} + t \vect{e}_i)$.
+\end{definition}
+
+\begin{definition}
+\label{def:differentiable-multi}
+$f$ is \emph{differentiable at~$\vect{x}$} if there exists a vector
+$\vect{a} \in \R^n$ for which
+\[
+  f(\vect{x} + \vect{h}) \;=\; f(\vect{x}) + \langle \vect{a}, \vect{h} \rangle + o(\|\vect{h}\|)
+  \qquad \text{as } \vect{h} \to \vect{0}.
+\]
+The vector $\vect{a}$ is then unique; it is called the \emph{gradient}
+of~$f$ at~$\vect{x}$ and denoted $\nabla f(\vect{x})$.
+\end{definition}
+
+\begin{proposition}[Differentiable $\Rightarrow$ partials and gradient]
+\label{prop:diff-implies-partials}
+If~$f$ is differentiable at~$\vect{x}$, then every partial derivative
+$\partial f / \partial x_i$ exists at~$\vect{x}$ and
+\[
+  \nabla f(\vect{x}) \;=\; \Bigl(\frac{\partial f}{\partial x_1}(\vect{x}), \dots, \frac{\partial f}{\partial x_n}(\vect{x})\Bigr)\T.
+\]
+\end{proposition}
+\proofof{diff-implies-partials}
+
+\begin{theorem}[Continuous partials $\Rightarrow$ differentiability]
+\label{thm:cont-partials-diff}
+If all partial derivatives $\partial f / \partial x_i$ exist on a
+neighbourhood of~$\vect{x}$ and are continuous at~$\vect{x}$, then~$f$
+is differentiable at~$\vect{x}$ (and the gradient is given by
+\cref{prop:diff-implies-partials}).
+\end{theorem}
+\proofof{cont-partials-diff}
+
+The converse of \cref{prop:diff-implies-partials} is \emph{not}
+true in general: a function may have all partial derivatives at a
+point yet fail to be differentiable there. \cref{thm:cont-partials-diff}
+gives the standard sufficient condition.
+
+\begin{definition}
+\label{def:directional-derivative}
+For a unit vector $\vect{v} \in \R^n$ ($\|\vect{v}\| = 1$), the
+\emph{directional derivative} of~$f$ at~$\vect{x}$ in the
+direction~$\vect{v}$ is
+\[
+  D_{\vect{v}} f(\vect{x}) \;=\; \lim_{t \to 0^{+}} \frac{f(\vect{x} + t\vect{v}) - f(\vect{x})}{t}.
+\]
+\end{definition}
+
+\begin{theorem}[Directional derivative formula]
+\label{thm:directional-derivative-formula}
+If~$f$ is differentiable at~$\vect{x}$ and $\vect{v}$ is a unit vector, then
+\[
+  D_{\vect{v}} f(\vect{x}) \;=\; \langle \nabla f(\vect{x}), \vect{v} \rangle.
+\]
+\end{theorem}
+\proofof{directional-derivative-formula}
+
+\begin{theorem}[Geometric meaning of the gradient]
+\label{thm:gradient-geometry}
+Let~$f$ be differentiable at~$\vect{x}$ with $\nabla f(\vect{x}) \neq \vect{0}$.
+\begin{enumerate}[label=(\alph*)]
+  \item Among all unit directions~$\vect{v}$, the directional
+        derivative $D_{\vect{v}} f(\vect{x})$ is maximized by
+        $\vect{v} = \nabla f(\vect{x}) / \|\nabla f(\vect{x})\|$, with
+        maximum value $\|\nabla f(\vect{x})\|$.
+  \item The gradient is orthogonal to the level set
+        $\{\vect{y} \in U : f(\vect{y}) = f(\vect{x})\}$ in the
+        following sense: every smooth curve $\gamma \colon (-\varepsilon, \varepsilon) \to U$
+        with $\gamma(0) = \vect{x}$ and $f(\gamma(t)) \equiv f(\vect{x})$
+        satisfies $\langle \nabla f(\vect{x}), \gamma'(0) \rangle = 0$.
+\end{enumerate}
+\end{theorem}
+\proofof{gradient-geometry}
+
+\medskip
+
+\noindent\textbf{Gradient descent.} The geometric content of
+\cref{thm:gradient-geometry}\,(a) is the basis for an iterative
+algorithm to minimize~$f$.
+
+\begin{definition}
+\label{def:gradient-descent}
+The \emph{gradient descent} iteration with step size $\alpha > 0$ is
+\[
+  \vect{x}_{k+1} \;=\; \vect{x}_k \;-\; \alpha\, \nabla f(\vect{x}_k),
+  \qquad k = 0, 1, 2, \dots,
+\]
+starting from a chosen initial point~$\vect{x}_0$.
+\end{definition}
+
+The minus sign realizes the steepest \emph{descent} direction
+$-\nabla f(\vect{x})$ (cf.\ \cref{thm:gradient-geometry}\,(a)
+applied to $-f$).
+
+\begin{theorem}[One-step descent inequality]
+\label{thm:gd-descent}
+Let~$f$ be differentiable on $\R^n$ with an \emph{$L$-Lipschitz
+gradient}, that is,
+$\|\nabla f(\vect{y}) - \nabla f(\vect{x})\| \le L\,\|\vect{y} - \vect{x}\|$
+for all $\vect{x}, \vect{y}$. Then for any $\alpha > 0$ and any
+$\vect{x} \in \R^n$,
+\[
+  f\bigl(\vect{x} - \alpha\, \nabla f(\vect{x})\bigr)
+  \;\le\; f(\vect{x}) - \alpha\Bigl(1 - \tfrac{\alpha L}{2}\Bigr) \|\nabla f(\vect{x})\|^2.
+\]
+In particular, for $0 < \alpha < 2/L$ the right-hand bracket is
+positive and each gradient-descent step strictly decreases~$f$ at
+points where $\nabla f(\vect{x}) \neq \vect{0}$.
+\end{theorem}
+\proofof{gd-descent}
+
+\begin{remark}
+A complete convergence theory of gradient descent (rates for convex
+and strongly convex objectives, role of the condition number,
+acceleration) belongs to convex optimization; see
+\cref{sec:2.4-convex-optimization} and \cite{Zorich1981} for the
+multivariable-calculus prerequisites.
+\end{remark}
 
 \subsection*{Proofs}
-% TODO
+
+\begin{proof}[\Cref{prop:diff-implies-partials}]
+\proofanchor{diff-implies-partials}
+Substitute $\vect{h} = t \vect{e}_i$ (with scalar~$t$) into the
+differentiability expansion of \cref{def:differentiable-multi}:
+\[
+  f(\vect{x} + t\vect{e}_i) \;=\; f(\vect{x}) + t\, \langle \vect{a}, \vect{e}_i \rangle + o(|t|).
+\]
+Subtracting and dividing by~$t$,
+\[
+  \frac{f(\vect{x} + t\vect{e}_i) - f(\vect{x})}{t} \;=\; a_i + \frac{o(|t|)}{t} \;\to\; a_i \quad (t \to 0),
+\]
+since $o(|t|)/t \to 0$. Hence $\partial f / \partial x_i (\vect{x})$
+exists and equals~$a_i$, the $i$-th component of~$\vect{a} = \nabla f(\vect{x})$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:cont-partials-diff}]
+\proofanchor{cont-partials-diff}
+Fix $\vect{x}$ and let $\vect{h} = (h_1, \dots, h_n)\T$ be small enough
+that the segment $\vect{x} + s\vect{h}$ remains in the open set on which
+all partials are continuous. We connect $\vect{x}$ to $\vect{x} + \vect{h}$
+along the broken path that increments one coordinate at a time:
+$\vect{p}_0 = \vect{x}, \vect{p}_i = \vect{p}_{i-1} + h_i \vect{e}_i$.
+By the single-variable mean-value theorem applied to
+$t \mapsto f(\vect{p}_{i-1} + t \vect{e}_i)$ on $[0, h_i]$, there is
+$\theta_i \in (0, h_i)$ (or in $(h_i, 0)$ if $h_i < 0$) with
+\[
+  f(\vect{p}_i) - f(\vect{p}_{i-1}) \;=\; \frac{\partial f}{\partial x_i}\bigl(\vect{p}_{i-1} + \theta_i \vect{e}_i\bigr) \cdot h_i.
+\]
+Telescoping,
+\[
+  f(\vect{x} + \vect{h}) - f(\vect{x}) \;=\; \sum_{i=1}^{n} \frac{\partial f}{\partial x_i}(\vect{q}_i) \cdot h_i,
+\]
+where $\vect{q}_i = \vect{p}_{i-1} + \theta_i \vect{e}_i$ tends
+to~$\vect{x}$ as $\vect{h} \to \vect{0}$. By continuity of the
+partials at~$\vect{x}$,
+$\partial f / \partial x_i(\vect{q}_i) = \partial f / \partial x_i(\vect{x}) + \varepsilon_i(\vect{h})$
+with $\varepsilon_i(\vect{h}) \to 0$. Therefore
+\[
+  f(\vect{x} + \vect{h}) - f(\vect{x}) \;=\; \sum_i \frac{\partial f}{\partial x_i}(\vect{x}) h_i + \sum_i \varepsilon_i(\vect{h}) h_i.
+\]
+The first sum is $\langle \nabla f(\vect{x}), \vect{h} \rangle$. The
+second is bounded in absolute value by
+$\bigl(\sum |\varepsilon_i(\vect{h})|\bigr) \|\vect{h}\|_\infty \le \bigl(\sum |\varepsilon_i(\vect{h})|\bigr) \|\vect{h}\| = o(\|\vect{h}\|)$,
+since each $\varepsilon_i(\vect{h}) \to 0$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:directional-derivative-formula}]
+\proofanchor{directional-derivative-formula}
+Apply the differentiability expansion with $\vect{h} = t\vect{v}$
+($t > 0$, $\|\vect{v}\| = 1$):
+\[
+  f(\vect{x} + t\vect{v}) \;=\; f(\vect{x}) + t\, \langle \nabla f(\vect{x}), \vect{v} \rangle + o(t).
+\]
+Subtract, divide by~$t$, and let $t \to 0^{+}$ to obtain the formula.
+\end{proof}
+
+\begin{proof}[\Cref{thm:gradient-geometry}]
+\proofanchor{gradient-geometry}
+\emph{(a)} For any unit~$\vect{v}$, by Cauchy--Schwarz,
+$\langle \nabla f(\vect{x}), \vect{v} \rangle \le \|\nabla f(\vect{x})\|$,
+with equality iff $\vect{v}$ is a positive scalar multiple of
+$\nabla f(\vect{x})$. The unit witness is
+$\vect{v} = \nabla f(\vect{x}) / \|\nabla f(\vect{x})\|$, achieving
+the maximum value $\|\nabla f(\vect{x})\|$.
+
+\emph{(b)} Let $\gamma$ be a smooth curve in the level set with
+$\gamma(0) = \vect{x}$. Differentiating $f(\gamma(t)) \equiv f(\vect{x})$
+at $t = 0$ via the chain rule (a special case of the directional
+derivative formula along $\gamma'(0)$, after rescaling to a unit
+direction): $0 = \langle \nabla f(\vect{x}), \gamma'(0) \rangle$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:gd-descent}]
+\proofanchor{gd-descent}
+The standard \emph{descent lemma} for $L$-smooth functions states
+that for all~$\vect{x}, \vect{h}$,
+\[
+  f(\vect{x} + \vect{h}) \;\le\; f(\vect{x}) + \langle \nabla f(\vect{x}), \vect{h} \rangle + \tfrac{L}{2}\|\vect{h}\|^2.
+\]
+(One derives it by integrating the Lipschitz bound on $\nabla f$
+along the segment from $\vect{x}$ to $\vect{x} + \vect{h}$:
+$f(\vect{x} + \vect{h}) - f(\vect{x}) - \langle \nabla f(\vect{x}), \vect{h} \rangle = \int_0^1 \langle \nabla f(\vect{x} + s\vect{h}) - \nabla f(\vect{x}), \vect{h}\rangle\,ds \le \int_0^1 sL\|\vect{h}\|^2 ds = L\|\vect{h}\|^2/2$.)
+
+Set $\vect{h} = -\alpha \nabla f(\vect{x})$:
+\[
+  f(\vect{x} - \alpha \nabla f(\vect{x}))
+  \;\le\; f(\vect{x}) - \alpha\,\|\nabla f(\vect{x})\|^2 + \tfrac{L \alpha^2}{2}\|\nabla f(\vect{x})\|^2
+  \;=\; f(\vect{x}) - \alpha\Bigl(1 - \tfrac{\alpha L}{2}\Bigr) \|\nabla f(\vect{x})\|^2.
+\]
+For $\alpha \in (0, 2/L)$ the bracket $1 - \alpha L / 2$ is strictly
+positive, so the right-hand side is strictly less than~$f(\vect{x})$
+whenever $\nabla f(\vect{x}) \neq \vect{0}$.
+\end{proof}
 
 \subsection*{Examples}
-% TODO
+
+\begin{example}[Computing a gradient]
+\label{ex:gradient-compute}
+For $f(x, y) = x^2 y + y^3 + 3 x y^2 - 4x$, the partial derivatives
+are
+\[
+  \frac{\partial f}{\partial x} = 2 x y + 3 y^2 - 4, \qquad
+  \frac{\partial f}{\partial y} = x^2 + 3 y^2 + 6 x y.
+\]
+Both are polynomials, hence continuous, so~$f$ is differentiable on
+all of~$\R^2$ by \cref{thm:cont-partials-diff} with
+$\nabla f(x, y) = (2xy + 3y^2 - 4,\; x^2 + 3y^2 + 6xy)\T$. At the
+point $(1, 2)$ this gives $\nabla f(1, 2) = (4 + 12 - 4,\; 1 + 12 + 12) = (12, 25)\T$.
+\end{example}
+
+\begin{example}[Gradient orthogonal to a level curve]
+\label{ex:gradient-orthogonal}
+Let $f(x, y) = x^2 + y^2$. The level curve $f = c$ is the circle
+$x^2 + y^2 = c$ (for $c > 0$); the gradient $\nabla f(x, y) = (2x, 2y)$
+is the radial vector $2(x, y)$, which is indeed perpendicular to the
+tangent of the circle at every point. This matches
+\cref{thm:gradient-geometry}\,(b): differentiating
+$\gamma(t) = (\sqrt{c}\cos t, \sqrt{c}\sin t)$ gives
+$\gamma'(t) = \sqrt{c}(-\sin t, \cos t)$, and
+$\langle \nabla f(\gamma(t)), \gamma'(t) \rangle = 2\sqrt{c}\cos t \cdot \sqrt{c}(-\sin t) + 2\sqrt{c}\sin t \cdot \sqrt{c}\cos t = 0$.
+\end{example}
+
+\begin{example}[One step of gradient descent on a quadratic]
+\label{ex:gd-step}
+For the convex quadratic $f(\vect{x}) = \tfrac{1}{2} \langle \vect{x}, \mat{A} \vect{x} \rangle - \langle \vect{b}, \vect{x} \rangle$
+with symmetric positive-definite~$\mat{A}$, the gradient is
+$\nabla f(\vect{x}) = \mat{A}\vect{x} - \vect{b}$ (cf.\
+\cref{thm:cofactor-inverse} for the algebra of the quadratic
+expansion). Take $\mat{A} = \begin{pmatrix} 4 & 0 \\ 0 & 1 \end{pmatrix}$,
+$\vect{b} = (4, 1)\T$, $\vect{x}_0 = (0, 0)\T$, $\alpha = 0.2$. Then
+$\nabla f(\vect{x}_0) = -\vect{b} = (-4, -1)\T$, and one descent step
+yields $\vect{x}_1 = \vect{x}_0 - 0.2 \cdot (-4, -1)\T = (0.8, 0.2)\T$.
+
+A direct check: $f(\vect{x}_0) = 0$, while
+$f(\vect{x}_1) = \tfrac{1}{2}(4 \cdot 0.64 + 1 \cdot 0.04) - (4 \cdot 0.8 + 1 \cdot 0.2) = 1.34 - 3.4 = -2.06$,
+confirming $f$ has decreased. The Lipschitz constant of $\nabla f$ is
+$L = \|\mat{A}\| = 4$, and the bracket
+$1 - \alpha L / 2 = 1 - 0.4 = 0.6 > 0$ in
+\cref{thm:gd-descent} predicts a decrease of at least
+$0.2 \cdot 0.6 \cdot \|\nabla f(\vect{x}_0)\|^2 = 0.12 \cdot 17 = 2.04$,
+matching the observed drop of $2.06$ closely.
+\end{example}
+
+\begin{problem}
+\label{prob:gd-anisotropic}
+Take $f(x, y) = x^2 + 4 y^2$. Compute $\nabla f$, run two gradient
+descent steps from $(1, 1)$ with step size $\alpha = 0.1$, and compare
+the rates of decrease in the two coordinates.
+\end{problem}
+
+\begin{proof}[Solution]
+$\nabla f(x, y) = (2x, 8y)$, with Lipschitz constant
+$L = 8$ (the larger eigenvalue of $\diag(2, 8)$). The unique global
+minimum is at $(0, 0)$ where $f = 0$.
+
+\emph{Step 0.} $\vect{x}_0 = (1, 1)$, $\nabla f(\vect{x}_0) = (2, 8)$.
+$\vect{x}_1 = \vect{x}_0 - 0.1 \cdot (2, 8) = (0.8, 0.2)$.
+$f(\vect{x}_1) = 0.64 + 0.16 = 0.80$ (was $f(\vect{x}_0) = 5$).
+
+\emph{Step 1.} $\nabla f(\vect{x}_1) = (1.6, 1.6)$.
+$\vect{x}_2 = \vect{x}_1 - 0.1 \cdot (1.6, 1.6) = (0.64, 0.04)$.
+$f(\vect{x}_2) = 0.4096 + 0.0064 = 0.416$.
+
+The $y$-coordinate dropped from $1$ to $0.2$ to $0.04$, a factor of
+$0.2$ per step (consistent with $|1 - \alpha \cdot 8| = 0.2$). The
+$x$-coordinate dropped from $1$ to $0.8$ to $0.64$, a factor of $0.8$
+per step ($|1 - \alpha \cdot 2| = 0.8$). The condition number of the
+quadratic is $L/\mu = 8/2 = 4$; the slow-decreasing coordinate
+($x$) drags out the convergence — the central observation that
+motivates preconditioning and acceleration in
+\cref{sec:2.4-convex-optimization}.
+\end{proof}
