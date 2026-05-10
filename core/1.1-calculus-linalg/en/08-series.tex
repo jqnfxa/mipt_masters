@@ -208,11 +208,13 @@ Summing for $n = 1, \dots, N - 1$:
 \[
   \sum_{n=2}^{N} a_n \;\le\; \int_1^{N} f(x)\, dx \;\le\; \sum_{n=1}^{N-1} a_n.
 \]
-Adding $a_1$ to both sides of the right inequality and rewriting
-the left gives the bracket displayed in the statement (with $N$
-replaced by $N - 1$). Both partial sums and the partial integrals are
-nondecreasing in~$N$ and bounded by each other up to a constant; they
-therefore converge or diverge together.
+Adding $a_1$ to both sides of the left inequality gives
+$\sum_{n=1}^{N} a_n \le a_1 + \int_1^N f$ — the right half of the
+statement. Shifting $N \to N + 1$ in the right inequality gives
+$\int_1^{N+1} f \le \sum_{n=1}^{N} a_n$ — the left half. Both
+partial sums and the partial integrals are nondecreasing in~$N$ and
+bound each other up to a constant; they therefore converge or diverge
+together.
 \end{proof}
 
 \begin{proof}[\Cref{thm:leibniz}]

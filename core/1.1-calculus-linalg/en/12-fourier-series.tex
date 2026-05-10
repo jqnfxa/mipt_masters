@@ -332,6 +332,19 @@ with absolute and uniform convergence.
 \end{example}
 
 \begin{problem}[Basel sum]
+\label{prob:basel}
 Substitute $x = \pi$ in \cref{ex:xsquared} and rearrange to obtain
 $\displaystyle \sum_{n=1}^{\infty} \frac{1}{n^2} \;=\; \frac{\pi^2}{6}$.
 \end{problem}
+
+\begin{proof}[Solution]
+At $x = \pi$, $\cos(n\pi) = (-1)^n$, so
+$(-1)^n \cos(n\pi) = (-1)^{2n} = 1$. Substituting into the identity
+of \cref{ex:xsquared}:
+\[
+  \pi^2 \;=\; \frac{\pi^2}{3} + 4 \sum_{n=1}^{\infty} \frac{(-1)^n \cos(n\pi)}{n^2}
+       \;=\; \frac{\pi^2}{3} + 4 \sum_{n=1}^{\infty} \frac{1}{n^2}.
+\]
+Rearranging and dividing by~$4$:
+$\sum_{n=1}^{\infty} 1/n^2 = (\pi^2 - \pi^2/3)/4 = \pi^2/6$.
+\end{proof}

@@ -272,21 +272,22 @@ $\langle \nabla f(\gamma(t)), \gamma'(t) \rangle = 2\sqrt{c}\cos t \cdot \sqrt{c
 \label{ex:gd-step}
 For the convex quadratic $f(\vect{x}) = \tfrac{1}{2} \langle \vect{x}, \mat{A} \vect{x} \rangle - \langle \vect{b}, \vect{x} \rangle$
 with symmetric positive-definite~$\mat{A}$, the gradient is
-$\nabla f(\vect{x}) = \mat{A}\vect{x} - \vect{b}$ (cf.\
-\cref{thm:cofactor-inverse} for the algebra of the quadratic
-expansion). Take $\mat{A} = \begin{pmatrix} 4 & 0 \\ 0 & 1 \end{pmatrix}$,
+$\nabla f(\vect{x}) = \mat{A}\vect{x} - \vect{b}$ (differentiate
+$\tfrac12 \sum_{i,j} A_{ij} x_i x_j - \sum_i b_i x_i$ with respect to
+$x_k$, using symmetry of~$\mat{A}$). Take
+$\mat{A} = \begin{pmatrix} 4 & 0 \\ 0 & 1 \end{pmatrix}$,
 $\vect{b} = (4, 1)\T$, $\vect{x}_0 = (0, 0)\T$, $\alpha = 0.2$. Then
 $\nabla f(\vect{x}_0) = -\vect{b} = (-4, -1)\T$, and one descent step
 yields $\vect{x}_1 = \vect{x}_0 - 0.2 \cdot (-4, -1)\T = (0.8, 0.2)\T$.
 
 A direct check: $f(\vect{x}_0) = 0$, while
-$f(\vect{x}_1) = \tfrac{1}{2}(4 \cdot 0.64 + 1 \cdot 0.04) - (4 \cdot 0.8 + 1 \cdot 0.2) = 1.34 - 3.4 = -2.06$,
+$f(\vect{x}_1) = \tfrac{1}{2}(4 \cdot 0.64 + 1 \cdot 0.04) - (4 \cdot 0.8 + 1 \cdot 0.2) = 1.30 - 3.40 = -2.10$,
 confirming $f$ has decreased. The Lipschitz constant of $\nabla f$ is
 $L = \|\mat{A}\| = 4$, and the bracket
 $1 - \alpha L / 2 = 1 - 0.4 = 0.6 > 0$ in
 \cref{thm:gd-descent} predicts a decrease of at least
 $0.2 \cdot 0.6 \cdot \|\nabla f(\vect{x}_0)\|^2 = 0.12 \cdot 17 = 2.04$,
-matching the observed drop of $2.06$ closely.
+matching the observed drop of $2.10$ closely.
 \end{example}
 
 \begin{problem}

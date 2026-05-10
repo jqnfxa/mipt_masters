@@ -298,9 +298,21 @@ own Fourier transform up to a constant.
 \end{example}
 
 \begin{problem}[Smoothness--decay correspondence]
+\label{prob:smoothness-decay}
 Let $f \in L^1(\R)$ be such that $f \in C^k(\R)$ with
 $f, f', \dots, f^{(k)} \in L^1(\R)$ and
 $f^{(j)}(x) \to 0$ as $|x| \to \infty$ for $j = 0, \dots, k - 1$.
 Prove that $\hat f(\xi) = o(|\xi|^{-k})$ as $|\xi| \to \infty$.
 (Hint: combine \cref{thm:ft-of-derivative} with \cref{thm:rl-line}.)
 \end{problem}
+
+\begin{proof}[Solution]
+Applying \cref{thm:ft-of-derivative} to the $k$-th derivative (whose
+hypotheses match the problem's assumptions) gives
+$\widehat{f^{(k)}}(\xi) = (i\xi)^k\, \hat f(\xi)$, so
+$|\xi|^k\, |\hat f(\xi)| = \bigl|\widehat{f^{(k)}}(\xi)\bigr|$. Since
+$f^{(k)} \in L^1(\R)$, \cref{thm:rl-line} yields
+$\widehat{f^{(k)}}(\xi) \to 0$ as $|\xi| \to \infty$, hence
+$|\xi|^k\, |\hat f(\xi)| \to 0$. This is exactly
+$\hat f(\xi) = o(|\xi|^{-k})$.
+\end{proof}

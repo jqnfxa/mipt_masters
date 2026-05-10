@@ -334,7 +334,20 @@ $a_0 = \frac{2\pi^2}{3}$ и $a_n = \frac{4 (-1)^n}{n^2}$ при $n \ge 1$.
 \end{example}
 
 \begin{problem}[Базельская сумма]
+\label{prob:basel}
 Подставьте $x = \pi$ в равенство из \cref{ex:xsquared} и преобразуйте
 выражение, чтобы получить
 $\displaystyle \sum_{n=1}^{\infty} \frac{1}{n^2} \;=\; \frac{\pi^2}{6}$.
 \end{problem}
+
+\begin{proof}[Решение]
+В точке $x = \pi$ имеем $\cos(n\pi) = (-1)^n$, поэтому
+$(-1)^n \cos(n\pi) = (-1)^{2n} = 1$. Подставляя в равенство из
+\cref{ex:xsquared}:
+\[
+  \pi^2 \;=\; \frac{\pi^2}{3} + 4 \sum_{n=1}^{\infty} \frac{(-1)^n \cos(n\pi)}{n^2}
+       \;=\; \frac{\pi^2}{3} + 4 \sum_{n=1}^{\infty} \frac{1}{n^2}.
+\]
+Перенося и деля на~$4$:
+$\sum_{n=1}^{\infty} 1/n^2 = (\pi^2 - \pi^2/3)/4 = \pi^2/6$.
+\end{proof}
