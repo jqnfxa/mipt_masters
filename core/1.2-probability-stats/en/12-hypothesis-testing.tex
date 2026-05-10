@@ -8,10 +8,245 @@ Choice of statistical hypotheses. Simple and composite hypotheses. Statistical d
 \end{ticket}
 
 \subsection*{Theory}
-% TODO
+
+A \emph{statistical hypothesis} is a claim about which probability
+law on the sample space generated the observed data. Testing means
+choosing, on the basis of data, between two competing hypotheses
+while controlling the rates at which we make wrong decisions.
+
+\medskip
+\noindent\textbf{Statistical model and hypotheses.}
+
+\begin{definition}[Hypothesis]
+\label{def:hypothesis}
+A \emph{statistical model} is a family of probability measures
+$\{\Prob_\theta : \theta \in \Theta\}$ on a sample space
+$(\mathcal{X}, \mathcal{A})$ indexed by a parameter
+$\theta \in \Theta$. A pair of \emph{hypotheses}
+$(H_0, H_1)$ is a partition $\Theta = \Theta_0 \sqcup \Theta_1$
+into a \emph{null} hypothesis $H_0 : \theta \in \Theta_0$ and an
+\emph{alternative} $H_1 : \theta \in \Theta_1$. A hypothesis is
+\emph{simple} if its parameter set is a singleton; otherwise it is
+\emph{composite}.
+\end{definition}
+
+\medskip
+\noindent\textbf{Tests, errors, and power.}
+
+\begin{definition}[Decision rule]
+\label{def:decision-rule}
+A \emph{(non-randomised) decision rule} or \emph{test} is a
+measurable function $\varphi \colon \mathcal{X} \to \{0, 1\}$,
+where $\varphi(x) = 1$ means ``reject $H_0$'' and $\varphi(x) = 0$
+means ``do not reject''. The \emph{rejection region} (or
+\emph{critical region}) is
+$\mathcal{R} = \{x \in \mathcal{X} : \varphi(x) = 1\}$. A
+\emph{randomised decision rule} replaces the codomain by $[0, 1]$:
+$\varphi(x)$ is the conditional probability of rejecting given
+$x$ is observed.
+\end{definition}
+
+\begin{definition}[Errors and power]
+\label{def:errors-power}
+For a (possibly randomised) test $\varphi$ in the model above, the
+\emph{power function} is
+\[
+  \beta_\varphi(\theta) \;=\; \E_\theta\, \varphi \;=\; \Prob_\theta(\text{reject } H_0).
+\]
+\begin{itemize}
+  \item For $\theta \in \Theta_0$, $\beta_\varphi(\theta)$ is the
+        probability of \emph{type-I error} (incorrectly rejecting
+        a true null).
+  \item For $\theta \in \Theta_1$, the
+        \emph{type-II error probability} is
+        $1 - \beta_\varphi(\theta) = \Prob_\theta(\text{do not reject})$.
+        The \emph{power} of $\varphi$ at $\theta$ is
+        $\beta_\varphi(\theta)$ itself.
+\end{itemize}
+The \emph{size} (or \emph{level}) of the test is
+$\sup_{\theta \in \Theta_0} \beta_\varphi(\theta)$.
+\end{definition}
+
+\medskip
+\noindent\textbf{Most powerful and uniformly most powerful tests.}
+
+\begin{definition}[(Uniformly) most powerful test]
+\label{def:ump}
+A test $\varphi^*$ of size~$\alpha \in (0, 1)$ is
+\emph{most powerful (MP)} for testing $H_0 : \theta \in \Theta_0$
+versus a simple alternative $H_1 : \theta = \theta_1$ if for every
+test $\varphi$ of size at most~$\alpha$,
+$\beta_\varphi(\theta_1) \leq \beta_{\varphi^*}(\theta_1)$. It is
+\emph{uniformly most powerful (UMP)} of size~$\alpha$ for a composite
+alternative $H_1 : \theta \in \Theta_1$ if the inequality above
+holds for every $\theta_1 \in \Theta_1$ simultaneously.
+\end{definition}
+
+\begin{theorem}[Neyman--Pearson lemma]
+\label{thm:neyman-pearson}
+Consider testing the simple null $H_0 : \theta = \theta_0$ against
+the simple alternative $H_1 : \theta = \theta_1$, with densities
+$f_0$ and $f_1$ with respect to a common dominating measure on
+$\mathcal{X}$. For each $k \geq 0$, the \emph{likelihood-ratio
+test}
+\[
+  \varphi_k(x) \;=\; \begin{cases}
+    1 & \text{if } f_1(x) > k\, f_0(x), \\
+    0 & \text{if } f_1(x) < k\, f_0(x),
+  \end{cases}
+\]
+(with $\varphi_k$ on the equality set $\{f_1 = k f_0\}$ chosen to
+attain a desired size~$\alpha \in (0, 1)$) is most powerful of
+size~$\alpha$ in the sense of \cref{def:ump}. Conversely, every
+size-$\alpha$ MP test agrees with $\varphi_k$ for some $k \geq 0$
+$\Prob_{\theta_0}$- and $\Prob_{\theta_1}$-a.s.\ outside the
+equality set.
+\end{theorem}
+\proofof{neyman-pearson}
+
+\begin{remark}
+The lemma reduces optimal binary testing to a likelihood-ratio
+threshold. When the alternative is composite, a UMP test exists in
+nice cases (e.g., one-parameter exponential families with monotone
+likelihood ratio) but not in general; for two-sided alternatives
+in a Gaussian model the conventional ``equal-tail'' test is not UMP
+and one falls back to other criteria — unbiasedness, invariance,
+or likelihood-ratio against the entire alternative
+\cite[Ch.~VII]{Shiryaev1989}.
+\end{remark}
+
+\medskip
+\noindent\textbf{The standard $z$- and $t$-tests.} The Gaussian
+sampling theorem of \cref{thm:sample-mean-variance} produces the
+two most-used tests in classical statistics.
+
+\begin{proposition}[Gaussian-mean tests]
+\label{prop:z-and-t-tests}
+Let $X_1, \dots, X_n$ be i.i.d.\ $\mathcal{N}(\mu, \sigma^2)$.
+\begin{enumerate}[label=(\alph*)]
+  \item \emph{Known $\sigma$.} For testing $H_0 : \mu = \mu_0$
+        versus $H_1 : \mu > \mu_0$, the \emph{$z$-test} that
+        rejects when $z = \sqrt n (\bar X - \mu_0)/\sigma > z_\alpha$
+        (the upper-$\alpha$ quantile of $\mathcal{N}(0, 1)$) is UMP
+        of size~$\alpha$.
+  \item \emph{Unknown $\sigma$.} For the same hypotheses, the
+        \emph{$t$-test} that rejects when
+        $t = \sqrt n (\bar X - \mu_0)/S > t_{\alpha, n - 1}$
+        (the upper-$\alpha$ quantile of $t_{n - 1}$) has size
+        exactly~$\alpha$ under $H_0$, with the test statistic
+        following $t_{n - 1}$ by \cref{thm:sample-mean-variance}.
+\end{enumerate}
+The two-sided versions reject when $|z| > z_{\alpha/2}$ or
+$|t| > t_{\alpha/2, n - 1}$.
+\end{proposition}
+\proofof{z-and-t-tests}
 
 \subsection*{Proofs}
-% TODO
+
+\begin{proof}[\Cref{thm:neyman-pearson}, sketch]
+\proofanchor{neyman-pearson}
+Suppose $\varphi^* = \varphi_k$ has size~$\alpha$ — i.e.,
+$\E_{\theta_0} \varphi^* = \alpha$ — and let $\varphi$ be any test
+of size $\leq \alpha$. Consider the integral of
+$(\varphi^* - \varphi)(f_1 - k f_0)$ over $\mathcal{X}$. By the
+definition of $\varphi^*$, the integrand is non-negative pointwise:
+\begin{itemize}
+  \item on $\{f_1 > k f_0\}$, $\varphi^* = 1 \geq \varphi$ and $f_1 - k f_0 > 0$;
+  \item on $\{f_1 < k f_0\}$, $\varphi^* = 0 \leq \varphi$ and $f_1 - k f_0 < 0$;
+  \item on $\{f_1 = k f_0\}$, $f_1 - k f_0 = 0$.
+\end{itemize}
+Integrating,
+\[
+  0 \leq \int (\varphi^* - \varphi)(f_1 - k f_0) = \bigl(\E_{\theta_1} \varphi^* - \E_{\theta_1} \varphi\bigr) - k \bigl(\E_{\theta_0} \varphi^* - \E_{\theta_0} \varphi\bigr).
+\]
+Since $\E_{\theta_0} \varphi^* = \alpha$ and $\E_{\theta_0} \varphi \leq \alpha$,
+the second bracket is $\leq 0$, so $-k$ times it is $\geq 0$, and the
+inequality $\geq 0$ on the whole expression then yields
+$\E_{\theta_1} \varphi^* \geq \E_{\theta_1} \varphi$ — i.e., the
+power at $\theta_1$ of $\varphi^*$ dominates that of any other test
+of size $\leq \alpha$. The converse identifies the structure of any
+optimal test: equality $\varphi = \varphi^*$ outside the
+$\{f_1 = k f_0\}$ set follows from the strict-inequality cases above
+because the integrand is strictly positive there and the integral
+must be zero for a competing optimum.
+\end{proof}
+
+\begin{proof}[\Cref{prop:z-and-t-tests}]
+\proofanchor{z-and-t-tests}
+\emph{(a)} For known $\sigma$, the joint density of an
+$\mathcal{N}(\mu, \sigma^2)$ sample factorises as
+$f_\mu(\vect{x}) \propto \exp\bigl(\mu \sum_i x_i / \sigma^2 - n \mu^2 / (2 \sigma^2)\bigr)$
+times a $\mu$-independent factor. The likelihood ratio
+$f_{\mu_1}(\vect{x})/f_{\mu_0}(\vect{x})$ is therefore an increasing
+function of $\sum_i x_i$ (equivalently, of $\bar X$) whenever
+$\mu_1 > \mu_0$. By the Neyman--Pearson lemma
+(\cref{thm:neyman-pearson}), for any specific $\mu_1 > \mu_0$ the
+MP test rejects for large~$\bar X$; the threshold is the same
+function of the size~$\alpha$ regardless of the specific $\mu_1$
+chosen. So the test ``reject when $\bar X > c_\alpha$'' is MP for
+every $\mu_1 > \mu_0$ simultaneously, hence UMP for the composite
+alternative $\mu > \mu_0$. Standardising, $c_\alpha$ corresponds
+to $z = \sqrt n (\bar X - \mu_0)/\sigma > z_\alpha$.
+
+\emph{(b)} The size claim follows directly from
+\cref{thm:sample-mean-variance}: under $H_0 : \mu = \mu_0$,
+$T = \sqrt n (\bar X - \mu_0)/S \sim t_{n - 1}$, so
+$\Prob_{\mu_0}(T > t_{\alpha, n - 1}) = \alpha$. (UMP-ness fails
+for the $t$-test because the alternative $\mu > \mu_0$ now has the
+nuisance parameter~$\sigma$; the standard $t$-test is UMP among
+\emph{unbiased} or \emph{invariant} tests, by deeper arguments
+\cite[Ch.~VII]{Shiryaev1989}.)
+\end{proof}
 
 \subsection*{Examples}
-% TODO
+
+\begin{example}[$z$-test power calculation]
+\label{ex:z-test-power}
+Test $H_0 : \mu = 0$ against $H_1 : \mu > 0$ from $n = 25$
+observations of an $\mathcal{N}(\mu, 1)$ sample at level
+$\alpha = 0.05$. The UMP test (\cref{prop:z-and-t-tests}\,(a))
+rejects when $\bar X > z_{0.05}/\sqrt{25} = 1.645/5 = 0.329$. The
+power at $\mu = 0.5$ is
+\[
+  \beta_\varphi(0.5) = \Prob_{0.5}(\bar X > 0.329) = \Prob\bigl(Z > (0.329 - 0.5)\sqrt{25}\bigr) = \Prob(Z > -0.855) \approx 0.804,
+\]
+where $Z \sim \mathcal{N}(0, 1)$. So with $n = 25$ we detect a true
+mean of $0.5$ with probability about~$0.80$.
+\end{example}
+
+\begin{example}[Sample-size determination]
+\label{ex:sample-size}
+Continuing the previous setup, what $n$ is needed to detect
+$\mu = 0.5$ with power~$0.95$? The condition
+\[
+  1 - \Phi\bigl(z_\alpha - \mu_1 \sqrt n / \sigma\bigr) = 0.95
+\]
+becomes $z_\alpha - 0.5 \sqrt n = -z_{0.05} = -1.645$, i.e.\
+$\sqrt n = (z_\alpha + 1.645)/0.5 = (1.645 + 1.645)/0.5 = 6.58$,
+giving $n \geq 44$. The sample-size formula
+$n = ((z_\alpha + z_\beta)\sigma/(\mu_1 - \mu_0))^2$ generalises this.
+\end{example}
+
+\begin{problem}
+\label{prob:bernoulli-test}
+$X_1, \dots, X_n$ are i.i.d.\ $\mathrm{Bernoulli}(p)$. Show that
+the most powerful test of $H_0 : p = 1/2$ against $H_1 : p = 3/4$
+at level $\alpha$ rejects when the number of successes $S = \sum X_i$
+exceeds a threshold, and identify it.
+\end{problem}
+
+\begin{proof}[Solution]
+The likelihood is $p^S (1 - p)^{n - S}$, so the likelihood ratio
+$L(\vect{x}) = (3/4)^S (1/4)^{n - S} / ((1/2)^n) = 2^n (3/4)^S (1/4)^{n - S} (1/(1))^n = 3^S / 2^{n}$ —
+strictly increasing in~$S$. The Neyman--Pearson lemma
+(\cref{thm:neyman-pearson}) therefore gives the MP test: reject
+when $S > c$ for some integer threshold~$c$. Choose $c$ so that
+$\Prob_{p = 1/2}(S > c) = \alpha$, i.e., $c$ is the upper
+$\alpha$-critical value of $\mathrm{Bin}(n, 1/2)$. Concretely, for
+$n = 20$ and $\alpha = 0.05$, the binomial CDF gives $c = 14$
+($\Prob(S \geq 15 \mid p = 1/2) \approx 0.021$, while
+$\Prob(S \geq 14 \mid p = 1/2) \approx 0.058$); a randomised test
+on $\{S = 14\}$ would attain exactly $\alpha = 0.05$ and is
+strictly MP. By the same monotone-likelihood-ratio reasoning, this
+test is UMP for the one-sided composite alternative $p > 1/2$.
+\end{proof}
