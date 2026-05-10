@@ -239,10 +239,12 @@ two.
 
 \begin{proof}[\Cref{thm:cauchy-schwarz}]
 \proofanchor{cauchy-schwarz}
-If $\E X^2 = 0$, then $X = 0$ a.s.\ (\cref{prop:var-properties}\,(b)
-applied with $\E X = 0$, since $X \geq 0$ in $L^2$ would give
-$\E X^2 \geq (\E X)^2$); then $XY = 0$ a.s.\ and the inequality
-holds with equality. Likewise if $\E Y^2 = 0$. Otherwise consider, for $t \in \R$,
+If $\E X^2 = 0$, then $X^2 \geq 0$ a.s.\ together with
+$\E X^2 = 0$ forces $X^2 = 0$ a.s.\ by monotonicity of expectation
+(\cref{prop:exp-properties}\,(b) applied to $X^2$ and the constant
+$0$), hence $X = 0$ a.s.; then $XY = 0$ a.s.\ and both sides of the
+inequality vanish. Likewise if $\E Y^2 = 0$. Otherwise consider, for
+$t \in \R$,
 \[
   0 \leq \E\bigl[(tX - Y)^2\bigr] = t^2\, \E X^2 - 2t\, \E(XY) + \E Y^2.
 \]
@@ -286,10 +288,11 @@ let $X_i = \mathbf{1}_{\{\text{flip } i \text{ is heads}\}}$ and
 $S_n = X_1 + \cdots + X_n$. Each $X_i$ is Bernoulli with
 $\E X_i = p$ and $\Var X_i = p(1 - p)$. By linearity (regardless of
 independence!), $\E S_n = np$. The flips are independent, hence
-pairwise uncorrelated (\cref{prop:cov-properties} setting), so by
-\cref{prop:cov-properties}\,(e), $\Var S_n = n p (1 - p)$. The same
-$\Var S_n$ formula will be revisited in \cref{sec:1.2.04-independence}
-in the framework of independence proper.
+pairwise uncorrelated (this last step uses
+\cref{thm:indep-multiplicative} from
+\cref{sec:1.2.04-independence}), so by
+\cref{prop:cov-properties}\,(e) the cross-covariances drop and
+$\Var S_n = n p (1 - p)$.
 \end{example}
 
 \begin{example}[Computing covariance and correlation]
