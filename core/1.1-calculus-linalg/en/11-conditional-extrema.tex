@@ -8,10 +8,304 @@ Finding extrema of functions of several variables. Constrained extremum of a fun
 \end{ticket}
 
 \subsection*{Theory}
-% TODO
+
+We consider real-valued functions $f \colon U \to \R$ on an open set
+$U \subseteq \R^n$, smooth enough for the partial and second-order
+partial derivatives we use.
+
+\subsubsection*{Unconstrained extrema}
+
+\begin{definition}
+\label{def:hessian}
+If~$f$ has all second-order partial derivatives at $\vect{x} \in U$,
+its \emph{Hessian} is the symmetric matrix
+\[
+  H_f(\vect{x}) \;=\; \Bigl(\tfrac{\partial^2 f}{\partial x_i \partial x_j}(\vect{x})\Bigr)_{i,j = 1}^{n}.
+\]
+(Symmetry assumes the mixed partials are continuous, by Schwarz's
+theorem.)
+\end{definition}
+
+\begin{theorem}[Necessary condition for an interior extremum]
+\label{thm:necessary-uncon}
+If~$f$ is differentiable at an interior point~$\vect{x}_*$ of~$U$ and
+has a local extremum there, then $\nabla f(\vect{x}_*) = \vect{0}$.
+A point with $\nabla f(\vect{x}_*) = \vect{0}$ is called a
+\emph{critical point} of~$f$.
+\end{theorem}
+\proofof{necessary-uncon}
+
+\begin{theorem}[Sufficient condition via the Hessian]
+\label{thm:sufficient-uncon}
+Let~$f$ be twice continuously differentiable on a neighbourhood
+of~$\vect{x}_*$ with $\nabla f(\vect{x}_*) = \vect{0}$.
+\begin{enumerate}[label=(\alph*)]
+  \item If $H_f(\vect{x}_*)$ is positive definite, $\vect{x}_*$ is a
+        strict local minimum.
+  \item If $H_f(\vect{x}_*)$ is negative definite, $\vect{x}_*$ is a
+        strict local maximum.
+  \item If $H_f(\vect{x}_*)$ is indefinite (has both positive and
+        negative eigenvalues), $\vect{x}_*$ is a saddle point — not
+        a local extremum.
+\end{enumerate}
+The borderline cases (semidefinite but not definite Hessian) are
+inconclusive at this order.
+\end{theorem}
+\proofof{sufficient-uncon}
+
+Definiteness of $H_f(\vect{x}_*)$ can be checked with Sylvester's
+criterion (\cref{thm:sylvester}).
+
+\subsubsection*{Constrained extrema}
+
+We now consider extremizing~$f$ subject to constraints
+\[
+  g_1(\vect{x}) = 0, \;\dots, \; g_m(\vect{x}) = 0 \qquad (m < n),
+\]
+with each $g_i \colon U \to \R$ continuously differentiable.
+
+\begin{definition}
+\label{def:constrained-extremum}
+A point $\vect{x}_* \in U$ is a \emph{constrained local minimum}
+(\emph{maximum}) of~$f$ subject to the constraints if
+$g_i(\vect{x}_*) = 0$ for every~$i$ and there is a neighbourhood
+$V \ni \vect{x}_*$ on which $f(\vect{x}_*) \le f(\vect{x})$
+($\ge$, respectively) for every $\vect{x} \in V$ that also satisfies
+$g_i(\vect{x}) = 0$ for every~$i$.
+\end{definition}
+
+\begin{definition}
+\label{def:regularity}
+A constraint point~$\vect{x}_*$ (with $g_i(\vect{x}_*) = 0$ for
+every~$i$) is \emph{regular} if the gradients
+$\nabla g_1(\vect{x}_*), \dots, \nabla g_m(\vect{x}_*)$ are linearly
+independent.
+\end{definition}
+
+\begin{definition}
+\label{def:lagrangian}
+The \emph{Lagrangian} of the constrained problem is
+\[
+  L(\vect{x}, \vect{\lambda}) \;=\; f(\vect{x}) - \sum_{i=1}^{m} \lambda_i\, g_i(\vect{x}),
+  \qquad \vect{\lambda} = (\lambda_1, \dots, \lambda_m) \in \R^m,
+\]
+the scalars $\lambda_i$ are the \emph{Lagrange multipliers}.
+\end{definition}
+
+\begin{theorem}[Lagrange necessary condition]
+\label{thm:lagrange-necessary}
+Let~$\vect{x}_*$ be a regular constrained local extremum of~$f$. Then
+there exist unique multipliers $\lambda_1^*, \dots, \lambda_m^*$ such
+that
+\[
+  \nabla f(\vect{x}_*) \;=\; \sum_{i=1}^{m} \lambda_i^*\, \nabla g_i(\vect{x}_*).
+\]
+Equivalently, $(\vect{x}_*, \vect{\lambda}^*)$ is a critical point of
+the Lagrangian: $\nabla_{\vect{x}} L(\vect{x}_*, \vect{\lambda}^*) = \vect{0}$
+together with $g_i(\vect{x}_*) = 0$.
+\end{theorem}
+\proofof{lagrange-necessary}
+
+\begin{theorem}[Sufficient condition for a constrained extremum]
+\label{thm:lagrange-sufficient}
+Let $\vect{x}_*$ be a regular point with multipliers $\vect{\lambda}^*$
+satisfying $\nabla_{\vect{x}} L(\vect{x}_*, \vect{\lambda}^*) = \vect{0}$
+and $g_i(\vect{x}_*) = 0$. Let $T = \{\vect{h} \in \R^n : \langle \nabla g_i(\vect{x}_*), \vect{h} \rangle = 0
+\text{ for all } i\}$ be the tangent space to the constraint manifold
+at~$\vect{x}_*$, and let $H = H_{L(\cdot, \vect{\lambda}^*)}(\vect{x}_*)$
+be the Hessian of $L(\,\cdot\,, \vect{\lambda}^*)$ at~$\vect{x}_*$.
+\begin{enumerate}[label=(\alph*)]
+  \item If $\vect{h}\T H \vect{h} > 0$ for every nonzero $\vect{h} \in T$,
+        then $\vect{x}_*$ is a strict constrained local minimum.
+  \item If $\vect{h}\T H \vect{h} < 0$ for every nonzero $\vect{h} \in T$,
+        then $\vect{x}_*$ is a strict constrained local maximum.
+  \item If $H$ restricted to~$T$ is indefinite, $\vect{x}_*$ is not a
+        constrained extremum.
+\end{enumerate}
+\end{theorem}
+\proofof{lagrange-sufficient}
+
+\begin{remark}
+In practice one solves the system of $n + m$ equations
+$\nabla_{\vect{x}} L = \vect{0}$, $\nabla_{\vect{\lambda}} L = \vect{0}$
+(the second being the constraints) for the $n + m$ unknowns
+$(\vect{x}, \vect{\lambda})$, then classifies each solution by
+restricting~$H_L$ to the tangent space~$T$. The view that
+unconstrained extrema generalize to constrained extrema by passing
+from $f$ to $L$ is the doorway into convex optimization (KKT
+conditions, duality), see \cref{sec:2.4-convex-optimization}; the
+multivariable-calculus prerequisites are in \cite{Zorich1981}.
+\end{remark}
 
 \subsection*{Proofs}
-% TODO
+
+\begin{proof}[\Cref{thm:necessary-uncon}]
+\proofanchor{necessary-uncon}
+Suppose~$\vect{x}_*$ is a local minimum (maximum is mirrored). For
+each~$i$ the single-variable function
+$\varphi_i(t) = f(\vect{x}_* + t\vect{e}_i)$ is differentiable at
+$t = 0$ with $\varphi_i'(0) = \partial f / \partial x_i (\vect{x}_*)$
+(\cref{def:partial-derivative}) and has a local minimum at $t = 0$.
+By Fermat's theorem (\cref{thm:fermat}), $\varphi_i'(0) = 0$, so
+$\partial f / \partial x_i (\vect{x}_*) = 0$ for every~$i$ — that is
+$\nabla f(\vect{x}_*) = \vect{0}$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:sufficient-uncon}]
+\proofanchor{sufficient-uncon}
+By the Taylor expansion of~$f$ at~$\vect{x}_*$ to second order
+(\cref{thm:taylor-peano} extended to several variables, applied
+along the line $t \mapsto \vect{x}_* + t \vect{h}$), and using
+$\nabla f(\vect{x}_*) = \vect{0}$,
+\[
+  f(\vect{x}_* + \vect{h}) - f(\vect{x}_*) \;=\; \tfrac{1}{2}\, \vect{h}\T H_f(\vect{x}_*)\, \vect{h} + o(\|\vect{h}\|^2).
+\]
+\emph{(a) Positive definite Hessian.} Let $\mu > 0$ be the smallest
+eigenvalue of $H_f(\vect{x}_*)$ (real and positive by the spectral
+theorem, \cref{thm:spectral}). Then
+$\vect{h}\T H_f(\vect{x}_*) \vect{h} \ge \mu \|\vect{h}\|^2$ for
+every~$\vect{h}$, and the $o(\|\vect{h}\|^2)$ term is bounded by
+$\varepsilon \|\vect{h}\|^2$ for $\|\vect{h}\|$ small enough. Choosing
+$\varepsilon < \mu/2$ gives
+$f(\vect{x}_* + \vect{h}) - f(\vect{x}_*) \ge (\mu/2 - \varepsilon)\|\vect{h}\|^2 > 0$
+for every nonzero small~$\vect{h}$. So $\vect{x}_*$ is a strict
+local minimum.
+
+\emph{(b) Negative definite.} Apply (a) to~$-f$.
+
+\emph{(c) Indefinite.} Pick eigenvectors $\vect{u}, \vect{v}$
+of~$H_f(\vect{x}_*)$ with eigenvalues of opposite signs. The
+expansion above shows that along the line through~$\vect{x}_*$ in
+direction~$\vect{u}$, $f$ strictly increases (locally), and along
+direction~$\vect{v}$ it strictly decreases. Both behaviours rule out
+a local extremum.
+\end{proof}
+
+\begin{proof}[\Cref{thm:lagrange-necessary}]
+\proofanchor{lagrange-necessary}
+Let~$\vect{x}_*$ be a regular constrained extremum and let
+$M = \{\vect{x} \in U : g_1(\vect{x}) = \dots = g_m(\vect{x}) = 0\}$
+be the constraint manifold. Regularity (linear independence of
+$\nabla g_1(\vect{x}_*), \dots, \nabla g_m(\vect{x}_*)$) implies, via
+the implicit function theorem (a standard prerequisite from
+\cite{Zorich1981}), that~$M$ is a smooth manifold of dimension
+$n - m$ near~$\vect{x}_*$, and its tangent space at~$\vect{x}_*$ is
+\[
+  T_{\vect{x}_*} M \;=\; \{\vect{v} \in \R^n : \langle \nabla g_i(\vect{x}_*), \vect{v} \rangle = 0 \text{ for all } i\}.
+\]
+
+For any tangent vector $\vect{v} \in T_{\vect{x}_*} M$ pick a smooth
+curve $\gamma \colon (-\varepsilon, \varepsilon) \to M$ with
+$\gamma(0) = \vect{x}_*$ and $\gamma'(0) = \vect{v}$. The composition
+$f \circ \gamma$ has a local extremum at $t = 0$, so
+$(f \circ \gamma)'(0) = \langle \nabla f(\vect{x}_*), \vect{v} \rangle = 0$
+by \cref{thm:fermat}. This holds for every
+$\vect{v} \in T_{\vect{x}_*} M$, so
+\[
+  \nabla f(\vect{x}_*) \;\in\; (T_{\vect{x}_*} M)^{\perp}
+  \;=\; \spn(\nabla g_1(\vect{x}_*), \dots, \nabla g_m(\vect{x}_*)),
+\]
+the second equality holding because the orthogonal complement of a
+subspace defined by~$m$ independent linear functionals is the span of
+those functionals. Hence
+$\nabla f(\vect{x}_*) = \sum \lambda_i^* \nabla g_i(\vect{x}_*)$ for
+unique scalars~$\lambda_i^*$ (uniqueness from linear independence of
+the $\nabla g_i$).
+\end{proof}
+
+\begin{proof}[\Cref{thm:lagrange-sufficient}]
+\proofanchor{lagrange-sufficient}
+The proof restricts the unconstrained sufficient condition
+(\cref{thm:sufficient-uncon}) to the constraint manifold~$M$: an
+$(n - m)$-dimensional smooth submanifold near~$\vect{x}_*$. Choose
+local coordinates $\vect{u} \in \R^{n - m}$ on~$M$ centered
+at~$\vect{x}_*$ via the implicit-function parametrization
+$\vect{x} = \Phi(\vect{u})$. The composition
+$\widetilde{f}(\vect{u}) = f(\Phi(\vect{u}))$ has a local extremum
+at $\vect{u} = \vect{0}$, and one shows that
+\[
+  \widetilde{f}(\vect{u}) - \widetilde{f}(\vect{0}) \;=\; \tfrac{1}{2}\, \vect{h}(\vect{u})\T H \vect{h}(\vect{u}) + o(\|\vect{u}\|^2),
+\]
+where $\vect{h}(\vect{u}) = \Phi'(\vect{0})\,\vect{u} + o(\|\vect{u}\|)$
+parametrizes the tangent space~$T = T_{\vect{x}_*} M$ near the origin.
+Definiteness of~$H$ on~$T$ (parts a/b/c of the statement) controls
+the sign of $\widetilde{f}(\vect{u}) - \widetilde{f}(\vect{0})$ near
+$\vect{u} = \vect{0}$ exactly as in \cref{thm:sufficient-uncon}.
+The full bookkeeping is in \cite{Zorich1981}.
+\end{proof}
 
 \subsection*{Examples}
-% TODO
+
+\begin{example}[Unconstrained: a positive-definite quadratic]
+\label{ex:uncon-quadratic}
+For $f(x, y) = x^2 + y^2 - 2x + 4y$, the gradient is
+$\nabla f(x, y) = (2x - 2, 2y + 4)$. Setting it to zero gives the
+unique critical point $\vect{x}_* = (1, -2)$. The Hessian is the
+constant matrix $H_f = \begin{pmatrix} 2 & 0 \\ 0 & 2 \end{pmatrix} = 2 \mat{I}$,
+which is positive definite (Sylvester: $M_1 = 2 > 0$, $M_2 = 4 > 0$).
+By \cref{thm:sufficient-uncon}\,(a), $\vect{x}_*$ is a strict local
+minimum, with $f(\vect{x}_*) = 1 + 4 - 2 - 8 = -5$. Since $f$ is a
+positive-definite quadratic, this local minimum is also the unique
+global minimum.
+\end{example}
+
+\begin{example}[Lagrange on a circle]
+\label{ex:lagrange-circle}
+Find the extrema of $f(x, y) = x + y$ subject to
+$g(x, y) = x^2 + y^2 - 1 = 0$. The Lagrangian is
+$L = (x + y) - \lambda(x^2 + y^2 - 1)$, with
+\[
+  \nabla_{\vect{x}} L = (1 - 2\lambda x,\; 1 - 2\lambda y),
+\]
+giving $1 = 2\lambda x = 2 \lambda y$, hence $x = y$. Combined with
+$x^2 + y^2 = 1$ this yields the two candidates
+$(1/\sqrt{2}, 1/\sqrt{2})$ with $f = \sqrt{2}$ and
+$(-1/\sqrt{2}, -1/\sqrt{2})$ with $f = -\sqrt{2}$. Both points are
+regular ($\nabla g = (2x, 2y) \neq \vect{0}$ on the unit circle).
+The unit circle is compact and~$f$ continuous, so the maximum
+$\sqrt{2}$ is attained at $(1/\sqrt{2}, 1/\sqrt{2})$ and the minimum
+$-\sqrt{2}$ at $(-1/\sqrt{2}, -1/\sqrt{2})$.
+\end{example}
+
+\begin{example}[Lagrange with a linear constraint]
+\label{ex:lagrange-linear}
+Maximize $f(x, y) = xy$ subject to $g(x, y) = x + y - 4 = 0$.
+$L = xy - \lambda(x + y - 4)$, $\nabla_{\vect{x}} L = (y - \lambda, x - \lambda)$,
+giving $x = y = \lambda$, hence $x = y = 2$ from the constraint. The
+maximum value is $f(2, 2) = 4$. (Geometric check: by AM--GM,
+$xy \le ((x + y)/2)^2 = 4$ on the constraint, with equality iff
+$x = y$.)
+\end{example}
+
+\begin{problem}
+\label{prob:rectangle-ellipse}
+Find the rectangle of largest area inscribed in the ellipse
+$\frac{x^2}{a^2} + \frac{y^2}{b^2} = 1$ with sides parallel to the
+coordinate axes ($a, b > 0$).
+\end{problem}
+
+\begin{proof}[Solution]
+By symmetry the rectangle has vertices $(\pm x, \pm y)$ with
+$x, y > 0$ on the ellipse. Its area is $A = 4xy$. Maximize
+$f(x, y) = 4xy$ subject to $g(x, y) = x^2/a^2 + y^2/b^2 - 1 = 0$.
+
+The Lagrangian is $L = 4xy - \lambda(x^2/a^2 + y^2/b^2 - 1)$,
+with
+\[
+  \frac{\partial L}{\partial x} = 4y - \frac{2\lambda x}{a^2} = 0,
+  \qquad
+  \frac{\partial L}{\partial y} = 4x - \frac{2\lambda y}{b^2} = 0.
+\]
+From the first equation $\lambda = 2 a^2 y / x$; substituting into the
+second, $4x = (2/b^2)(2 a^2 y / x) y$, i.e.\
+$x^2 b^2 = a^2 y^2$, so $y = (b/a) x$. Plugging into the constraint,
+$x^2/a^2 + (b/a)^2 x^2 / b^2 = 2 x^2 / a^2 = 1$, hence
+$x = a/\sqrt{2}$, $y = b/\sqrt{2}$, and the maximal area is
+$A = 4 (a/\sqrt{2})(b/\sqrt{2}) = 2 a b$.
+
+The point is regular (the constraint gradient
+$\nabla g = (2x/a^2, 2y/b^2)$ is nonzero on the ellipse). Compactness
+of the closed ellipse (intersected with the first quadrant for our
+parametrization) and continuity of~$f$ guarantee that the maximum is
+attained, and the unique stationary point above must realise it.
+\end{proof}
