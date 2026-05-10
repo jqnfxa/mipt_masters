@@ -8,10 +8,332 @@ Linear maps and linear operators. Linear maps in coordinates. Image and kernel o
 \end{ticket}
 
 \subsection*{Theory}
-% TODO
+
+We continue to work over a fixed field~$\F$. All vector spaces in this
+section are assumed finite-dimensional unless stated otherwise.
+
+\begin{definition}
+\label{def:linear-map}
+A map $T \colon V \to W$ between vector spaces over~$\F$ is
+\emph{linear} (an \emph{$\F$-linear map}, a \emph{homomorphism of vector
+spaces}) if
+\[
+  T(\vect{u} + \vect{v}) = T(\vect{u}) + T(\vect{v}), \qquad
+  T(\alpha \vect{v}) = \alpha\, T(\vect{v})
+\]
+for all $\vect{u}, \vect{v} \in V$ and $\alpha \in \F$. A \emph{linear
+operator} on~$V$ is a linear map $T \colon V \to V$.
+\end{definition}
+
+\begin{theorem}[A linear map is determined by its values on a basis]
+\label{thm:lin-determined-by-basis}
+Let $\vect{e}_1, \dots, \vect{e}_n$ be a basis of~$V$ and let
+$\vect{w}_1, \dots, \vect{w}_n$ be any vectors in~$W$. There exists a
+unique linear map $T \colon V \to W$ with $T(\vect{e}_j) = \vect{w}_j$
+for $j = 1, \dots, n$.
+\end{theorem}
+\proofof{lin-determined-by-basis}
+
+\begin{definition}
+\label{def:matrix-of-linear-map}
+Let $T \colon V \to W$ be linear, $\{\vect{e}_j\}_{j=1}^{n}$ a basis
+of~$V$, $\{\vect{f}_i\}_{i=1}^{m}$ a basis of~$W$. The
+\emph{matrix of~$T$ in these bases} is the matrix
+$\mat{A} = (a_{ij}) \in \F^{m \times n}$ defined by
+\[
+  T(\vect{e}_j) \;=\; \sum_{i=1}^{m} a_{ij}\,\vect{f}_i,
+  \qquad j = 1, \dots, n.
+\]
+Equivalently, the $j$-th column of $\mat{A}$ is the coordinate column
+of $T(\vect{e}_j)$ in the basis~$\{\vect{f}_i\}$.
+
+If $\vect{x} \in \F^n$ is the coordinate column of~$\vect{v}$ in
+$\{\vect{e}_j\}$, then $\mat{A}\vect{x}$ is the coordinate column of
+$T(\vect{v})$ in~$\{\vect{f}_i\}$.
+\end{definition}
+
+\begin{theorem}[Composition corresponds to matrix product]
+\label{thm:composition-of-maps}
+Let $S \colon U \to V$ and $T \colon V \to W$ be linear maps with
+matrices~$\mat{B}$ and~$\mat{A}$ respectively in chosen bases of
+$U, V, W$. Then the composition $T \circ S \colon U \to W$ has matrix
+$\mat{A}\mat{B}$ in the bases of $U$ and~$W$.
+\end{theorem}
+\proofof{composition-of-maps}
+
+\begin{definition}
+\label{def:image-kernel}
+For a linear map $T \colon V \to W$, the \emph{image} and
+\emph{kernel} are the subspaces
+\[
+  \im T \;=\; \{T(\vect{v}) : \vect{v} \in V\} \;\subseteq\; W,
+  \qquad
+  \ker T \;=\; \{\vect{v} \in V : T(\vect{v}) = \vect{0}\} \;\subseteq\; V.
+\]
+\end{definition}
+
+If~$\mat{A}$ is the matrix of~$T$ in some pair of bases, then
+$\im T$ corresponds (via the coordinate isomorphism, see
+\cref{thm:coordinates}) to the column space of~$\mat{A}$ and
+$\ker T$ to the kernel of~$\mat{A}$ in the sense of
+\cref{def:fsr}.
+
+\begin{theorem}[Rank-nullity]
+\label{thm:rank-nullity-map}
+For any linear map $T \colon V \to W$ with $\dim V$ finite,
+\[
+  \dim \im T \;+\; \dim \ker T \;=\; \dim V.
+\]
+\end{theorem}
+\proofof{rank-nullity-map}
+
+\begin{definition}
+\label{def:dual-space-basis}
+The \emph{dual space} of~$V$ is
+\[
+  V^{*} \;=\; \{\varphi \colon V \to \F : \varphi \text{ is linear}\},
+\]
+the space of \emph{linear functionals} on~$V$. With pointwise
+operations $(\varphi + \psi)(\vect{v}) = \varphi(\vect{v}) + \psi(\vect{v})$
+and $(\alpha\varphi)(\vect{v}) = \alpha\,\varphi(\vect{v})$, $V^{*}$ is
+itself a vector space over~$\F$.
+
+For a basis $\{\vect{e}_j\}_{j=1}^{n}$ of~$V$, the \emph{dual basis}
+$\{e^i\}_{i=1}^{n}$ of~$V^{*}$ is defined by
+\[
+  e^{i}(\vect{e}_j) \;=\; \delta_{ij}
+  \;=\;
+  \begin{cases}
+    1, & i = j, \\
+    0, & i \neq j.
+  \end{cases}
+\]
+\end{definition}
+
+\begin{theorem}[Dual basis exists and has size $n$]
+\label{thm:dual-basis-exists}
+For every basis of~$V$ the dual basis defined in
+\cref{def:dual-space-basis} exists, is uniquely determined, and is a
+basis of~$V^{*}$. In particular, $\dim V^{*} = \dim V$.
+\end{theorem}
+\proofof{dual-basis-exists}
+
+\begin{theorem}[Change of matrix of a linear operator]
+\label{thm:operator-change-of-basis}
+Let $T \colon V \to V$ be a linear operator with matrix~$\mat{A}$ in a
+basis $\{\vect{e}_j\}$. If $\{\vect{e}'_j\}$ is another basis with
+transition matrix~$\mat{T}$ from $\{\vect{e}_j\}$ to $\{\vect{e}'_j\}$
+(see \cref{def:transition-matrix}), then the matrix of~$T$ in
+$\{\vect{e}'_j\}$ is
+\[
+  \mat{A}' \;=\; \mat{T}^{-1} \mat{A}\, \mat{T}.
+\]
+Two square matrices related by such a transformation are called
+\emph{similar}.
+\end{theorem}
+\proofof{operator-change-of-basis}
+
+\begin{remark}
+The matrices of a single operator in different bases form an
+equivalence class under similarity; intrinsic invariants of the
+operator (rank, determinant, trace, characteristic polynomial,
+spectrum) are functions of any matrix in this class. We will return to
+the question of choosing a basis in which the matrix is as simple as
+possible (diagonal when feasible) in
+\cref{sec:1.1.06-eigenvalues,sec:1.1.07-quadratic-forms}. Further
+reading: \cite{Beklemishev2025}.
+\end{remark}
 
 \subsection*{Proofs}
-% TODO
+
+\begin{proof}[\Cref{thm:lin-determined-by-basis}]
+\proofanchor{lin-determined-by-basis}
+\emph{Existence.} For $\vect{v} \in V$ with unique expansion
+$\vect{v} = \sum_j x_j \vect{e}_j$ (\cref{thm:coordinates}), define
+$T(\vect{v}) = \sum_j x_j \vect{w}_j \in W$. Linearity of~$T$ follows
+from linearity of coordinates: if
+$\vect{v} = \sum x_j \vect{e}_j$ and $\vect{v}' = \sum x'_j \vect{e}_j$,
+then
+$\vect{v} + \alpha \vect{v}' = \sum (x_j + \alpha x'_j) \vect{e}_j$ has
+image $\sum (x_j + \alpha x'_j) \vect{w}_j = T(\vect{v}) + \alpha T(\vect{v}')$.
+Choosing $\vect{v} = \vect{e}_j$ (so $x_k = \delta_{jk}$) gives
+$T(\vect{e}_j) = \vect{w}_j$.
+
+\emph{Uniqueness.} Any linear $T'$ with $T'(\vect{e}_j) = \vect{w}_j$
+satisfies, by linearity,
+$T'(\sum x_j \vect{e}_j) = \sum x_j T'(\vect{e}_j) = \sum x_j \vect{w}_j = T(\sum x_j \vect{e}_j)$,
+so $T' = T$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:composition-of-maps}]
+\proofanchor{composition-of-maps}
+Let $\vect{x} \in \F^p$ be the coordinate column of $\vect{u} \in U$
+in the chosen basis of~$U$. By
+\cref{def:matrix-of-linear-map}, $S(\vect{u})$ has coordinate column
+$\mat{B}\vect{x}$ in the basis of~$V$, and then $T(S(\vect{u}))$ has
+coordinate column $\mat{A}(\mat{B}\vect{x}) = (\mat{A}\mat{B})\vect{x}$
+in the basis of~$W$. Thus $\mat{A}\mat{B}$ is the matrix of
+$T \circ S$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:rank-nullity-map}]
+\proofanchor{rank-nullity-map}
+Let $k = \dim \ker T$ and choose a basis
+$\vect{u}_1, \dots, \vect{u}_k$ of $\ker T$. By
+\cref{thm:basis-exists} extend it to a basis
+$\vect{u}_1, \dots, \vect{u}_k, \vect{v}_1, \dots, \vect{v}_{n-k}$
+of~$V$, where $n = \dim V$.
+
+We claim that $T(\vect{v}_1), \dots, T(\vect{v}_{n-k})$ is a basis
+of $\im T$, which gives $\dim \im T = n - k$ and the desired identity.
+
+\emph{Spanning.} Any element of $\im T$ is $T(\vect{v})$ for some
+$\vect{v} \in V$. Expanding
+$\vect{v} = \sum a_i \vect{u}_i + \sum b_j \vect{v}_j$ and applying~$T$
+(noting $T(\vect{u}_i) = \vect{0}$),
+$T(\vect{v}) = \sum b_j T(\vect{v}_j) \in \spn(T(\vect{v}_1), \dots, T(\vect{v}_{n-k}))$.
+
+\emph{Linear independence.} Suppose
+$\sum b_j T(\vect{v}_j) = \vect{0}$. Then
+$T(\sum b_j \vect{v}_j) = \vect{0}$, so
+$\sum b_j \vect{v}_j \in \ker T = \spn(\vect{u}_i)$, that is,
+$\sum b_j \vect{v}_j = \sum c_i \vect{u}_i$ for some $c_i$. Rearranging,
+$\sum b_j \vect{v}_j - \sum c_i \vect{u}_i = \vect{0}$ — a relation in
+the basis $\{\vect{u}_i, \vect{v}_j\}$ of~$V$, which forces every
+$b_j = 0$ (and every $c_i = 0$).
+\end{proof}
+
+\begin{proof}[\Cref{thm:dual-basis-exists}]
+\proofanchor{dual-basis-exists}
+\emph{Existence and uniqueness of each~$e^i$.} The values
+$e^i(\vect{e}_j) = \delta_{ij}$ specify $e^i$ on a basis of~$V$, so by
+\cref{thm:lin-determined-by-basis} there is a unique linear functional
+$e^i \in V^{*}$ with these values.
+
+\emph{$\{e^i\}$ is a basis of $V^{*}$.}
+\textit{Linear independence:} if $\sum c_i e^i = 0$ as a functional,
+evaluating at~$\vect{e}_j$ gives $c_j = 0$.
+\textit{Spanning:} for any $\varphi \in V^{*}$ set
+$\psi = \sum_i \varphi(\vect{e}_i)\, e^i$. Then
+$\psi(\vect{e}_j) = \sum_i \varphi(\vect{e}_i)\, \delta_{ij} = \varphi(\vect{e}_j)$
+for every~$j$, so $\psi$ and $\varphi$ agree on a basis of~$V$ and are
+equal (\cref{thm:lin-determined-by-basis}).
+
+In particular $\dim V^{*} = n = \dim V$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:operator-change-of-basis}]
+\proofanchor{operator-change-of-basis}
+Let $\vect{v} \in V$ have coordinate columns $\vect{x}$ in
+$\{\vect{e}_j\}$ and $\vect{x}'$ in $\{\vect{e}'_j\}$, and let
+$T(\vect{v})$ have coordinate columns $\vect{y}$ and $\vect{y}'$
+respectively. By the change-of-basis formula
+(\cref{thm:change-of-basis}),
+\[
+  \vect{x} \;=\; \mat{T}\vect{x}', \qquad \vect{y} \;=\; \mat{T}\vect{y}'.
+\]
+By the definitions of $\mat{A}$ and $\mat{A}'$, $\vect{y} = \mat{A}\vect{x}$
+and $\vect{y}' = \mat{A}' \vect{x}'$. Substituting,
+\[
+  \mat{T}\vect{y}' \;=\; \vect{y} \;=\; \mat{A}\vect{x} \;=\; \mat{A}\mat{T}\vect{x}',
+\]
+hence $\vect{y}' = \mat{T}^{-1}\mat{A}\mat{T}\vect{x}'$. Since this
+holds for every~$\vect{x}'$, $\mat{A}' = \mat{T}^{-1}\mat{A}\mat{T}$.
+\end{proof}
 
 \subsection*{Examples}
-% TODO
+
+\begin{example}[Matrix of a concrete linear map]
+\label{ex:matrix-of-linear-map}
+Define $T \colon \R^2 \to \R^3$ by
+$T(x, y) = (x + y,\; x - y,\; 2x)$. The standard basis of~$\R^2$ is
+$\vect{e}_1 = (1, 0)$, $\vect{e}_2 = (0, 1)$, with images
+$T(\vect{e}_1) = (1, 1, 2)$ and $T(\vect{e}_2) = (1, -1, 0)$. The
+matrix in the standard bases is
+\[
+  \mat{A} = \begin{pmatrix} 1 & 1 \\ 1 & -1 \\ 2 & 0 \end{pmatrix}.
+\]
+By \cref{thm:rank-row-col} the rank of~$\mat{A}$ is~$2$ (the
+$2 \times 2$ top minor has determinant $-2$), so
+$\dim \im T = 2$ and, by rank-nullity,
+$\dim \ker T = 2 - 2 = 0$. The map is therefore injective.
+\end{example}
+
+\begin{example}[Rank-nullity check on a rank-one matrix]
+\label{ex:rank-nullity-numeric}
+Let $\mat{A} = \begin{pmatrix} 1 & 2 & 3 \\ 2 & 4 & 6 \\ 3 & 6 & 9 \end{pmatrix}$
+viewed as the matrix of $T \colon \R^3 \to \R^3$ in the standard
+basis. Each row is a multiple of $(1, 2, 3)$, so $\rank \mat{A} = 1$
+and $\im T = \spn\bigl((1, 2, 3)\T\bigr)$.
+
+Solving $\mat{A}\vect{x} = \vect{0}$ reduces to the single equation
+$x + 2y + 3z = 0$, whose solution space is two-dimensional with FSS
+$\bigl((-2, 1, 0)\T,\; (-3, 0, 1)\T\bigr)$. So $\dim \ker T = 2$, and
+$\dim \im T + \dim \ker T = 1 + 2 = 3 = \dim \R^3$, in agreement with
+\cref{thm:rank-nullity-map}.
+\end{example}
+
+\begin{example}[Dual basis in $\R^2$]
+\label{ex:dual-basis-numeric}
+Take $V = \R^2$ with the basis
+$\vect{e}_1 = (1, 1)$, $\vect{e}_2 = (1, -1)$. Each functional
+$\varphi \in V^{*}$ has the form $\varphi(x_1, x_2) = \alpha x_1 + \beta x_2$
+for some $(\alpha, \beta)$ depending on~$\varphi$.
+
+For the dual basis we need $e^1(\vect{e}_1) = 1$, $e^1(\vect{e}_2) = 0$.
+Solving $\alpha + \beta = 1$, $\alpha - \beta = 0$ gives
+$\alpha = \beta = 1/2$, so $e^1(x_1, x_2) = (x_1 + x_2)/2$.
+
+Similarly $e^2(\vect{e}_1) = 0$, $e^2(\vect{e}_2) = 1$ yields
+$\alpha = 1/2$, $\beta = -1/2$, so $e^2(x_1, x_2) = (x_1 - x_2)/2$.
+
+Sanity check: any $\vect{v} = a \vect{e}_1 + b \vect{e}_2 = (a + b,\, a - b)$
+satisfies $e^1(\vect{v}) = ((a + b) + (a - b))/2 = a$ and
+$e^2(\vect{v}) = ((a + b) - (a - b))/2 = b$, recovering the
+coordinates of~$\vect{v}$ in the basis $\{\vect{e}_1, \vect{e}_2\}$.
+This is the general principle: the dual basis extracts coordinates.
+\end{example}
+
+\begin{problem}
+\label{prob:operator-similarity}
+Let $T \colon \R^2 \to \R^2$ be the operator
+$T(x, y) = (2x + y,\; x + 2y)$. Find its matrix in the standard basis
+$\vect{e}_1 = (1, 0)$, $\vect{e}_2 = (0, 1)$ and in the basis
+$\vect{e}'_1 = (1, 1)$, $\vect{e}'_2 = (1, -1)$. Verify directly that
+the two matrices are similar via $\mat{A}' = \mat{T}^{-1}\mat{A}\mat{T}$
+where~$\mat{T}$ is the transition matrix.
+\end{problem}
+
+\begin{proof}[Solution]
+In the standard basis: $T(\vect{e}_1) = (2, 1) = 2\vect{e}_1 + \vect{e}_2$
+and $T(\vect{e}_2) = (1, 2) = \vect{e}_1 + 2\vect{e}_2$, so
+\[
+  \mat{A} = \begin{pmatrix} 2 & 1 \\ 1 & 2 \end{pmatrix}.
+\]
+
+In the new basis: $T(\vect{e}'_1) = T(1, 1) = (3, 3) = 3\vect{e}'_1$ and
+$T(\vect{e}'_2) = T(1, -1) = (1, -1) = \vect{e}'_2$, so
+\[
+  \mat{A}' = \begin{pmatrix} 3 & 0 \\ 0 & 1 \end{pmatrix}.
+\]
+The operator is diagonalized by $\{\vect{e}'_1, \vect{e}'_2\}$ with
+eigenvalues $3$ and~$1$ — a foretaste of \cref{sec:1.1.06-eigenvalues}.
+
+\emph{Direct verification.} The transition matrix and its inverse are
+\[
+  \mat{T} = \begin{pmatrix} 1 & 1 \\ 1 & -1 \end{pmatrix}, \qquad
+  \mat{T}^{-1} = \frac{1}{2}\begin{pmatrix} 1 & 1 \\ 1 & -1 \end{pmatrix}.
+\]
+Compute $\mat{A}\mat{T}$ first:
+\[
+  \mat{A}\mat{T} = \begin{pmatrix} 2 & 1 \\ 1 & 2 \end{pmatrix}\begin{pmatrix} 1 & 1 \\ 1 & -1 \end{pmatrix}
+  = \begin{pmatrix} 3 & 1 \\ 3 & -1 \end{pmatrix},
+\]
+then $\mat{T}^{-1}\mat{A}\mat{T}$:
+\[
+  \frac{1}{2}\begin{pmatrix} 1 & 1 \\ 1 & -1 \end{pmatrix}\begin{pmatrix} 3 & 1 \\ 3 & -1 \end{pmatrix}
+  = \frac{1}{2}\begin{pmatrix} 6 & 0 \\ 0 & 2 \end{pmatrix}
+  = \begin{pmatrix} 3 & 0 \\ 0 & 1 \end{pmatrix} = \mat{A}',
+\]
+matching \cref{thm:operator-change-of-basis}.
+\end{proof}
