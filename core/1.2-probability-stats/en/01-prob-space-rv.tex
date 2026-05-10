@@ -8,10 +8,374 @@ Definition of a probability space; simplest discrete cases (samples with/without
 \end{ticket}
 
 \subsection*{Theory}
-% TODO
+
+Probability theory is built on a triple $(\Omega, \mathcal{F}, \Prob)$ —
+the \emph{probability space} of Kolmogorov \cite{Shiryaev1989}. It
+encodes three ingredients of a random experiment: the set of possible
+outcomes, the collection of questions one is allowed to ask, and the
+rule that assigns probabilities to those questions.
+
+\begin{definition}
+\label{def:sigma-algebra}
+A \emph{$\sigma$-algebra} on a nonempty set~$\Omega$ is a family
+$\mathcal{F} \subseteq 2^{\Omega}$ that contains~$\Omega$ and is closed
+under complements and countable unions:
+\begin{enumerate}[label=(\alph*)]
+  \item $\Omega \in \mathcal{F}$;
+  \item $A \in \mathcal{F} \Rightarrow \Omega \setminus A \in \mathcal{F}$;
+  \item $A_1, A_2, \dots \in \mathcal{F} \Rightarrow \bigcup_{n=1}^{\infty} A_n \in \mathcal{F}$.
+\end{enumerate}
+Members of~$\mathcal{F}$ are called \emph{events}. Closure under
+countable intersections follows from~(b) and~(c) by De~Morgan.
+\end{definition}
+
+\begin{definition}
+\label{def:prob-measure}
+A \emph{probability measure} on $(\Omega, \mathcal{F})$ is a function
+$\Prob \colon \mathcal{F} \to [0, 1]$ that satisfies the
+\emph{Kolmogorov axioms}:
+\begin{enumerate}[label=(P\arabic*)]
+  \item $\Prob(A) \geq 0$ for every $A \in \mathcal{F}$;
+  \item $\Prob(\Omega) = 1$;
+  \item \emph{$\sigma$-additivity:} for any pairwise disjoint
+        $A_1, A_2, \dots \in \mathcal{F}$,
+        \[
+          \Prob\Bigl(\bigsqcup_{n=1}^{\infty} A_n\Bigr) = \sum_{n=1}^{\infty} \Prob(A_n).
+        \]
+\end{enumerate}
+The triple $(\Omega, \mathcal{F}, \Prob)$ is then a
+\emph{probability space}.
+\end{definition}
+
+The next proposition collects the rules of probabilistic arithmetic
+that follow purely from the axioms.
+
+\begin{proposition}[Elementary properties of $\Prob$]
+\label{prop:prob-elementary}
+For any events $A, B, A_1, \dots, A_n \in \mathcal{F}$:
+\begin{enumerate}[label=(\alph*)]
+  \item $\Prob(\varnothing) = 0$;
+  \item finite additivity: $A \cap B = \varnothing \Rightarrow \Prob(A \sqcup B) = \Prob(A) + \Prob(B)$;
+  \item complement rule: $\Prob(\Omega \setminus A) = 1 - \Prob(A)$;
+  \item monotonicity: $A \subseteq B \Rightarrow \Prob(A) \leq \Prob(B)$;
+  \item subadditivity: $\Prob\bigl(\bigcup_{i=1}^{n} A_i\bigr) \leq \sum_{i=1}^{n} \Prob(A_i)$;
+  \item inclusion–exclusion:
+        \[
+          \Prob\Bigl(\bigcup_{i=1}^{n} A_i\Bigr) = \sum_{k=1}^{n} (-1)^{k-1} \!\!\sum_{1 \leq i_1 < \cdots < i_k \leq n}\!\! \Prob(A_{i_1} \cap \cdots \cap A_{i_k}).
+        \]
+\end{enumerate}
+\end{proposition}
+\proofof{prob-elementary}
+
+\begin{theorem}[Continuity of probability]
+\label{thm:prob-continuity}
+Let $A_1, A_2, \dots \in \mathcal{F}$. Then
+\begin{enumerate}[label=(\alph*)]
+  \item if $A_1 \subseteq A_2 \subseteq \cdots$ and
+        $A = \bigcup_{n} A_n$, then $\Prob(A_n) \uparrow \Prob(A)$;
+  \item if $A_1 \supseteq A_2 \supseteq \cdots$ and
+        $A = \bigcap_{n} A_n$, then $\Prob(A_n) \downarrow \Prob(A)$.
+\end{enumerate}
+\end{theorem}
+\proofof{prob-continuity}
+
+\medskip
+\noindent\textbf{Discrete probability spaces.} If $\Omega$ is finite or
+countable and $\mathcal{F} = 2^{\Omega}$, a probability measure
+on~$\Omega$ is determined by its values on singletons:
+\[
+  p(\omega) = \Prob(\{\omega\}), \qquad p(\omega) \geq 0,\quad \sum_{\omega \in \Omega} p(\omega) = 1,
+\]
+and $\Prob(A) = \sum_{\omega \in A} p(\omega)$. The function~$p$ is
+called the \emph{probability mass function}.
+
+\begin{definition}[Classical probability model]
+\label{def:classical-model}
+The \emph{classical} (\emph{equiprobable}) model is the discrete space
+in which $\Omega$ is finite and every outcome carries equal mass:
+$p(\omega) = 1/|\Omega|$ for all $\omega \in \Omega$. In this case
+\[
+  \Prob(A) = \frac{|A|}{|\Omega|} \quad \text{for every } A \subseteq \Omega.
+\]
+\end{definition}
+
+In the classical model, computing probabilities reduces to counting
+outcomes — typically via combinatorics on samples drawn from a base
+set of $n$ items.
+
+\begin{proposition}[Sampling formulas]
+\label{prop:sampling-formulas}
+Let $|S| = n$ and $1 \leq k \leq n$ (with $k$ unrestricted in the
+``with replacement'' rows). The number of length-$k$ samples
+from~$S$ is
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+ & \textbf{ordered} & \textbf{unordered} \\
+\midrule
+\textbf{without replacement} & $A_n^k = \dfrac{n!}{(n-k)!}$ & $C_n^k = \dbinom{n}{k} = \dfrac{n!}{k!\,(n-k)!}$ \\[6pt]
+\textbf{with replacement}    & $n^k$ & $\bar C_n^k = \dbinom{n+k-1}{k}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{proposition}
+\proofof{sampling-formulas}
+
+\medskip
+\noindent\textbf{Random variables and distribution functions.} A random
+variable assigns a numerical value to every outcome of an experiment;
+to use measure-theoretic tools we require this assignment to be
+compatible with the $\sigma$-algebra. We write $\mathcal{B}(\R)$ for the
+\emph{Borel $\sigma$-algebra} on~$\R$ — the smallest $\sigma$-algebra
+containing all open intervals.
+
+\begin{definition}
+\label{def:random-variable}
+A \emph{random variable} on $(\Omega, \mathcal{F}, \Prob)$ is a function
+$X \colon \Omega \to \R$ such that the preimage of every Borel set is
+an event:
+\[
+  \{X \in B\} := X^{-1}(B) \in \mathcal{F} \quad \text{for every } B \in \mathcal{B}(\R).
+\]
+Equivalently (\cref{lem:rv-equiv-criterion} below), it suffices that
+$\{X \leq x\} \in \mathcal{F}$ for every $x \in \R$.
+\end{definition}
+
+\begin{lemma}[Generating sets suffice]
+\label{lem:rv-equiv-criterion}
+$X \colon \Omega \to \R$ is a random variable iff
+$\{X \leq x\} \in \mathcal{F}$ for all $x \in \R$.
+\end{lemma}
+\proofof{rv-equiv-criterion}
+
+\begin{definition}
+\label{def:cdf}
+The \emph{cumulative distribution function} (CDF) of a random
+variable~$X$ is
+\[
+  F_X(x) = \Prob(X \leq x), \qquad x \in \R.
+\]
+\end{definition}
+
+The CDF carries enough information to compute the probability that~$X$
+lies in any Borel set; in particular,
+$\Prob(a < X \leq b) = F_X(b) - F_X(a)$ for $a < b$. The next theorem
+characterizes which functions arise as CDFs.
+
+\begin{theorem}[Characterization of distribution functions]
+\label{thm:cdf-properties}
+The CDF $F = F_X$ of any random variable~$X$ satisfies
+\begin{enumerate}[label=(\alph*)]
+  \item \emph{monotonicity:} $x \leq y \Rightarrow F(x) \leq F(y)$;
+  \item \emph{right-continuity:} $\lim_{y \downarrow x} F(y) = F(x)$ for every $x \in \R$;
+  \item \emph{normalization:} $\lim_{x \to -\infty} F(x) = 0$ and $\lim_{x \to +\infty} F(x) = 1$.
+\end{enumerate}
+Moreover, $F$ has at most countably many discontinuities; at any
+point~$x$,
+\[
+  \Prob(X = x) = F(x) - F(x^{-}), \qquad F(x^{-}) := \lim_{y \uparrow x} F(y).
+\]
+\end{theorem}
+\proofof{cdf-properties}
+
+\begin{remark}
+The converse — every function with properties (a)–(c) is the CDF of
+some random variable — is the content of the Lebesgue–Stieltjes
+construction; see \cite[Ch.~II, \S 3]{Shiryaev1989}. We use it freely
+in later topics when we ``define a random variable by its
+distribution''.
+\end{remark}
 
 \subsection*{Proofs}
-% TODO
+
+\begin{proof}[\Cref{prop:prob-elementary}]
+\proofanchor{prob-elementary}
+\emph{(a)} Apply $\sigma$-additivity to the disjoint family
+$A_1 = A_2 = \cdots = \varnothing$: $\Prob(\varnothing) = \sum_{n \geq 1} \Prob(\varnothing)$.
+This is finite (bounded by~$1$), so $\Prob(\varnothing) = 0$.
+
+\emph{(b)} Apply $\sigma$-additivity to $A, B, \varnothing, \varnothing, \dots$
+and use~(a).
+
+\emph{(c)} $\Omega = A \sqcup (\Omega \setminus A)$, so by~(b) and~(P2),
+$1 = \Prob(A) + \Prob(\Omega \setminus A)$.
+
+\emph{(d)} Write $B = A \sqcup (B \setminus A)$ (disjoint since
+$A \subseteq B$); then $\Prob(B) = \Prob(A) + \Prob(B \setminus A) \geq \Prob(A)$
+by~(P1).
+
+\emph{(e)} Disjointify: set $B_1 = A_1$ and
+$B_i = A_i \setminus (A_1 \cup \cdots \cup A_{i-1})$ for $i \geq 2$. Then
+$B_i \subseteq A_i$ are pairwise disjoint with the same union, so by
+$\sigma$-additivity (extended by $\varnothing$'s) and~(d),
+$\Prob(\bigcup A_i) = \sum \Prob(B_i) \leq \sum \Prob(A_i)$.
+
+\emph{(f)} Induction on~$n$. The base $n = 2$ comes from
+$\Prob(A_1 \cup A_2) = \Prob(A_1) + \Prob(A_2 \setminus A_1)$ and
+$\Prob(A_2) = \Prob(A_1 \cap A_2) + \Prob(A_2 \setminus A_1)$. For the
+step, set $C = A_1 \cup \cdots \cup A_{n-1}$ and use the case $n = 2$
+on $C$ and~$A_n$, then expand $\Prob(C)$ and $\Prob(C \cap A_n) = \Prob(\bigcup_{i < n}(A_i \cap A_n))$
+by the inductive hypothesis. The signs combine into the stated
+alternating sum.
+\end{proof}
+
+\begin{proof}[\Cref{thm:prob-continuity}]
+\proofanchor{prob-continuity}
+\emph{(a)} Set $B_1 = A_1$ and $B_n = A_n \setminus A_{n-1}$ for
+$n \geq 2$. Then $\bigsqcup_{n} B_n = A$ and
+$A_N = \bigsqcup_{n \leq N} B_n$. By $\sigma$- and finite additivity,
+\[
+  \Prob(A) = \sum_{n=1}^{\infty} \Prob(B_n) = \lim_{N \to \infty} \sum_{n=1}^{N} \Prob(B_n) = \lim_{N \to \infty} \Prob(A_N).
+\]
+The sequence $\Prob(A_N)$ is non-decreasing by monotonicity, so the
+limit equals the supremum, i.e.\ $\Prob(A_N) \uparrow \Prob(A)$.
+
+\emph{(b)} Reduce to~(a) by complementation: the sets
+$A_n^{c} = \Omega \setminus A_n$ are non-decreasing with union
+$\Omega \setminus A$, so $\Prob(A_n^{c}) \uparrow \Prob(\Omega \setminus A)$
+and the conclusion follows from $\Prob(A_n) = 1 - \Prob(A_n^{c})$.
+\end{proof}
+
+\begin{proof}[\Cref{prop:sampling-formulas}]
+\proofanchor{sampling-formulas}
+\emph{Ordered, without replacement.} A length-$k$ sample is a
+sequence $(s_1, \dots, s_k)$ of distinct elements of~$S$. There are
+$n$ choices for~$s_1$, then $n - 1$ for~$s_2$ (since $s_1$ is
+forbidden), and so on down to $n - k + 1$ choices for~$s_k$, giving
+$n(n-1)\cdots(n-k+1) = n!/(n-k)!$.
+
+\emph{Ordered, with replacement.} Each of the $k$ positions is filled
+independently with one of $n$ symbols, yielding $n^k$.
+
+\emph{Unordered, without replacement.} A $k$-subset of~$S$ corresponds
+to a $k!$-fold class of ordered samples (its permutations), so the
+count is $A_n^k / k! = n! / (k!(n-k)!) = \binom{n}{k}$.
+
+\emph{Unordered, with replacement.} Encode a multiset
+$\{s_{i_1}, \dots, s_{i_k}\}$ ($i_1 \leq \cdots \leq i_k$) by the
+binary string with $n - 1$ separators (between groups of identical
+symbols) and $k$ stars (the picks); this is a length-$(n + k - 1)$
+string with $k$ stars chosen out of $n + k - 1$ positions, giving
+$\binom{n+k-1}{k}$.
+\end{proof}
+
+\begin{proof}[\Cref{lem:rv-equiv-criterion}]
+\proofanchor{rv-equiv-criterion}
+The forward implication is immediate since $(-\infty, x] \in \mathcal{B}(\R)$.
+For the converse, the family
+$\mathcal{C} = \{B \subseteq \R : X^{-1}(B) \in \mathcal{F}\}$ is a
+$\sigma$-algebra (preimage commutes with complements and countable
+unions, and $\R \in \mathcal{C}$). By assumption it contains every
+half-line $(-\infty, x]$. Differences and countable unions of such
+half-lines generate the open sets — for instance,
+$(a, b) = \bigcup_{n} \bigl((-\infty, b - 1/n] \setminus (-\infty, a]\bigr)$
+— so $\mathcal{C}$ contains all open sets, hence the whole Borel
+$\sigma$-algebra $\mathcal{B}(\R)$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:cdf-properties}]
+\proofanchor{cdf-properties}
+\emph{(a)} $\{X \leq x\} \subseteq \{X \leq y\}$ for $x \leq y$, so
+$F(x) \leq F(y)$ by monotonicity of~$\Prob$.
+
+\emph{(b)} For $y_n \downarrow x$, the events $\{X \leq y_n\}$
+decrease to $\bigcap_n \{X \leq y_n\} = \{X \leq x\}$, hence by
+\cref{thm:prob-continuity}\,(b), $F(y_n) \to F(x)$.
+
+\emph{(c)} As $x_n \uparrow +\infty$, $\{X \leq x_n\} \uparrow \Omega$,
+so $F(x_n) \to \Prob(\Omega) = 1$ by \cref{thm:prob-continuity}\,(a).
+As $x_n \downarrow -\infty$, $\{X \leq x_n\} \downarrow \varnothing$,
+so $F(x_n) \to 0$ by \cref{thm:prob-continuity}\,(b).
+
+\emph{Atom formula.} For $y_n \uparrow x$, the events $\{X \leq y_n\}$
+increase to $\{X < x\}$, so $F(y_n) \to \Prob(X < x) =: F(x^{-})$. Then
+$\Prob(X = x) = \Prob(X \leq x) - \Prob(X < x) = F(x) - F(x^{-})$.
+
+\emph{Countably many jumps.} For each $k \geq 1$, the set of
+$x \in \R$ with $F(x) - F(x^{-}) > 1/k$ is finite (any $n$ such
+points contribute at least $n/k$ to the total mass~$1$). The union
+over~$k$ is countable.
+\end{proof}
 
 \subsection*{Examples}
-% TODO
+
+\begin{example}[Two dice, classical model]
+\label{ex:two-dice}
+Toss two distinguishable fair dice. Take
+$\Omega = \{1, \dots, 6\}^2$, $\mathcal{F} = 2^{\Omega}$, and the
+classical $\Prob$ from \cref{def:classical-model}; here
+$|\Omega| = 36$. Let~$A$ be the event ``the sum is~$7$''. Counting,
+$A = \{(1,6), (2,5), (3,4), (4,3), (5,2), (6,1)\}$, so $|A| = 6$ and
+$\Prob(A) = 6/36 = 1/6$. By the same recipe, $\Prob(\text{sum}{=}\,2) = 1/36$
+and $\Prob(\text{sum}{=}\,12) = 1/36$.
+\end{example}
+
+\begin{example}[Sampling without replacement: a hand of cards]
+\label{ex:cards}
+Deal $5$ cards uniformly at random from a $52$-card deck. The number
+of unordered hands is $\binom{52}{5}$. The probability of receiving a
+flush (five cards of the same suit) equals
+\[
+  \Prob(\text{flush}) = \frac{4 \cdot \binom{13}{5}}{\binom{52}{5}} = \frac{4 \cdot 1287}{2598960} \approx 0.00198.
+\]
+Here we used \cref{prop:sampling-formulas} (unordered, without
+replacement) to count both numerator and denominator in the same
+sample space.
+\end{example}
+
+\begin{example}[CDF of a discrete random variable]
+\label{ex:cdf-discrete}
+Let~$X$ be the result of one fair die: $X(\omega) = \omega$ on
+$\Omega = \{1, \dots, 6\}$ with the classical measure. Then
+\[
+  F_X(x) = \begin{cases}
+    0, & x < 1, \\
+    k/6, & k \leq x < k + 1,\; k \in \{1, 2, 3, 4, 5\}, \\
+    1, & x \geq 6.
+  \end{cases}
+\]
+$F_X$ is a step function with jumps of height~$1/6$ at $x = 1, 2, \dots, 6$;
+each jump equals $\Prob(X = k)$, in agreement with the atom formula
+of \cref{thm:cdf-properties}.
+\end{example}
+
+\begin{example}[CDF of a uniform distribution]
+\label{ex:cdf-uniform}
+Take $\Omega = [0, 1]$, $\mathcal{F}$ the Borel sets of $[0, 1]$, and
+$\Prob$ Lebesgue measure. Set $X(\omega) = \omega$. Then
+\[
+  F_X(x) = \begin{cases}
+    0, & x < 0, \\
+    x, & 0 \leq x \leq 1, \\
+    1, & x > 1.
+  \end{cases}
+\]
+$F_X$ is continuous (no atoms) and piecewise smooth, illustrating the
+``continuous'' end of the spectrum opposite to
+\cref{ex:cdf-discrete}. We have $\Prob(X = a) = 0$ for every
+$a \in [0, 1]$, while $\Prob(a < X \leq b) = b - a$ for $0 \leq a < b \leq 1$.
+\end{example}
+
+\begin{problem}
+\label{prob:birthday-pair}
+In a room of $n$ people with independent uniformly distributed
+birthdays in a year of $N = 365$ days, find the probability that at
+least two share a birthday. Evaluate it numerically for $n = 23$.
+\end{problem}
+
+\begin{proof}[Solution]
+Take $\Omega = \{1, \dots, N\}^n$ with the classical measure
+($|\Omega| = N^n$, an ``ordered with replacement'' sample,
+\cref{prop:sampling-formulas}). The complementary event ``all
+birthdays distinct'' is counted by ordered samples \emph{without}
+replacement: $A_N^n = N(N-1)\cdots(N-n+1)$. By the complement rule
+(\cref{prop:prob-elementary}\,(c)),
+\[
+  \Prob(\text{at least one match}) = 1 - \frac{N(N-1)\cdots(N-n+1)}{N^n}
+  = 1 - \prod_{k=0}^{n-1}\Bigl(1 - \tfrac{k}{N}\Bigr).
+\]
+For $n = 23$, $N = 365$, the product evaluates to about $0.4927$, so
+the answer is approximately~$0.5073$ — already over one half, the
+classical surprise of the ``birthday paradox''
+\cite[\S~II.4]{GnedenkoKhinchin1970}.
+\end{proof}
