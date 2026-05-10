@@ -131,6 +131,7 @@ quadratic form~$Q$ depend only on~$Q$, not on the basis used. The pair
 $(n_+, n_-)$ is the \emph{signature} of~$Q$, and $n_+ + n_- = \rank Q$
 (the rank of the matrix of~$Q$).
 \end{theorem}
+\proofof{inertia}
 
 \begin{theorem}[Sylvester's criterion]
 \label{thm:sylvester}
@@ -150,15 +151,15 @@ be the \emph{leading principal minors} of~$\mat{A}$. Then
 \proofof{sylvester}
 
 \begin{remark}
-The full proof of Sylvester's law of inertia
+An alternative proof of Sylvester's law of inertia
 (\cref{thm:inertia}) goes through the spectral theorem
 (\cref{thm:spectral}): the matrix of a real symmetric form is
 diagonalizable in an orthonormal basis with real eigenvalues
 $\mu_1, \dots, \mu_n$, and $(n_+, n_-)$ is the count of positive
-versus negative~$\mu_i$, which are basis-independent invariants of the
-matrix. See \cite{Beklemishev2025} for the careful argument and for
-the closely related Jacobi method (an alternative to Lagrange that
-gives the diagonal entries as ratios of leading principal minors).
+versus negative~$\mu_i$, which are basis-independent invariants. The
+closely related Jacobi method (an alternative to Lagrange that gives
+the diagonal entries as ratios of leading principal minors) is
+discussed in \cite{Beklemishev2025}.
 \end{remark}
 
 \subsection*{Proofs}
@@ -245,6 +246,51 @@ The recursion terminates after at most $n$ rounds, producing the
 required canonical form.
 \end{proof}
 
+\begin{proof}[\Cref{thm:inertia}]
+\proofanchor{inertia}
+Suppose $Q$ has two canonical forms in two bases:
+\[
+  Q(\vect{v}) = \sum_{i=1}^{n_+} y_i^2 - \sum_{i=n_+ + 1}^{n_+ + n_-} y_i^2,
+  \qquad
+  Q(\vect{v}) = \sum_{i=1}^{n'_+} (y'_i)^2 - \sum_{i=n'_+ + 1}^{n'_+ + n'_-} (y'_i)^2,
+\]
+with coordinates $\vect{y}$ in the basis $\{\vect{e}_i\}$ and
+$\vect{y}'$ in $\{\vect{e}'_i\}$ (zero coefficients are omitted; both
+expressions have $n$ coordinates). We show $n_+ = n'_+$; the
+symmetric argument gives $n_- = n'_-$.
+
+\emph{Positive subspace.} Let
+$P = \spn(\vect{e}_1, \dots, \vect{e}_{n_+})$, so $\dim P = n_+$. For
+$\vect{v} = \sum_{i \le n_+} y_i \vect{e}_i$ we have
+$Q(\vect{v}) = \sum_{i \le n_+} y_i^2 \ge 0$, with equality only when
+$\vect{v} = \vect{0}$. Hence $Q$ is positive definite on $P$.
+
+\emph{Non-positive subspace (in the new basis).} Let
+$N' = \spn(\vect{e}'_{n'_+ + 1}, \dots, \vect{e}'_n)$, so
+$\dim N' = n - n'_+$. For
+$\vect{v} = \sum_{i > n'_+} y'_i \vect{e}'_i$,
+$Q(\vect{v}) = -\sum_{n'_+ < i \le n'_+ + n'_-} (y'_i)^2 \le 0$.
+
+\emph{Intersection.} If $\vect{v} \in P \cap N'$, then $Q(\vect{v})$ is
+both nonnegative (as an element of $P$) and nonpositive (as an element
+of $N'$), so $Q(\vect{v}) = 0$. Positive definiteness on $P$ forces
+$\vect{v} = \vect{0}$, hence $P \cap N' = \{\vect{0}\}$.
+
+\emph{Dimension count.} By \cref{thm:grassmann},
+$\dim P + \dim N' = \dim(P + N') + \dim(P \cap N') = \dim(P + N') \le n$,
+so $n_+ + (n - n'_+) \le n$, i.e.\ $n_+ \le n'_+$. Swapping the roles
+of the two bases gives $n'_+ \le n_+$, hence $n_+ = n'_+$.
+
+\emph{Rank invariance.} By
+\cref{thm:bilinear-change-of-basis}, the matrix of~$Q$ in any basis
+has the form $\mat{T}\T \mat{A}\, \mat{T}$ with $\mat{T}$ invertible,
+and $\rank(\mat{T}\T \mat{A}\, \mat{T}) = \rank \mat{A}$. In a
+canonical form the matrix $\diag(\lambda_1, \dots, \lambda_n)$ has
+rank equal to the number of nonzero $\lambda_i$, namely $n_+ + n_-$.
+Thus $\rank Q = n_+ + n_-$ depends only on~$Q$, and combined with
+$n_+ = n'_+$ this yields $n_- = n'_-$.
+\end{proof}
+
 \begin{proof}[\Cref{thm:sylvester}]
 \proofanchor{sylvester}
 Both parts follow once we prove (a); part~(b) is then obtained by
@@ -264,18 +310,53 @@ be positive (an eigenvector~$\vect{v}$ with eigenvalue~$\mu$ satisfies
 $Q|_{U_k}(\vect{v}) = \mu \|\vect{v}\|^2$). Hence $M_k$, the product of
 these eigenvalues, is positive.
 
-\emph{(a)~$\Leftarrow$.} Suppose all $M_k > 0$. We show by induction
-on~$k$ that the Lagrange algorithm in the basis
-$\{\vect{e}_1, \dots, \vect{e}_n\}$ never falls into Case~2 or Case~3
-of the proof of \cref{thm:lagrange-method}, and that it produces
-strictly positive diagonal entries
-$\mu_k = M_k / M_{k-1} > 0$ (with $M_0 := 1$). Thus~$Q$ is congruent
-to $\diag(\mu_1, \dots, \mu_n) = \diag(M_1, M_2/M_1, \dots, M_n/M_{n-1})$,
-all of whose diagonal entries are positive, and~$Q$ is positive
-definite by \cref{thm:inertia}. The verification that the Lagrange
-elimination produces those ratios is the standard step-by-step
-calculation
-(see \cite{Beklemishev2025} for the detailed bookkeeping).
+\emph{(a)~$\Leftarrow$.} Suppose all $M_k > 0$ (with $M_0 := 1$). We
+show by induction on $n = \dim V$ that the Lagrange algorithm in the
+basis $\{\vect{e}_1, \dots, \vect{e}_n\}$ stays in Case~1 throughout
+and produces diagonal coefficients $\mu_1 = M_1$ and
+$\mu_k = M_k / M_{k-1}$ for $2 \le k \le n$.
+
+\emph{Key observation.} The change of variables in Case~1 with leading
+coefficient $a_{11} \neq 0$ is realized by an \emph{upper-triangular}
+transition matrix $\mat{S}$ with unit diagonal. The upper-left
+$k \times k$ block of $\mat{S}\T \mat{A}\, \mat{S}$ is exactly
+$\mat{S}_k\T \mat{A}_k\, \mat{S}_k$, where $\mat{S}_k, \mat{A}_k$ are
+the upper-left $k \times k$ blocks (block upper-triangularity of
+$\mat{S}$ with unit diagonal makes the cross-block products vanish in
+the leading position), and
+$\det(\mat{S}_k\T \mat{A}_k\, \mat{S}_k) = (\det \mat{S}_k)^2 \det \mat{A}_k = \det \mat{A}_k$.
+So this change of variables preserves the leading principal minors of
+the matrix of~$Q$.
+
+\emph{Base $n = 1$.} Then $Q = M_1 y_1^2$ with $\mu_1 = M_1 > 0$.
+
+\emph{Step $n - 1 \Rightarrow n$.} Since $a_{11} = M_1 > 0$, Case~1
+applies and Lagrange produces $Q = M_1 y_1^2 + Q'(y_2, \dots, y_n)$
+with matrix $\diag(M_1) \oplus \mat{B}_1$, where
+$\mat{B}_1 \in \R^{(n-1) \times (n-1)}$ is the matrix of $Q'$. By the
+key observation the leading principal minors are preserved, so
+$M_k\bigl(\diag(M_1) \oplus \mat{B}_1\bigr) = M_k$. Direct evaluation
+of the same minor of the block-diagonal matrix gives
+$M_k\bigl(\diag(M_1) \oplus \mat{B}_1\bigr) = M_1 \cdot M_{k-1}(\mat{B}_1)$,
+hence
+\[
+  M_{k-1}(\mat{B}_1) \;=\; M_k / M_1 \;>\; 0
+  \qquad (k = 1, \dots, n).
+\]
+All leading principal minors of $\mat{B}_1$ are positive, so by the
+inductive hypothesis Lagrange applied to $Q'$ stays in Case~1 and
+produces diagonal coefficients
+\[
+  \mu_2 = M_1(\mat{B}_1) = M_2 / M_1,
+  \qquad
+  \mu_k = \frac{M_{k-1}(\mat{B}_1)}{M_{k-2}(\mat{B}_1)} = \frac{M_k/M_1}{M_{k-1}/M_1} = \frac{M_k}{M_{k-1}}
+  \quad (3 \le k \le n).
+\]
+
+Therefore $Q$ is congruent to
+$\diag(M_1, M_2/M_1, \dots, M_n/M_{n-1})$, all of whose diagonal
+entries are positive, and $Q$ is positive definite by
+\cref{thm:inertia}.
 \end{proof}
 
 \subsection*{Examples}

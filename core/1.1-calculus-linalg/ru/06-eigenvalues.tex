@@ -116,8 +116,19 @@ $\langle \vect{u}, \vect{v} \rangle = 0$. Базис $\{\vect{e}_i\}$
 $\langle \vect{e}_i, \vect{e}_j \rangle = \delta_{ij}$. Для подпространства
 $W \subseteq V$ \emph{ортогональным дополнением} называется
 $W^{\perp} = \{\vect{v} \in V : \langle \vect{v}, \vect{w} \rangle = 0
-\text{ для всех } \vect{w} \in W\}$, и всегда $V = W \oplus W^{\perp}$.
+\text{ для всех } \vect{w} \in W\}$.
 \end{definition}
+
+\begin{proposition}[Ортогональное разложение]
+\label{prop:orthogonal-decomposition}
+Для любого подпространства $W \subseteq V$ конечномерного евклидова
+пространства~$V$ имеет место разложение
+\[
+  V \;=\; W \oplus W^{\perp},
+\]
+и, в частности, $\dim W^{\perp} = \dim V - \dim W$.
+\end{proposition}
+\proofof{orthogonal-decomposition}
 
 \begin{definition}
 \label{def:self-adjoint}
@@ -127,11 +138,15 @@ $W^{\perp} = \{\vect{v} \in V : \langle \vect{v}, \vect{w} \rangle = 0
   \langle T\vect{u}, \vect{v} \rangle \;=\; \langle \vect{u}, T\vect{v} \rangle
   \quad \text{для всех } \vect{u}, \vect{v} \in V.
 \]
-В любом ортонормированном базисе матрица самосопряжённого оператора
-симметрична ($\mat{A}\T = \mat{A}$); обратно, всякая вещественная
-симметрическая матрица представляет в каждом ортонормированном базисе
-самосопряжённый оператор.
 \end{definition}
+
+\begin{proposition}[Симметричность матрицы в ортонормированном базисе]
+\label{prop:self-adj-symmetric}
+Оператор $T$ самосопряжён тогда и только тогда, когда его матрица в
+некотором (равносильно: в любом) ортонормированном базисе симметрична,
+$\mat{A}\T = \mat{A}$.
+\end{proposition}
+\proofof{self-adj-symmetric}
 
 \begin{theorem}[Собственные значения самосопряжённого оператора вещественны]
 \label{thm:self-adj-eig-real}
@@ -230,6 +245,72 @@ $(b) \Leftrightarrow (c)$. Применяя ту же теорему к лине
 только тогда, когда прямая сумма исчерпывает всё~$V$.
 \end{proof}
 
+\begin{proof}[\Cref{prop:self-adj-symmetric}]
+\proofanchor{self-adj-symmetric}
+В ортонормированном базисе $\{\vect{e}_i\}$ из определения матрицы
+оператора (\cref{def:matrix-of-linear-map}) и
+ортонормированности следует
+$a_{ij} = \langle T\vect{e}_j, \vect{e}_i \rangle$ ($i$-я координата
+вектора $T\vect{e}_j$). Если~$T$ самосопряжён, то
+\[
+  a_{ij} \;=\; \langle T\vect{e}_j, \vect{e}_i \rangle
+  \;=\; \langle \vect{e}_j, T\vect{e}_i \rangle
+  \;=\; \langle T\vect{e}_i, \vect{e}_j \rangle
+  \;=\; a_{ji},
+\]
+где использована симметрия вещественного скалярного произведения. Тем
+самым $\mat{A}\T = \mat{A}$.
+
+Обратно, пусть $\mat{A}\T = \mat{A}$. Для произвольных
+$\vect{u} = \sum x_j \vect{e}_j$ и $\vect{v} = \sum y_i \vect{e}_i$
+\[
+  \langle T\vect{u}, \vect{v} \rangle = \sum_{i, j} x_j y_i\, a_{ij},
+  \qquad
+  \langle \vect{u}, T\vect{v} \rangle = \sum_{i, j} x_j y_i\, a_{ji},
+\]
+и из $a_{ij} = a_{ji}$ две суммы совпадают, то есть~$T$ самосопряжён.
+Так как самосопряжённость не зависит от выбора базиса, оба направления
+верны для любого ортонормированного базиса.
+\end{proof}
+
+\begin{proof}[\Cref{prop:orthogonal-decomposition}]
+\proofanchor{orthogonal-decomposition}
+\emph{Тривиальное пересечение.} Если $\vect{v} \in W \cap W^{\perp}$,
+то $\langle \vect{v}, \vect{v} \rangle = 0$, и положительная
+определённость даёт $\vect{v} = \vect{0}$.
+
+\emph{Ортонормированный базис в~$W$.} Выберем какой-нибудь базис
+$\vect{w}_1, \dots, \vect{w}_k$ подпространства~$W$
+(\cref{cor:subspace-fg}) и применим к нему процесс
+ортогонализации: положим $\vect{e}_1 = \vect{w}_1 / \|\vect{w}_1\|$ и
+для $j = 2, \dots, k$
+\[
+  \vect{w}'_j \;=\; \vect{w}_j - \sum_{i=1}^{j-1} \langle \vect{w}_j, \vect{e}_i \rangle\, \vect{e}_i,
+  \qquad
+  \vect{e}_j \;=\; \vect{w}'_j / \|\vect{w}'_j\|.
+\]
+Вектор $\vect{w}'_j \neq \vect{0}$: иначе $\vect{w}_j$ выражался бы
+через $\vect{e}_1, \dots, \vect{e}_{j-1}$, а значит и через
+$\vect{w}_1, \dots, \vect{w}_{j-1}$, что противоречит линейной
+независимости. По построению $\langle \vect{e}_i, \vect{e}_j \rangle = \delta_{ij}$,
+и линейная оболочка $\{\vect{e}_i\}_{i=1}^{k}$ совпадает с~$W$.
+
+\emph{Ортогональная проекция.} Для произвольного $\vect{u} \in V$
+положим
+$\vect{u}_W = \sum_{i=1}^{k} \langle \vect{u}, \vect{e}_i \rangle\, \vect{e}_i \in W$.
+Разность $\vect{u} - \vect{u}_W$ ортогональна каждому $\vect{e}_j$:
+\[
+  \langle \vect{u} - \vect{u}_W, \vect{e}_j \rangle
+  = \langle \vect{u}, \vect{e}_j \rangle - \sum_{i=1}^{k} \langle \vect{u}, \vect{e}_i \rangle\, \delta_{ij}
+  = 0,
+\]
+поэтому $\vect{u} - \vect{u}_W \in W^{\perp}$. Таким образом,
+$\vect{u} = \vect{u}_W + (\vect{u} - \vect{u}_W) \in W + W^{\perp}$, то
+есть $V = W + W^{\perp}$. Вместе с условием $W \cap W^{\perp} = \{\vect{0}\}$
+это даёт $V = W \oplus W^{\perp}$, а из \cref{thm:grassmann}
+следует $\dim W^{\perp} = \dim V - \dim W$.
+\end{proof}
+
 \begin{proof}[\Cref{thm:self-adj-eig-real}]
 \proofanchor{self-adj-eig-real}
 Расширим~$V$ до его комплексификации $V_{\C} = V \oplus iV$ с
@@ -281,17 +362,20 @@ $\langle \vect{v}_1, \vect{v}_2 \rangle = 0$.
 \proofanchor{spectral}
 Индукция по $n = \dim V$.
 
-\emph{База $n = 1$.} Любой ненулевой $\vect{v}_1 \in V$ автоматически
-является собственным ($T\vect{v}_1 = \lambda \vect{v}_1$ для
-единственного $\lambda \in \R$, для которого $T\vect{v}_1 = \lambda \vect{v}_1$);
-нормируем его до $\vect{v}_1 / \|\vect{v}_1\|$.
+\emph{База $n = 1$.} Возьмём произвольный ненулевой
+$\vect{v}_1 \in V$. Так как $V = \spn(\vect{v}_1)$, образ $T\vect{v}_1$
+есть некоторый скаляр, помноженный на~$\vect{v}_1$; обозначим этот
+скаляр через~$\lambda$. Тогда $\vect{v}_1 / \|\vect{v}_1\|$~---
+ортонормированный собственный базис~$V$ с собственным значением~$\lambda$.
 
 \emph{Шаг $n - 1 \Rightarrow n$.} По \cref{thm:self-adj-eig-real}
 выберем вещественный собственный вектор $\vect{e}_1$ с собственным
 значением~$\lambda_1$, нормированный условием $\|\vect{e}_1\| = 1$.
 Положим
 $W = \vect{e}_1^{\perp} = \{\vect{w} \in V : \langle \vect{w}, \vect{e}_1 \rangle = 0\}$~---
-подпространство размерности $n - 1$.
+подпространство размерности $n - 1$ (по
+\cref{prop:orthogonal-decomposition}, применённой к одномерному
+$\spn(\vect{e}_1)$).
 
 \emph{Утверждение:} $T(W) \subseteq W$. Действительно, для
 $\vect{w} \in W$
