@@ -8,10 +8,260 @@
 \end{ticket}
 
 \subsection*{Теория}
-% TODO
+
+В основе теории вероятностей лежит \emph{вероятностное пространство}~--- тройка $(\Omega, \mathcal{F}, \Prob)$ в смысле А.~Н.~Колмогорова \cite{Shiryaev1989}. Эта тройка кодирует три составляющие случайного эксперимента: множество возможных исходов, набор допустимых вопросов о результате эксперимента и правило, по которому каждому такому вопросу приписывается вероятность.
+
+\begin{definition}
+\label{def:sigma-algebra}
+\emph{$\sigma$-алгеброй} на непустом множестве~$\Omega$ называется семейство $\mathcal{F} \subseteq 2^{\Omega}$, содержащее~$\Omega$ и замкнутое относительно дополнений и счётных объединений:
+\begin{enumerate}[label=(\alph*)]
+  \item $\Omega \in \mathcal{F}$;
+  \item $A \in \mathcal{F} \Rightarrow \Omega \setminus A \in \mathcal{F}$;
+  \item $A_1, A_2, \dots \in \mathcal{F} \Rightarrow \bigcup_{n=1}^{\infty} A_n \in \mathcal{F}$.
+\end{enumerate}
+Элементы~$\mathcal{F}$ называются \emph{событиями}. Замкнутость относительно счётных пересечений вытекает из~(b) и~(c) по формулам де~Моргана.
+\end{definition}
+
+\begin{definition}
+\label{def:prob-measure}
+\emph{Вероятностной мерой} на $(\Omega, \mathcal{F})$ называется функция $\Prob \colon \mathcal{F} \to [0, 1]$, удовлетворяющая \emph{аксиомам Колмогорова}:
+\begin{enumerate}[label=(P\arabic*)]
+  \item $\Prob(A) \geq 0$ для каждого $A \in \mathcal{F}$;
+  \item $\Prob(\Omega) = 1$;
+  \item \emph{$\sigma$-аддитивность:} для любого набора попарно непересекающихся событий $A_1, A_2, \dots \in \mathcal{F}$ выполнено
+        \[
+          \Prob\Bigl(\bigsqcup_{n=1}^{\infty} A_n\Bigr) = \sum_{n=1}^{\infty} \Prob(A_n).
+        \]
+\end{enumerate}
+Тогда тройка $(\Omega, \mathcal{F}, \Prob)$ называется \emph{вероятностным пространством}.
+\end{definition}
+
+В следующем утверждении собраны правила обращения с вероятностью, вытекающие непосредственно из аксиом.
+
+\begin{proposition}[Элементарные свойства~$\Prob$]
+\label{prop:prob-elementary}
+Для любых событий $A, B, A_1, \dots, A_n \in \mathcal{F}$ выполнены равенства и неравенства:
+\begin{enumerate}[label=(\alph*)]
+  \item $\Prob(\varnothing) = 0$;
+  \item конечная аддитивность: $A \cap B = \varnothing \Rightarrow \Prob(A \sqcup B) = \Prob(A) + \Prob(B)$;
+  \item правило дополнения: $\Prob(\Omega \setminus A) = 1 - \Prob(A)$;
+  \item монотонность: $A \subseteq B \Rightarrow \Prob(A) \leq \Prob(B)$;
+  \item полуаддитивность: $\Prob\bigl(\bigcup_{i=1}^{n} A_i\bigr) \leq \sum_{i=1}^{n} \Prob(A_i)$;
+  \item формула включений-исключений:
+        \[
+          \Prob\Bigl(\bigcup_{i=1}^{n} A_i\Bigr) = \sum_{k=1}^{n} (-1)^{k-1} \!\!\sum_{1 \leq i_1 < \cdots < i_k \leq n}\!\! \Prob(A_{i_1} \cap \cdots \cap A_{i_k}).
+        \]
+\end{enumerate}
+\end{proposition}
+\proofof{prob-elementary}
+
+\begin{theorem}[Непрерывность вероятности]
+\label{thm:prob-continuity}
+Пусть $A_1, A_2, \dots \in \mathcal{F}$. Тогда
+\begin{enumerate}[label=(\alph*)]
+  \item если $A_1 \subseteq A_2 \subseteq \cdots$ и $A = \bigcup_{n} A_n$, то $\Prob(A_n) \uparrow \Prob(A)$;
+  \item если $A_1 \supseteq A_2 \supseteq \cdots$ и $A = \bigcap_{n} A_n$, то $\Prob(A_n) \downarrow \Prob(A)$.
+\end{enumerate}
+\end{theorem}
+\proofof{prob-continuity}
+
+\medskip
+\noindent\textbf{Дискретные вероятностные пространства.} Если~$\Omega$ конечно или счётно и $\mathcal{F} = 2^{\Omega}$, то вероятностная мера на~$\Omega$ полностью определяется своими значениями на одноточечных подмножествах:
+\[
+  p(\omega) = \Prob(\{\omega\}), \qquad p(\omega) \geq 0,\quad \sum_{\omega \in \Omega} p(\omega) = 1,
+\]
+причём $\Prob(A) = \sum_{\omega \in A} p(\omega)$. Функция~$p$ называется \emph{функцией вероятностей} (или \emph{распределением вероятностей на~$\Omega$}).
+
+\begin{definition}[Классическая вероятностная модель]
+\label{def:classical-model}
+\emph{Классической} (\emph{равновероятной}) моделью называется дискретное вероятностное пространство, в котором~$\Omega$ конечно и каждый исход имеет одинаковую массу: $p(\omega) = 1/|\Omega|$ при всех $\omega \in \Omega$. В этом случае
+\[
+  \Prob(A) = \frac{|A|}{|\Omega|} \quad \text{для любого } A \subseteq \Omega.
+\]
+\end{definition}
+
+В классической модели вычисление вероятности сводится к подсчёту числа исходов~--- как правило, с помощью комбинаторных формул для выборок из множества из~$n$ элементов.
+
+\begin{proposition}[Формулы для числа выборок]
+\label{prop:sampling-formulas}
+Пусть $|S| = n$ и $1 \leq k \leq n$ (в строках ``с повторениями''~$k$ ничем не ограничено). Число выборок длины~$k$ из множества~$S$ задаётся таблицей
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+ & \textbf{с учётом порядка} & \textbf{без учёта порядка} \\
+\midrule
+\textbf{без повторений} & $A_n^k = \dfrac{n!}{(n-k)!}$ & $C_n^k = \dbinom{n}{k} = \dfrac{n!}{k!\,(n-k)!}$ \\[6pt]
+\textbf{с повторениями} & $n^k$ & $\bar C_n^k = \dbinom{n+k-1}{k}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{proposition}
+\proofof{sampling-formulas}
+
+\medskip
+\noindent\textbf{Случайные величины и функция распределения.} Случайная величина сопоставляет каждому исходу эксперимента числовое значение; чтобы задействовать инструменты теории меры, требуется, чтобы это сопоставление было согласовано с $\sigma$-алгеброй. Через $\mathcal{B}(\R)$ обозначаем \emph{борелевскую $\sigma$-алгебру} на~$\R$~--- наименьшую $\sigma$-алгебру, содержащую все открытые интервалы.
+
+\begin{definition}
+\label{def:random-variable}
+\emph{Случайной величиной} на $(\Omega, \mathcal{F}, \Prob)$ называется функция $X \colon \Omega \to \R$, для которой прообраз каждого борелевского множества является событием:
+\[
+  \{X \in B\} := X^{-1}(B) \in \mathcal{F} \quad \text{для каждого } B \in \mathcal{B}(\R).
+\]
+Эквивалентное условие (см.~\cref{lem:rv-equiv-criterion} ниже): достаточно, чтобы $\{X \leq x\} \in \mathcal{F}$ для всех $x \in \R$.
+\end{definition}
+
+\begin{lemma}[Достаточно проверять на образующих]
+\label{lem:rv-equiv-criterion}
+Функция $X \colon \Omega \to \R$ является случайной величиной тогда и только тогда, когда $\{X \leq x\} \in \mathcal{F}$ при всех $x \in \R$.
+\end{lemma}
+\proofof{rv-equiv-criterion}
+
+\begin{definition}
+\label{def:cdf}
+\emph{Функцией распределения} случайной величины~$X$ называется
+\[
+  F_X(x) = \Prob(X \leq x), \qquad x \in \R.
+\]
+\end{definition}
+
+Функция распределения несёт в себе всю информацию, необходимую для вычисления вероятностей попадания~$X$ в произвольное борелевское множество; в частности, $\Prob(a < X \leq b) = F_X(b) - F_X(a)$ при $a < b$. Следующая теорема описывает, какие функции вообще могут служить функциями распределения.
+
+\begin{theorem}[Характеризация функций распределения]
+\label{thm:cdf-properties}
+Функция распределения $F = F_X$ произвольной случайной величины~$X$ удовлетворяет условиям:
+\begin{enumerate}[label=(\alph*)]
+  \item \emph{монотонность:} $x \leq y \Rightarrow F(x) \leq F(y)$;
+  \item \emph{непрерывность справа:} $\lim_{y \downarrow x} F(y) = F(x)$ для всех $x \in \R$;
+  \item \emph{нормировка:} $\lim_{x \to -\infty} F(x) = 0$ и $\lim_{x \to +\infty} F(x) = 1$.
+\end{enumerate}
+Кроме того,~$F$ имеет не более чем счётное число точек разрыва, и в каждой такой точке~$x$ выполнено
+\[
+  \Prob(X = x) = F(x) - F(x^{-}), \qquad F(x^{-}) := \lim_{y \uparrow x} F(y).
+\]
+\end{theorem}
+\proofof{cdf-properties}
+
+\begin{remark}
+Обратное утверждение~--- любая функция со свойствами~(a)--(c) является функцией распределения некоторой случайной величины~--- составляет содержание построения Лебега--Стилтьеса; см. \cite[гл.~II, \S~3]{Shiryaev1989}. В дальнейших темах мы свободно пользуемся им, ``задавая случайную величину её распределением''.
+\end{remark}
 
 \subsection*{Доказательства}
-% TODO
+
+\begin{proof}[\Cref{prop:prob-elementary}]
+\proofanchor{prob-elementary}
+\emph{(a)} Применим $\sigma$-аддитивность к набору попарно непересекающихся $A_1 = A_2 = \cdots = \varnothing$: $\Prob(\varnothing) = \sum_{n \geq 1} \Prob(\varnothing)$. Сумма конечна (ограничена~$1$), поэтому $\Prob(\varnothing) = 0$.
+
+\emph{(b)} Применим $\sigma$-аддитивность к набору $A, B, \varnothing, \varnothing, \dots$ и воспользуемся пунктом~(a).
+
+\emph{(c)} Поскольку $\Omega = A \sqcup (\Omega \setminus A)$, из~(b) и~(P2) следует $1 = \Prob(A) + \Prob(\Omega \setminus A)$.
+
+\emph{(d)} Запишем $B = A \sqcup (B \setminus A)$ (объединение непересекающееся при $A \subseteq B$); тогда $\Prob(B) = \Prob(A) + \Prob(B \setminus A) \geq \Prob(A)$ в силу~(P1).
+
+\emph{(e)} Перейдём к разбиению на непересекающиеся события: положим $B_1 = A_1$ и $B_i = A_i \setminus (A_1 \cup \cdots \cup A_{i-1})$ при $i \geq 2$. Тогда события~$B_i \subseteq A_i$ попарно не пересекаются и имеют то же объединение, поэтому из $\sigma$-аддитивности (дополненной нулями) и~(d) получаем $\Prob(\bigcup A_i) = \sum \Prob(B_i) \leq \sum \Prob(A_i)$.
+
+\emph{(f)} Индукция по~$n$. База $n = 2$ следует из равенств $\Prob(A_1 \cup A_2) = \Prob(A_1) + \Prob(A_2 \setminus A_1)$ и $\Prob(A_2) = \Prob(A_1 \cap A_2) + \Prob(A_2 \setminus A_1)$. Для шага положим $C = A_1 \cup \cdots \cup A_{n-1}$, применим случай $n = 2$ к~$C$ и~$A_n$, после чего раскроем $\Prob(C)$ и $\Prob(C \cap A_n) = \Prob(\bigcup_{i < n}(A_i \cap A_n))$ по индукционному предположению. Знаки в обоих разложениях складываются в указанную знакочередующуюся сумму.
+\end{proof}
+
+\begin{proof}[\Cref{thm:prob-continuity}]
+\proofanchor{prob-continuity}
+\emph{(a)} Положим $B_1 = A_1$ и $B_n = A_n \setminus A_{n-1}$ при $n \geq 2$. Тогда $\bigsqcup_{n} B_n = A$ и $A_N = \bigsqcup_{n \leq N} B_n$. По $\sigma$-аддитивности и конечной аддитивности
+\[
+  \Prob(A) = \sum_{n=1}^{\infty} \Prob(B_n) = \lim_{N \to \infty} \sum_{n=1}^{N} \Prob(B_n) = \lim_{N \to \infty} \Prob(A_N).
+\]
+Последовательность $\Prob(A_N)$ не убывает в силу монотонности~$\Prob$, поэтому предел совпадает с супремумом, то есть $\Prob(A_N) \uparrow \Prob(A)$.
+
+\emph{(b)} Сводим к~(a) переходом к дополнениям: события $A_n^{c} = \Omega \setminus A_n$ образуют возрастающую последовательность с объединением $\Omega \setminus A$, поэтому $\Prob(A_n^{c}) \uparrow \Prob(\Omega \setminus A)$, а равенство $\Prob(A_n) = 1 - \Prob(A_n^{c})$ даёт требуемое.
+\end{proof}
+
+\begin{proof}[\Cref{prop:sampling-formulas}]
+\proofanchor{sampling-formulas}
+\emph{С учётом порядка, без повторений.} Выборка длины~$k$~--- последовательность $(s_1, \dots, s_k)$ различных элементов~$S$. Для~$s_1$ имеется~$n$ способов, для~$s_2$~--- $n - 1$ (исключён~$s_1$), и так до $n - k + 1$ способов для~$s_k$; всего $n(n-1)\cdots(n-k+1) = n!/(n-k)!$.
+
+\emph{С учётом порядка, с повторениями.} Каждое из~$k$ мест заполняется независимо одним из~$n$ символов, то есть~$n^k$ выборок.
+
+\emph{Без учёта порядка, без повторений.} Каждому $k$-элементному подмножеству~$S$ соответствует ровно $k!$ упорядоченных выборок (его перестановки), поэтому число подмножеств равно $A_n^k / k! = n! / (k!(n-k)!) = \binom{n}{k}$.
+
+\emph{Без учёта порядка, с повторениями.} Закодируем мультимножество $\{s_{i_1}, \dots, s_{i_k}\}$ ($i_1 \leq \cdots \leq i_k$) двоичной строкой из $n - 1$ разделителей (между группами одинаковых символов) и~$k$ звёздочек (выбранные элементы). Получится строка длины $n + k - 1$, в которой~$k$ позиций отведены под звёздочки; число таких строк равно $\binom{n+k-1}{k}$.
+\end{proof}
+
+\begin{proof}[\Cref{lem:rv-equiv-criterion}]
+\proofanchor{rv-equiv-criterion}
+Прямое утверждение тривиально: $(-\infty, x] \in \mathcal{B}(\R)$. Обратно, рассмотрим семейство
+\[
+  \mathcal{C} = \{B \subseteq \R : X^{-1}(B) \in \mathcal{F}\}.
+\]
+Оно является $\sigma$-алгеброй (взятие прообраза перестановочно с дополнениями и счётными объединениями, и $\R \in \mathcal{C}$). По условию~$\mathcal{C}$ содержит каждый луч $(-\infty, x]$. Через разности и счётные объединения таких лучей выражаются все открытые множества, например
+\[
+  (a, b) = \bigcup_{n} \bigl((-\infty, b - 1/n] \setminus (-\infty, a]\bigr).
+\]
+Поэтому $\mathcal{C}$ содержит все открытые множества, а значит, и всю борелевскую $\sigma$-алгебру $\mathcal{B}(\R)$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:cdf-properties}]
+\proofanchor{cdf-properties}
+\emph{(a)} Из $\{X \leq x\} \subseteq \{X \leq y\}$ при $x \leq y$ по монотонности~$\Prob$ следует $F(x) \leq F(y)$.
+
+\emph{(b)} При $y_n \downarrow x$ события $\{X \leq y_n\}$ убывают к $\bigcap_n \{X \leq y_n\} = \{X \leq x\}$, поэтому по~\cref{thm:prob-continuity}\,(b) $F(y_n) \to F(x)$.
+
+\emph{(c)} При $x_n \uparrow +\infty$ имеем $\{X \leq x_n\} \uparrow \Omega$, и потому $F(x_n) \to \Prob(\Omega) = 1$ согласно~\cref{thm:prob-continuity}\,(a). При $x_n \downarrow -\infty$ имеем $\{X \leq x_n\} \downarrow \varnothing$, поэтому $F(x_n) \to 0$ по~\cref{thm:prob-continuity}\,(b).
+
+\emph{Формула для атома.} При $y_n \uparrow x$ события $\{X \leq y_n\}$ возрастают к $\{X < x\}$, поэтому $F(y_n) \to \Prob(X < x) =: F(x^{-})$. Тогда $\Prob(X = x) = \Prob(X \leq x) - \Prob(X < x) = F(x) - F(x^{-})$.
+
+\emph{Счётность множества скачков.} При каждом $k \geq 1$ множество таких $x \in \R$, что $F(x) - F(x^{-}) > 1/k$, конечно: любые~$n$ таких точек дали бы суммарную массу не меньше $n/k$, а полная масса равна~$1$. Объединение по~$k$ счётно.
+\end{proof}
 
 \subsection*{Примеры}
-% TODO
+
+\begin{example}[Две игральные кости, классическая модель]
+\label{ex:two-dice}
+Бросаем две различимые правильные кости. Возьмём $\Omega = \{1, \dots, 6\}^2$, $\mathcal{F} = 2^{\Omega}$ и классическую меру $\Prob$ из~\cref{def:classical-model}; здесь $|\Omega| = 36$. Пусть~$A$~--- событие ``сумма очков равна~$7$''. Перечислим благоприятствующие исходы: $A = \{(1,6), (2,5), (3,4), (4,3), (5,2), (6,1)\}$, поэтому $|A| = 6$ и $\Prob(A) = 6/36 = 1/6$. Тем же приёмом $\Prob(\text{сумма}\,{=}\,2) = 1/36$, $\Prob(\text{сумма}\,{=}\,12) = 1/36$.
+\end{example}
+
+\begin{example}[Выборка без повторений: карточная раздача]
+\label{ex:cards}
+Раздаём~$5$ карт случайно равномерно из колоды в~$52$ карты. Число неупорядоченных раздач равно $\binom{52}{5}$. Вероятность получить ``флешь'' (пять карт одной масти) равна
+\[
+  \Prob(\text{флешь}) = \frac{4 \cdot \binom{13}{5}}{\binom{52}{5}} = \frac{4 \cdot 1287}{2598960} \approx 0{,}00198.
+\]
+Здесь и в числителе, и в знаменателе мы воспользовались~\cref{prop:sampling-formulas} (без учёта порядка, без повторений), так что обе величины посчитаны в одном и том же пространстве элементарных исходов.
+\end{example}
+
+\begin{example}[Функция распределения дискретной случайной величины]
+\label{ex:cdf-discrete}
+Пусть~$X$~--- число очков на одной правильной кости: $X(\omega) = \omega$ на $\Omega = \{1, \dots, 6\}$ с классической мерой. Тогда
+\[
+  F_X(x) = \begin{cases}
+    0, & x < 1, \\
+    k/6, & k \leq x < k + 1,\; k \in \{1, 2, 3, 4, 5\}, \\
+    1, & x \geq 6.
+  \end{cases}
+\]
+$F_X$~--- ступенчатая функция со скачками высоты~$1/6$ в точках $x = 1, 2, \dots, 6$; каждый скачок равен $\Prob(X = k)$, что согласуется с формулой для атома из~\cref{thm:cdf-properties}.
+\end{example}
+
+\begin{example}[Функция распределения равномерной величины]
+\label{ex:cdf-uniform}
+Возьмём $\Omega = [0, 1]$, $\mathcal{F}$~--- борелевская $\sigma$-алгебра отрезка $[0, 1]$, а в качестве~$\Prob$~--- меру Лебега. Положим $X(\omega) = \omega$. Тогда
+\[
+  F_X(x) = \begin{cases}
+    0, & x < 0, \\
+    x, & 0 \leq x \leq 1, \\
+    1, & x > 1.
+  \end{cases}
+\]
+Функция~$F_X$ непрерывна (атомов нет) и кусочно гладкая~--- крайний случай, противоположный дискретному из~\cref{ex:cdf-discrete}. Здесь $\Prob(X = a) = 0$ для каждого $a \in [0, 1]$, тогда как $\Prob(a < X \leq b) = b - a$ при $0 \leq a < b \leq 1$.
+\end{example}
+
+\begin{problem}
+\label{prob:birthday-pair}
+В комнате собрались~$n$ человек, дни рождения которых независимы и равномерно распределены по году из $N = 365$ дней. Найдите вероятность того, что хотя бы у двух человек дни рождения совпадают, и оцените её численно при $n = 23$.
+\end{problem}
+
+\begin{proof}[Решение]
+Возьмём $\Omega = \{1, \dots, N\}^n$ с классической мерой ($|\Omega| = N^n$~--- упорядоченная выборка с повторениями, см.~\cref{prop:sampling-formulas}). Дополнительное событие ``все дни рождения различны'' соответствует упорядоченным выборкам \emph{без} повторений: их $A_N^n = N(N-1)\cdots(N-n+1)$. По правилу дополнения (\cref{prop:prob-elementary}\,(c))
+\[
+  \Prob(\text{есть совпадение}) = 1 - \frac{N(N-1)\cdots(N-n+1)}{N^n}
+  = 1 - \prod_{k=0}^{n-1}\Bigl(1 - \tfrac{k}{N}\Bigr).
+\]
+При $n = 23$, $N = 365$ произведение приближённо равно~$0{,}4927$, так что искомая вероятность составляет около~$0{,}5073$~--- уже больше половины. Это и есть знаменитый ``парадокс дней рождения'' \cite[\S~II.4]{GnedenkoKhinchin1970}.
+\end{proof}
