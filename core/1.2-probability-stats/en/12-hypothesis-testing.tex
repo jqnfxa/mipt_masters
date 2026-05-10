@@ -160,9 +160,14 @@ Integrating,
   0 \leq \int (\varphi^* - \varphi)(f_1 - k f_0) = \bigl(\E_{\theta_1} \varphi^* - \E_{\theta_1} \varphi\bigr) - k \bigl(\E_{\theta_0} \varphi^* - \E_{\theta_0} \varphi\bigr).
 \]
 Since $\E_{\theta_0} \varphi^* = \alpha$ and $\E_{\theta_0} \varphi \leq \alpha$,
-the second bracket is $\leq 0$, so $-k$ times it is $\geq 0$, and the
-inequality $\geq 0$ on the whole expression then yields
-$\E_{\theta_1} \varphi^* \geq \E_{\theta_1} \varphi$ — i.e., the
+$\E_{\theta_0} \varphi^* - \E_{\theta_0} \varphi \geq 0$ (the second
+bracket is non-negative), and with $k \geq 0$ this makes
+$k(\E_{\theta_0} \varphi^* - \E_{\theta_0} \varphi) \geq 0$.
+Rearranging the displayed inequality,
+\[
+  \E_{\theta_1} \varphi^* - \E_{\theta_1} \varphi \;\geq\; k\bigl(\E_{\theta_0} \varphi^* - \E_{\theta_0} \varphi\bigr) \;\geq\; 0,
+\]
+i.e.\ $\E_{\theta_1} \varphi^* \geq \E_{\theta_1} \varphi$ — the
 power at $\theta_1$ of $\varphi^*$ dominates that of any other test
 of size $\leq \alpha$. The converse identifies the structure of any
 optimal test: equality $\varphi = \varphi^*$ outside the
