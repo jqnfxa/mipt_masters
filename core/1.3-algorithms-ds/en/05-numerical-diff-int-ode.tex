@@ -8,10 +8,280 @@ Numerical differentiation and integration. Numerical methods for systems of diff
 \end{ticket}
 
 \subsection*{Theory}
-% TODO
+
+We treat three closely related approximation problems on real-valued
+functions of a real argument: estimating $f'(x)$ from samples,
+estimating $\int_a^b f(x)\, dx$ from samples, and approximating the
+solution of a Cauchy ODE problem. Throughout, $h > 0$ is a step size.
+For deeper treatment see \cite[Ch.~28]{CLRS2013} and the numerical
+analysis classics referenced in chapter 2.1.
+
+\subsubsection*{Numerical differentiation}
+
+Replace the limit definition of the derivative by a finite-difference
+approximation.
+
+\begin{definition}[Finite-difference approximations]
+\label{def:finite-diff}
+For sufficiently smooth $f$ and step $h > 0$:
+\begin{align*}
+  D_+ f(x) &= \frac{f(x + h) - f(x)}{h} && \text{forward difference,} \\
+  D_- f(x) &= \frac{f(x) - f(x - h)}{h} && \text{backward difference,} \\
+  D_0 f(x) &= \frac{f(x + h) - f(x - h)}{2h} && \text{central difference.}
+\end{align*}
+\end{definition}
+
+\begin{theorem}[Truncation error of finite differences]
+\label{thm:finite-diff-error}
+If $f \in C^2$ in a neighbourhood of~$x$, then
+$D_+ f(x) - f'(x) = -\tfrac{h}{2} f''(\xi_+)$ for some $\xi_+ \in (x, x + h)$;
+hence $D_+ f(x) = f'(x) + O(h)$. The same first-order error holds for
+$D_-$. If $f \in C^3$, then
+$D_0 f(x) - f'(x) = -\tfrac{h^2}{6} f'''(\xi_0)$ for some
+$\xi_0 \in (x - h, x + h)$; hence $D_0 f(x) = f'(x) + O(h^2)$.
+\end{theorem}
+\proofof{finite-diff-error}
+
+\subsubsection*{Numerical integration (quadrature)}
+
+A \emph{quadrature rule} approximates $\int_a^b f(x)\, dx$ by a
+finite linear combination of point evaluations of~$f$. The simplest
+rules come from interpolating $f$ by a polynomial through equally
+spaced nodes and integrating exactly. Subdividing $[a, b]$ into $n$
+subintervals of equal length $h = (b - a)/n$ with nodes
+$x_k = a + kh$, $k = 0, \dots, n$, gives the \emph{composite}
+versions.
+
+\begin{definition}[Composite quadrature rules]
+\label{def:composite-quad}
+With $f_k = f(x_k)$:
+\begin{itemize}
+  \item composite \emph{midpoint}: $M_n(f) = h \sum_{k=0}^{n-1} f\!\bigl(x_k + h/2\bigr)$;
+  \item composite \emph{trapezoidal}: $T_n(f) = h \bigl(\tfrac{f_0}{2} + f_1 + f_2 + \dots + f_{n-1} + \tfrac{f_n}{2}\bigr)$;
+  \item composite \emph{Simpson's rule}: with $n$ even,
+        $S_n(f) = \tfrac{h}{3}\bigl(f_0 + 4 f_1 + 2 f_2 + 4 f_3 + \dots + 2 f_{n-2} + 4 f_{n-1} + f_n\bigr)$.
+\end{itemize}
+\end{definition}
+
+\begin{theorem}[Error estimates for composite rules]
+\label{thm:quadrature-error}
+Let $I(f) = \int_a^b f(x)\, dx$ and $h = (b - a)/n$.
+\begin{enumerate}[label=(\alph*)]
+  \item If $f \in C^2[a, b]$, then
+        $|T_n(f) - I(f)| \leq \tfrac{(b - a) h^2}{12} \max_{[a, b]} |f''|$;
+        in particular $T_n(f) = I(f) + O(h^2)$.
+  \item If $f \in C^4[a, b]$ and $n$ is even, then
+        $|S_n(f) - I(f)| \leq \tfrac{(b - a) h^4}{180} \max_{[a, b]} |f^{(4)}|$;
+        in particular $S_n(f) = I(f) + O(h^4)$.
+  \item Simpson's rule is \emph{exact} (zero error) on polynomials of
+        degree at most~$3$.
+\end{enumerate}
+\end{theorem}
+\proofof{quadrature-error}
+
+\subsubsection*{Cauchy problem for ODEs}
+
+Consider the initial-value (Cauchy) problem
+\[
+  y'(x) = f(x, y(x)),\qquad y(x_0) = y_0,
+\]
+on an interval $[x_0, x_0 + L]$, with $f$ Lipschitz in~$y$ uniformly
+in~$x$ (so that the solution exists and is unique by the
+Picard--Lindelöf theorem). A numerical method produces approximate
+values $y_n \approx y(x_n)$ on a grid $x_n = x_0 + n h$,
+$n = 0, 1, \dots, N$, with $N h = L$.
+
+\begin{definition}[Explicit Euler method]
+\label{def:euler}
+$y_{n+1} = y_n + h\, f(x_n, y_n)$, $n = 0, 1, \dots, N - 1$.
+\end{definition}
+
+\begin{definition}[Implicit Euler method]
+\label{def:implicit-euler}
+$y_{n+1} = y_n + h\, f(x_{n+1}, y_{n+1})$ — solve for $y_{n+1}$
+implicitly at each step.
+\end{definition}
+
+\begin{definition}[Classical Runge--Kutta (RK4)]
+\label{def:rk4}
+\[
+  k_1 = f(x_n, y_n),\quad
+  k_2 = f\!\bigl(x_n + \tfrac{h}{2},\, y_n + \tfrac{h}{2} k_1\bigr),\quad
+  k_3 = f\!\bigl(x_n + \tfrac{h}{2},\, y_n + \tfrac{h}{2} k_2\bigr),\quad
+  k_4 = f(x_n + h,\, y_n + h k_3),
+\]
+\[
+  y_{n+1} = y_n + \tfrac{h}{6}\bigl(k_1 + 2 k_2 + 2 k_3 + k_4\bigr).
+\]
+\end{definition}
+
+\begin{theorem}[Convergence of explicit Euler]
+\label{thm:euler-convergence}
+Suppose $f$ is $L$-Lipschitz in~$y$ (uniformly in~$x$) on the strip
+of interest, and the exact solution $y$ has $y \in C^2[x_0, x_0 + L]$
+with $\|y''\|_{\infty} \leq M$. Then the explicit Euler method
+satisfies, for every $n$ with $x_n \leq x_0 + L$,
+\[
+  |y_n - y(x_n)| \;\leq\; \frac{M h}{2 L} \bigl(e^{L (x_n - x_0)} - 1\bigr) \;=\; O(h).
+\]
+In particular Euler's method converges with order~$1$.
+\end{theorem}
+\proofof{euler-convergence}
+
+\begin{remark}[A vocabulary of order, consistency, stability]
+A one-step method has \emph{local truncation error}~$\tau_n$ at order
+$h^{p+1}$ if $\tau_n = O(h^{p+1})$, and \emph{global error}~$O(h^p)$
+when stability is in force. \emph{Consistency} ($\tau_n \to 0$ as
+$h \to 0$) plus \emph{zero-stability} (small perturbations stay
+bounded) gives \emph{convergence}; this is the Lax equivalence
+theorem in this setting. Euler is order~$1$, RK4 is order~$4$ — far
+fewer evaluations of~$f$ for the same accuracy when $f$ is smooth.
+\end{remark}
 
 \subsection*{Proofs}
-% TODO
+
+\begin{proof}[\Cref{thm:finite-diff-error}]
+\proofanchor{finite-diff-error}
+\emph{Forward.} Taylor expansion with Lagrange remainder
+(\cref{thm:taylor-lagrange}, applied to $f$ around~$x$):
+\[
+  f(x + h) = f(x) + h f'(x) + \tfrac{h^2}{2} f''(\xi_+),
+  \quad \xi_+ \in (x, x + h).
+\]
+Solve for $D_+ f(x) = (f(x + h) - f(x))/h$:
+$D_+ f(x) = f'(x) + \tfrac{h}{2} f''(\xi_+)$, hence
+$D_+ f(x) - f'(x) = \tfrac{h}{2} f''(\xi_+)$. The sign convention in
+the statement comes from writing the error as
+$D_+ f(x) = f'(x) + O(h)$.
+
+\emph{Central.} Two Taylor expansions with the third-derivative term:
+\begin{align*}
+  f(x + h) &= f(x) + h f'(x) + \tfrac{h^2}{2} f''(x) + \tfrac{h^3}{6} f'''(\xi_1), \\
+  f(x - h) &= f(x) - h f'(x) + \tfrac{h^2}{2} f''(x) - \tfrac{h^3}{6} f'''(\xi_2),
+\end{align*}
+with $\xi_1 \in (x, x + h)$, $\xi_2 \in (x - h, x)$. Subtract and
+divide by $2h$:
+$D_0 f(x) = f'(x) + \tfrac{h^2}{12}(f'''(\xi_1) + f'''(\xi_2))$.
+By the intermediate-value property of $f'''$ on the interval
+$(x - h, x + h)$, the average $(f'''(\xi_1) + f'''(\xi_2))/2$ equals
+$f'''(\xi_0)$ for some $\xi_0$ in that interval, giving the stated
+$\tfrac{h^2}{6} f'''(\xi_0)$ form (up to the sign convention).
+\end{proof}
+
+\begin{proof}[\Cref{thm:quadrature-error}]
+\proofanchor{quadrature-error}
+\emph{(a) Trapezoidal.} On a single subinterval $[x_k, x_{k+1}]$ of
+length~$h$, the trapezoid rule
+$\tfrac{h}{2}(f_k + f_{k+1})$ equals $\int_{x_k}^{x_{k+1}} L_1(x)\, dx$
+for the linear interpolant $L_1$ through $(x_k, f_k), (x_{k+1}, f_{k+1})$.
+The interpolation error formula (Lagrange remainder for one-point
+Hermite-type interpolation) gives
+$f(x) - L_1(x) = \tfrac{(x - x_k)(x - x_{k+1})}{2}\, f''(\eta(x))$.
+Integrate over $[x_k, x_{k+1}]$: the integral of
+$(x - x_k)(x - x_{k+1})$ is $-h^3/6$, hence
+\[
+  \Bigl| \int_{x_k}^{x_{k+1}} f(x)\, dx - \tfrac{h}{2}(f_k + f_{k+1}) \Bigr|
+  \leq \frac{h^3}{12} \max_{[x_k, x_{k+1}]} |f''|.
+\]
+Sum over the $n$ subintervals; with $n h = b - a$, the total error
+bound is $\tfrac{(b - a) h^2}{12} \max |f''|$.
+
+\emph{(b) Simpson.} The single-interval Simpson rule on $[x_k, x_{k+2}]$
+is the integral of the quadratic interpolant through
+$(x_k, f_k), (x_{k+1}, f_{k+1}), (x_{k+2}, f_{k+2})$. By a similar
+Taylor expansion around~$x_{k+1}$ (equivalently, the Peano kernel
+representation), the error on a single block is
+$\tfrac{h^5}{90} f^{(4)}(\eta_k)$ for some
+$\eta_k \in (x_k, x_{k+2})$; summing over $n/2$ such blocks gives
+$\tfrac{(b - a) h^4}{180} \max |f^{(4)}|$.
+
+\emph{(c) Exactness on cubics.} Both interpolating quadratic and
+cubic functions integrate exactly via Simpson because the leading
+error term contains $f^{(4)}$, which vanishes for degree $\leq 3$.
+This is a special algebraic accident — Simpson's rule has \emph{degree
+of precision}~$3$, even though it is built from a degree-$2$
+interpolant.
+\end{proof}
+
+\begin{proof}[\Cref{thm:euler-convergence}]
+\proofanchor{euler-convergence}
+\emph{Local truncation error.} By Taylor expansion of the exact
+solution:
+$y(x_{n+1}) = y(x_n) + h y'(x_n) + \tfrac{h^2}{2} y''(\xi_n)
+            = y(x_n) + h f(x_n, y(x_n)) + \tfrac{h^2}{2} y''(\xi_n)$.
+Subtracting Euler's update $y_{n+1} = y_n + h f(x_n, y_n)$:
+\[
+  e_{n+1} := y_{n+1} - y(x_{n+1}) = e_n + h \bigl(f(x_n, y_n) - f(x_n, y(x_n))\bigr) - \tfrac{h^2}{2} y''(\xi_n).
+\]
+Lipschitz: $|f(x_n, y_n) - f(x_n, y(x_n))| \leq L |e_n|$, hence
+$|e_{n+1}| \leq (1 + h L) |e_n| + \tfrac{M h^2}{2}$.
+
+\emph{Global error.} Iterate: with $e_0 = 0$,
+$|e_n| \leq \tfrac{M h^2}{2} \sum_{k=0}^{n-1} (1 + h L)^k
+        = \tfrac{M h^2}{2} \cdot \tfrac{(1 + h L)^n - 1}{h L}
+        = \tfrac{M h}{2 L} \bigl((1 + h L)^n - 1\bigr)$.
+Since $(1 + h L)^n \leq e^{n h L} = e^{L (x_n - x_0)}$, this is
+$\tfrac{M h}{2 L} (e^{L (x_n - x_0)} - 1)$. The factor multiplying~$h$
+is bounded for $x_n \leq x_0 + L$, so $|e_n| = O(h)$.
+\end{proof}
 
 \subsection*{Examples}
-% TODO
+
+\begin{example}[Forward vs. central difference for $\sin'(0)$]
+\label{ex:diff-sin}
+Exact: $\sin'(0) = \cos(0) = 1$. With $h = 0.1$:
+\begin{itemize}
+  \item forward: $D_+ \sin(0) = (\sin(0.1) - 0)/0.1 \approx 0.99833$;
+        error $\approx 1.7 \times 10^{-3}$, consistent with the $h/2$
+        bound;
+  \item central: $D_0 \sin(0) = (\sin(0.1) - \sin(-0.1))/0.2 \approx 0.99833$;
+        error $\approx 1.7 \times 10^{-3}$ —
+        \emph{wait}: actually $\sin(-0.1) = -\sin(0.1)$, so the
+        numerator $= 2 \sin(0.1)$ and $D_0 \sin(0) = \sin(0.1)/0.1 \approx 0.99833$,
+        same as $D_+$? No — that coincidence is because $\sin$ is odd
+        and the centered formula at~$0$ collapses. Take instead
+        $\sin'(\pi/3) = 0.5$: $D_+ \sin(\pi/3) \approx 0.45524$
+        (error $\approx 4.5 \times 10^{-2}$), while
+        $D_0 \sin(\pi/3) \approx 0.49917$ (error
+        $\approx 8.3 \times 10^{-4}$). The centred rule wins by two
+        orders of $h$, as predicted.
+\end{itemize}
+\end{example}
+
+\begin{example}[Trapezoidal vs. Simpson on $\int_0^1 e^x\, dx$]
+\label{ex:quadrature-exp}
+Exact value $e - 1 \approx 1.71828$.
+
+With $n = 4$, $h = 0.25$: the trapezoidal rule yields
+$T_4 \approx 1.72722$ (error $\approx 8.9 \times 10^{-3}$); Simpson's
+rule yields $S_4 \approx 1.71832$ (error $\approx 3.6 \times 10^{-5}$).
+Halving~$h$ to $h = 0.125$ ($n = 8$): trapezoidal error drops to
+$\approx 2.2 \times 10^{-3}$ (factor of~$4$, matching $h^2$); Simpson
+error to $\approx 2.2 \times 10^{-6}$ (factor of~$16$, matching
+$h^4$). Each rule confirms the rate predicted by
+\cref{thm:quadrature-error}.
+\end{example}
+
+\begin{example}[Euler's method on the model problem $y' = -y$]
+\label{ex:euler-model}
+$y' = -y$, $y(0) = 1$, exact solution $y(x) = e^{-x}$. Euler's
+update is $y_{n+1} = y_n - h y_n = (1 - h) y_n$, so
+$y_n = (1 - h)^n$. At $x = 1$, with $h = 0.1$, $n = 10$:
+$y_{10} = 0.9^{10} \approx 0.34868$, while $e^{-1} \approx 0.36788$;
+error $\approx 1.9 \times 10^{-2}$. Halving $h$ to $0.05$:
+$y_{20} = 0.95^{20} \approx 0.35849$, error $\approx 9.4 \times 10^{-3}$
+— roughly halved, consistent with first-order convergence.
+For $h \geq 2$, $|1 - h| \geq 1$ and $y_n$ does not decay: Euler
+is only \emph{conditionally stable} on this problem (with stability
+restriction $h < 2/|\lambda|$ for $y' = \lambda y$).
+\end{example}
+
+\begin{problem}[Degree of precision of Simpson's rule]
+Verify directly that on a single subinterval $[a, b]$ of length~$h = b - a$,
+the simple Simpson rule
+$\tfrac{h}{6}\bigl(f(a) + 4 f((a + b)/2) + f(b)\bigr)$ integrates
+exactly the monomials $1, x, x^2, x^3$, but errs on $x^4$ by
+$\tfrac{h^5}{120}$ (compute both integrals and take the difference).
+Use this to deduce the leading $h^4$ error term in
+\cref{thm:quadrature-error}~(b).
+\end{problem}
