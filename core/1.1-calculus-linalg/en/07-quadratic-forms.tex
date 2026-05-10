@@ -49,6 +49,25 @@ For any fixed basis of~$V$, the map sending~$B$ to its matrix is a
 bijection between bilinear forms on~$V$ and matrices in
 $\F^{n \times n}$. Symmetric forms correspond to symmetric matrices.
 \end{theorem}
+\begin{proof}
+\emph{Injectivity.} A bilinear form is determined by its values on
+basis pairs: for $\vect{u} = \sum x_i \vect{e}_i$ and
+$\vect{v} = \sum y_j \vect{e}_j$, bilinearity gives
+$B(\vect{u}, \vect{v}) = \sum_{i, j} x_i y_j\, B(\vect{e}_i, \vect{e}_j)
+= \sum_{i, j} x_i y_j\, a_{ij}$
+(\cref{def:matrix-bilinear}). Two forms with the same matrix therefore
+agree everywhere.
+
+\emph{Surjectivity.} For any $\mat{A} = (a_{ij}) \in \F^{n \times n}$,
+the formula
+$B(\vect{u}, \vect{v}) := \sum_{i, j} a_{ij}\, x_i y_j$
+defines a bilinear form on $V$, and the values
+$B(\vect{e}_i, \vect{e}_j) = a_{ij}$ show that its matrix is~$\mat{A}$.
+
+Symmetry of $B$ amounts to
+$a_{ij} = B(\vect{e}_i, \vect{e}_j) = B(\vect{e}_j, \vect{e}_i) = a_{ji}$,
+i.e.\ to symmetry of $\mat{A}$.
+\end{proof}
 
 \begin{theorem}[Change of basis: congruence]
 \label{thm:bilinear-change-of-basis}
