@@ -264,6 +264,7 @@ visibly toward $(1, 1)$.
 \end{example}
 
 \begin{problem}[Cache-aware blocking]
+\label{prob:cache-blocking}
 Suppose the cache holds $M$ floating-point values and matrices $A$, $B$,
 $C$ are stored in row-major order. Show that the naive triple-loop
 matrix multiplication of two $n \times n$ matrices incurs
@@ -272,3 +273,23 @@ show that block multiplication with block size $b = \Theta(\sqrt{M})$
 incurs only $\Theta(n^3 / \sqrt{M})$ misses, achieving the
 Hong--Kung lower bound for matrix multiplication.
 \end{problem}
+
+\begin{proof}[Solution]
+\emph{Naive.} The inner loop $C_{ij} \mathrel{+}= A_{ik} B_{kj}$
+accesses $B_{kj}$ along a column, so successive $k$-iterations stride
+by $n$ entries. When $n^2 > M$, no two consecutive $k$-accesses share
+a cache line, so each access is a miss. The triple loop performs
+$n^3$ such accesses, giving $\Theta(n^3)$ misses.
+
+\emph{Blocked.} Partition each matrix into $b \times b$ blocks. To
+form the block $C_{IJ} = \sum_K A_{IK} B_{KJ}$, iterate $K$ and for
+each triple $(I, K, J)$ multiply the three blocks with the naive
+algorithm. Choose $b = \Theta(\sqrt{M})$ so $3 b^2 \le M$: the three
+blocks $A_{IK}, B_{KJ}, C_{IJ}$ all fit in cache simultaneously.
+Loading each is $b^2 / B_{\text{line}} = \Theta(b^2)$ misses (treating
+the cache-line size as $\Theta(1)$ for the analysis); once loaded,
+the block multiplication itself does no further misses. The number of
+block multiplications is $(n / b)^3$, so total misses are
+$(n / b)^3 \cdot \Theta(b^2) = \Theta(n^3 / b) = \Theta(n^3 / \sqrt{M})$,
+matching the Hong--Kung bound.
+\end{proof}

@@ -275,6 +275,7 @@ restriction $h < 2/|\lambda|$ for $y' = \lambda y$).
 \end{example}
 
 \begin{problem}[Degree of precision of Simpson's rule]
+\label{prob:simpson-precision}
 Verify directly that on a single subinterval $[a, b]$ of length~$h = b - a$,
 the simple Simpson rule
 $\tfrac{h}{6}\bigl(f(a) + 4 f((a + b)/2) + f(b)\bigr)$ integrates
@@ -283,3 +284,29 @@ $\tfrac{h^5}{120}$ (compute both integrals and take the difference).
 Use this to deduce the leading $h^4$ error term in
 \cref{thm:quadrature-error}~(b).
 \end{problem}
+
+\begin{proof}[Solution]
+By translation invariance, take $a = 0$, $b = h$, midpoint $m = h/2$.
+Denote $S(f) = (h/6)\bigl(f(0) + 4 f(h/2) + f(h)\bigr)$ and
+$I(f) = \int_0^h f$.
+\begin{itemize}
+  \item $f = 1$: $I = h$, $S = (h/6)(1 + 4 + 1) = h$.
+  \item $f = x$: $I = h^2/2$, $S = (h/6)(0 + 2 h + h) = h^2/2$.
+  \item $f = x^2$: $I = h^3/3$, $S = (h/6)(0 + h^2 + h^2) = h^3/3$.
+  \item $f = x^3$: $I = h^4/4$, $S = (h/6)(0 + h^3/2 + h^3) = h^4/4$.
+  \item $f = x^4$: $I = h^5/5$, $S = (h/6)(0 + h^4/4 + h^4) = 5 h^5/24$.
+        $S - I = 5 h^5/24 - h^5/5 = h^5/120$.
+\end{itemize}
+Thus the error vanishes for polynomials of degree $\le 3$ and has the
+form $S(f) - I(f) = \tfrac{h^5}{120} \cdot \tfrac{f^{(4)}(\eta)}{4!} + \dots
+= \tfrac{h^5}{2880} f^{(4)}(\eta) + O(h^6)$ on a generic $C^4$ block of
+width~$h$.
+
+In the chapter's composite formula a block has width $2 h$ (with $h$ =
+subinterval length); applying the simple-Simpson constant
+$\tfrac{(2h)^5}{2880} = \tfrac{h^5}{90}$ to each of $n / 2$ blocks gives
+the per-block error $\tfrac{h^5}{90} f^{(4)}(\eta_k)$, and summing over
+$n h = b - a$ yields
+$|S_n(f) - I(f)| \le \tfrac{(b - a) h^4}{180} \max |f^{(4)}|$, which is
+the bound in \cref{thm:quadrature-error}~(b).
+\end{proof}

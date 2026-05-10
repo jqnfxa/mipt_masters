@@ -263,6 +263,7 @@ $\leq A[j]$ и наименьшим из элементов $> A[j]$. Значи
 \end{example}
 
 \begin{problem}[Иерархия типичных скоростей роста]
+\label{prob:growth-hierarchy}
 Расположите перечисленные функции по возрастанию асимптотической
 скорости (от самой медленной к самой быстрой), группируя
 $\Theta$-эквивалентные:
@@ -272,3 +273,29 @@ $n^{\log_2 3}$, $2^n$, $n!$. Для каждого строгого нераве
 $\lim_{n \to \infty} f(n)/g(n)$ через правило Лопиталя или формулу
 Стирлинга.
 \end{problem}
+
+\begin{proof}[Решение]
+На каждом шаге проверяется $f = o(g)$ между соседними функциями в
+порядке
+\[
+  1 \prec \log\log n \prec \log n \prec \sqrt n \prec n \prec n \log n
+    \prec n^{\log_2 3} \prec n^2 \prec 2^n \prec n!.
+\]
+\begin{itemize}
+  \item $1 = o(\log\log n)$: $\log\log n \to \infty$.
+  \item $\log\log n = o(\log n)$: подстановка $m = \log n$ даёт
+        отношение $\log m / m \to 0$.
+  \item $\log n = o(\sqrt n)$: по
+        \cref{prop:big-o-rules}~(д) имеем
+        $\log^k n = o(n^\varepsilon)$ при любом $\varepsilon > 0$.
+  \item $\sqrt n = o(n)$, $n = o(n \log n)$: отношения $1/\sqrt n$,
+        $1/\log n \to 0$.
+  \item $n \log n = o(n^{\log_2 3})$: $\log_2 3 - 1 \approx 0{,}585 > 0$,
+        и \cref{prop:big-o-rules}~(д) даёт
+        $\log n = o(n^{\log_2 3 - 1})$.
+  \item $n^{\log_2 3} = o(n^2)$: $\log_2 3 < 2$.
+  \item $n^2 = o(2^n)$: по правилу Лопиталя дважды $n^2 / 2^n \to 0$.
+  \item $2^n = o(n!)$: по формуле Стирлинга $n! \sim \sqrt{2\pi n}\,(n/e)^n$,
+        поэтому $2^n / n! \le (2 e / n)^n \to 0$.
+\end{itemize}
+\end{proof}

@@ -260,6 +260,7 @@ permutation of the original, which is the postcondition.
 \end{example}
 
 \begin{problem}[Hierarchy of common growth rates]
+\label{prob:growth-hierarchy}
 Order the following functions by asymptotic growth (slowest to
 fastest), with $\Theta$-equivalent functions grouped:
 $1$, $\log\log n$, $\log n$, $\sqrt{n}$, $n$, $n \log n$, $n^2$,
@@ -267,3 +268,28 @@ $n^{\log_2 3}$, $2^n$, $n!$. Justify each strict inequality using
 \cref{prop:big-o-rules} or by computing
 $\lim_{n \to \infty} f(n)/g(n)$ via L'Hôpital or Stirling.
 \end{problem}
+
+\begin{proof}[Solution]
+Each step verifies $f = o(g)$ between consecutive entries, in the
+order
+\[
+  1 \prec \log\log n \prec \log n \prec \sqrt n \prec n \prec n \log n
+    \prec n^{\log_2 3} \prec n^2 \prec 2^n \prec n!.
+\]
+\begin{itemize}
+  \item $1 = o(\log\log n)$: $\log\log n \to \infty$.
+  \item $\log\log n = o(\log n)$: substitute $m = \log n$; ratio
+        $\log m / m \to 0$.
+  \item $\log n = o(\sqrt n)$: \cref{prop:big-o-rules}~(e) gives
+        $\log^k n = o(n^\varepsilon)$ for every $\varepsilon > 0$.
+  \item $\sqrt n = o(n)$, $n = o(n \log n)$: ratios $1/\sqrt n$,
+        $1/\log n \to 0$.
+  \item $n \log n = o(n^{\log_2 3})$: $\log_2 3 - 1 \approx 0.585 > 0$
+        and \cref{prop:big-o-rules}~(e) yields
+        $\log n = o(n^{\log_2 3 - 1})$.
+  \item $n^{\log_2 3} = o(n^2)$: $\log_2 3 < 2$.
+  \item $n^2 = o(2^n)$: by L'Hôpital twice, $n^2 / 2^n \to 0$.
+  \item $2^n = o(n!)$: Stirling gives $n! \sim \sqrt{2\pi n}\,(n/e)^n$,
+        so $2^n / n! \le (2 e / n)^n \to 0$.
+\end{itemize}
+\end{proof}

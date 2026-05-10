@@ -271,6 +271,7 @@ $\Theta(nm)$ in the worst case for the naive algorithm.
 \end{example}
 
 \begin{problem}[Cost of repeated string concatenation]
+\label{prob:concat-cost}
 Suppose strings are immutable: each concatenation produces a fresh
 copy whose contents come from copying both operands character by
 character. Let $f(n)$ be the worst-case time to build a string of
@@ -280,3 +281,20 @@ $f(n) = \Theta(n^2)$. Then explain how a doubling-buffer
 implementation reduces the amortised cost per append to~$\Theta(1)$
 and the total cost to~$\Theta(n)$.
 \end{problem}
+
+\begin{proof}[Solution]
+\emph{Immutable case.} Step $k \to k + 1$ produces a length-$(k+1)$
+string by copying both operands, costing $\Theta(k + 1)$
+(\cref{prop:string-ops-cost}~(c)). Summing,
+$f(n) = \sum_{k=0}^{n-1} \Theta(k + 1) = \Theta(n^2)$.
+
+\emph{Doubling buffer.} Maintain a mutable buffer of capacity~$c$
+holding the current length~$\ell$. An append writes one character at
+position $\ell$ in $\Theta(1)$ when $\ell < c$; if $\ell = c$,
+allocate a buffer of capacity $2c$, copy the existing $\ell$
+characters, free the old buffer, and then append. Starting from
+$c_0 = 1$, the resize at sizes $1, 2, 4, \dots, 2^{\lfloor \log_2 n \rfloor}$
+copies a geometric total of $\le 2 n$ characters; combined with the
+$n$ direct writes, total cost is $\Theta(n)$, hence $\Theta(1)$
+amortised per append.
+\end{proof}

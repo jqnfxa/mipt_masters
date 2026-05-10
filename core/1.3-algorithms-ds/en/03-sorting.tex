@@ -258,6 +258,7 @@ $n = 4$.
 \end{example}
 
 \begin{problem}[Beating the lower bound when not comparison-based]
+\label{prob:radix-sort}
 Show that \emph{radix sort} sorts $n$ integers in $\{0, 1, \dots, U\}$
 in time $\Theta\bigl(n \log_b U\bigr)$ using a stable bucket sort with
 base~$b$ on each digit. In particular, when
@@ -265,3 +266,23 @@ $U = O(n^c)$ for a constant $c$ and $b = n$, the running time becomes
 $\Theta(n)$ — beating the $\Omega(n \log n)$ lower bound. Explain
 why this does not contradict \cref{thm:comparison-lb}.
 \end{problem}
+
+\begin{proof}[Solution]
+Each integer has $d = \lceil \log_b(U + 1) \rceil = \Theta(\log_b U)$
+digits in base~$b$. One pass of stable bucket sort on a single digit
+runs in $\Theta(n + b)$ time (write each input into its bucket;
+concatenate the $b$ buckets in order). Iterating from the
+least-significant to the most-significant digit gives total time
+$\Theta(d (n + b)) = \Theta((n + b) \log_b U)$.
+
+Choosing $b = n$ and $U = O(n^c)$: $\log_b U = c$ is constant, so the
+running time is $\Theta(n)$.
+
+This does not contradict \cref{thm:comparison-lb} because radix sort
+is \emph{not} comparison-based: it dispatches each item by reading
+its digits directly. Each digit read extracts $\log_2 b$ bits of
+information about the item, more than the single bit produced by a
+binary comparison. The lower bound $\Omega(n \log n)$ applies only
+to algorithms that interact with the input through the comparators
+$<, \le, =$.
+\end{proof}
