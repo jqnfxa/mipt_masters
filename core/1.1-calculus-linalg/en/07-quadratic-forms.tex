@@ -8,10 +8,346 @@ Bilinear forms and their matrices. Transformation of the matrix of a bilinear fo
 \end{ticket}
 
 \subsection*{Theory}
-% TODO
+
+We continue to work over a fixed field~$\F$. From
+\cref{def:char-poly,thm:rank-row-col} onwards we have used the
+transpose-and-product machinery freely; we now apply it to bilinear
+forms. Whenever the polarization identity is invoked we additionally
+assume $\operatorname{char} \F \neq 2$ (so that division by~$2$ makes
+sense); the reduction theorems then specialize to $\F = \R$ for the
+definiteness discussion at the end.
+
+\begin{definition}
+\label{def:bilinear-form}
+A \emph{bilinear form} on a vector space~$V$ over~$\F$ is a map
+$B \colon V \times V \to \F$ that is linear in each argument:
+\[
+  B(\alpha \vect{u} + \beta \vect{u}', \vect{v}) = \alpha B(\vect{u}, \vect{v}) + \beta B(\vect{u}', \vect{v}),
+  \quad
+  B(\vect{u}, \alpha \vect{v} + \beta \vect{v}') = \alpha B(\vect{u}, \vect{v}) + \beta B(\vect{u}, \vect{v}').
+\]
+$B$ is \emph{symmetric} if $B(\vect{u}, \vect{v}) = B(\vect{v}, \vect{u})$
+for all $\vect{u}, \vect{v}$.
+\end{definition}
+
+\begin{definition}
+\label{def:matrix-bilinear}
+Let $\{\vect{e}_1, \dots, \vect{e}_n\}$ be a basis of~$V$. The
+\emph{matrix of~$B$ in this basis} is
+$\mat{A} = (a_{ij}) \in \F^{n \times n}$ with $a_{ij} = B(\vect{e}_i, \vect{e}_j)$.
+For vectors $\vect{u} = \sum x_i \vect{e}_i$ and $\vect{v} = \sum y_j \vect{e}_j$,
+\[
+  B(\vect{u}, \vect{v}) \;=\; \sum_{i, j} a_{ij}\, x_i\, y_j \;=\; \vect{x}\T \mat{A}\, \vect{y}.
+\]
+The form $B$ is symmetric iff its matrix~$\mat{A}$ is symmetric
+($\mat{A}\T = \mat{A}$).
+\end{definition}
+
+\begin{theorem}[Bijection forms $\leftrightarrow$ matrices in a fixed basis]
+\label{thm:bilinear-matrix-bijection}
+For any fixed basis of~$V$, the map sending~$B$ to its matrix is a
+bijection between bilinear forms on~$V$ and matrices in
+$\F^{n \times n}$. Symmetric forms correspond to symmetric matrices.
+\end{theorem}
+
+\begin{theorem}[Change of basis: congruence]
+\label{thm:bilinear-change-of-basis}
+If $\mat{A}$ is the matrix of~$B$ in the basis $\{\vect{e}_j\}$ and
+$\mat{T}$ is the transition matrix to a new basis $\{\vect{e}'_j\}$
+(\cref{def:transition-matrix}), then the matrix of~$B$ in the new
+basis is
+\[
+  \mat{A}' \;=\; \mat{T}\T \mat{A}\, \mat{T}.
+\]
+Two matrices related in this way are called \emph{congruent}.
+\end{theorem}
+\proofof{bilinear-change-of-basis}
+
+\begin{remark}
+Compare \cref{thm:operator-change-of-basis} for the operator: there
+$\mat{A}' = \mat{T}^{-1} \mat{A}\, \mat{T}$ (similarity). Operators
+and bilinear forms are different objects --- operators send vectors to
+vectors, forms send pairs of vectors to scalars --- so they
+transform differently under a change of basis. In particular, $\det \mat{A}$
+is a similarity invariant of an operator but is only a
+\emph{congruence-class} invariant up to a square factor for a bilinear
+form (since $\det \mat{A}' = (\det \mat{T})^2 \det \mat{A}$).
+\end{remark}
+
+\begin{definition}
+\label{def:quadratic-form}
+A \emph{quadratic form} on~$V$ is a map $Q \colon V \to \F$ for which
+there exists a symmetric bilinear form~$B$ with
+$Q(\vect{v}) = B(\vect{v}, \vect{v})$ for every~$\vect{v}$. We say~$Q$
+is \emph{associated} to~$B$. The \emph{matrix of~$Q$} (in a fixed
+basis) is the symmetric matrix of its associated~$B$.
+\end{definition}
+
+\begin{theorem}[Polarization]
+\label{thm:polarization}
+Assume $\operatorname{char} \F \neq 2$. The map
+$B \mapsto Q(\vect{v}) := B(\vect{v}, \vect{v})$ is a bijection between
+symmetric bilinear forms on~$V$ and quadratic forms on~$V$. The inverse
+is the \emph{polarization identity}
+\[
+  B(\vect{u}, \vect{v}) \;=\; \tfrac{1}{2}\bigl(Q(\vect{u} + \vect{v}) - Q(\vect{u}) - Q(\vect{v})\bigr).
+\]
+\end{theorem}
+\proofof{polarization}
+
+We now specialize to $\F = \R$ for the definiteness discussion.
+
+\begin{definition}
+\label{def:definite}
+A quadratic form $Q$ on a real vector space~$V$ is
+\begin{itemize}
+  \item \emph{positive definite} if $Q(\vect{v}) > 0$ for every $\vect{v} \neq \vect{0}$;
+  \item \emph{negative definite} if $Q(\vect{v}) < 0$ for every $\vect{v} \neq \vect{0}$;
+  \item \emph{positive semidefinite} if $Q(\vect{v}) \ge 0$ for every $\vect{v}$;
+  \item \emph{indefinite} if $Q$ takes both strictly positive and strictly negative values.
+\end{itemize}
+\end{definition}
+
+\begin{theorem}[Lagrange's method]
+\label{thm:lagrange-method}
+Let $Q$ be a quadratic form on $V$ over~$\F$ with $\operatorname{char} \F \neq 2$.
+There exists a basis $\{\vect{e}'_j\}$ of~$V$ in which~$Q$ has the
+\emph{canonical form}
+\[
+  Q(\vect{v}) \;=\; \sum_{i=1}^{n} \lambda_i\, y_i^{2},
+\]
+where $\vect{y}$ is the coordinate column of~$\vect{v}$ in
+$\{\vect{e}'_j\}$ and the scalars $\lambda_i \in \F$ are determined by
+the algorithm in the proof. Equivalently, the matrix of~$Q$ becomes
+diagonal $\diag(\lambda_1, \dots, \lambda_n)$ in the new basis.
+\end{theorem}
+\proofof{lagrange-method}
+
+\begin{theorem}[Sylvester's law of inertia]
+\label{thm:inertia}
+For $\F = \R$, the number $n_+$ of positive coefficients and the number
+$n_-$ of negative coefficients in any canonical form of a real
+quadratic form~$Q$ depend only on~$Q$, not on the basis used. The pair
+$(n_+, n_-)$ is the \emph{signature} of~$Q$, and $n_+ + n_- = \rank Q$
+(the rank of the matrix of~$Q$).
+\end{theorem}
+
+\begin{theorem}[Sylvester's criterion]
+\label{thm:sylvester}
+Let $\mat{A} \in \R^{n \times n}$ be the matrix of a quadratic
+form~$Q$ in some basis, and let
+\[
+  M_k \;=\; \det \begin{pmatrix} a_{11} & \cdots & a_{1k} \\ \vdots & & \vdots \\ a_{k1} & \cdots & a_{kk} \end{pmatrix},
+  \qquad k = 1, 2, \dots, n,
+\]
+be the \emph{leading principal minors} of~$\mat{A}$. Then
+\begin{enumerate}[label=(\alph*)]
+  \item $Q$ is positive definite iff $M_k > 0$ for all $k = 1, \dots, n$;
+  \item $Q$ is negative definite iff $(-1)^k M_k > 0$ for all $k = 1, \dots, n$
+        (i.e.\ the $M_k$ alternate in sign starting with $M_1 < 0$).
+\end{enumerate}
+\end{theorem}
+\proofof{sylvester}
+
+\begin{remark}
+The full proof of Sylvester's law of inertia
+(\cref{thm:inertia}) goes through the spectral theorem
+(\cref{thm:spectral}): the matrix of a real symmetric form is
+diagonalizable in an orthonormal basis with real eigenvalues
+$\mu_1, \dots, \mu_n$, and $(n_+, n_-)$ is the count of positive
+versus negative~$\mu_i$, which are basis-independent invariants of the
+matrix. See \cite{Beklemishev2025} for the careful argument and for
+the closely related Jacobi method (an alternative to Lagrange that
+gives the diagonal entries as ratios of leading principal minors).
+\end{remark}
 
 \subsection*{Proofs}
-% TODO
+
+\begin{proof}[\Cref{thm:bilinear-change-of-basis}]
+\proofanchor{bilinear-change-of-basis}
+By \cref{thm:change-of-basis}, the coordinate columns transform via
+$\vect{x} = \mat{T} \vect{x}'$ and $\vect{y} = \mat{T} \vect{y}'$.
+Substituting into the matrix expression for $B$,
+\[
+  B(\vect{u}, \vect{v}) \;=\; \vect{x}\T \mat{A}\, \vect{y}
+  \;=\; (\mat{T}\vect{x}')\T \mat{A}\, (\mat{T}\vect{y}')
+  \;=\; {\vect{x}'}\T (\mat{T}\T \mat{A}\, \mat{T})\, {\vect{y}'}.
+\]
+By \cref{thm:bilinear-matrix-bijection}, the matrix of~$B$ in the new
+basis is uniquely determined by this coordinate expression, so it
+equals $\mat{T}\T \mat{A}\, \mat{T}$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:polarization}]
+\proofanchor{polarization}
+\emph{Surjectivity.} For any symmetric~$B$, the function
+$Q(\vect{v}) = B(\vect{v}, \vect{v})$ is by definition a quadratic
+form.
+
+\emph{Injectivity (and the formula).} Suppose $B$ is symmetric and
+$Q(\vect{v}) = B(\vect{v}, \vect{v})$. Expand $Q(\vect{u} + \vect{v})$:
+\[
+  Q(\vect{u} + \vect{v}) = B(\vect{u} + \vect{v}, \vect{u} + \vect{v})
+  = B(\vect{u}, \vect{u}) + B(\vect{u}, \vect{v}) + B(\vect{v}, \vect{u}) + B(\vect{v}, \vect{v})
+  = Q(\vect{u}) + 2\,B(\vect{u}, \vect{v}) + Q(\vect{v}),
+\]
+using symmetry of~$B$. Solving for~$B$,
+$B(\vect{u}, \vect{v}) = \tfrac{1}{2}\bigl(Q(\vect{u} + \vect{v}) - Q(\vect{u}) - Q(\vect{v})\bigr)$
+(division by~$2$ uses $\operatorname{char} \F \neq 2$). So $B$ is
+recovered uniquely from~$Q$, hence the map $B \mapsto Q$ is injective.
+The formula on the right also defines a symmetric bilinear form for
+any quadratic~$Q$ (a routine check), giving the inverse map.
+\end{proof}
+
+\begin{proof}[\Cref{thm:lagrange-method}]
+\proofanchor{lagrange-method}
+Induction on~$n = \dim V$. The case $n = 0$ is trivial; the case
+$n = 1$ is also trivial ($Q = a_{11} y_1^2$ in the only basis, possibly
+with $a_{11} = 0$).
+
+\emph{Step.} Write $Q = \sum a_{ij} x_i x_j$ in the current basis,
+with $a_{ij} = a_{ji}$. There are three cases.
+
+\emph{Case 1: some $a_{ii} \neq 0$.} After a permutation of basis
+vectors we may assume $a_{11} \neq 0$. Complete the square in $x_1$:
+\[
+  Q = a_{11}\,x_1^2 + 2 \sum_{j \ge 2} a_{1j}\, x_1 x_j + \sum_{i, j \ge 2} a_{ij} x_i x_j
+   = a_{11}\Bigl(x_1 + \sum_{j \ge 2} \tfrac{a_{1j}}{a_{11}}\,x_j\Bigr)^2 + Q'(x_2, \dots, x_n),
+\]
+where $Q'$ is a quadratic form in the $n - 1$ variables
+$x_2, \dots, x_n$. Setting
+\[
+  y_1 = x_1 + \sum_{j \ge 2} \tfrac{a_{1j}}{a_{11}}\, x_j, \qquad y_j = x_j \text{ for } j \ge 2,
+\]
+defines a non-degenerate (upper-triangular with units on the diagonal)
+linear change of variables. By the inductive hypothesis applied to~$Q'$,
+there is a further change among $y_2, \dots, y_n$ bringing $Q'$ to
+diagonal form $\sum_{j \ge 2} \mu_j z_j^2$. Together this yields the
+canonical form $a_{11} y_1^2 + \sum_{j \ge 2} \mu_j z_j^2$.
+
+\emph{Case 2: all $a_{ii} = 0$ but some $a_{ij} \neq 0$ ($i \neq j$).}
+After a permutation we may assume $a_{12} \neq 0$. The substitution
+\[
+  x_1 = y_1 + y_2, \qquad x_2 = y_1 - y_2, \qquad x_k = y_k \text{ for } k \ge 3
+\]
+is a non-degenerate change of variables (its inverse exists because
+$\operatorname{char} \F \neq 2$). The off-diagonal contribution
+\[
+  2 a_{12} x_1 x_2 = 2 a_{12} (y_1 + y_2)(y_1 - y_2) = 2 a_{12} (y_1^2 - y_2^2)
+\]
+introduces the diagonal entries $2 a_{12}$ and $-2 a_{12}$ for $y_1$
+and $y_2$, putting us back in Case~1.
+
+\emph{Case 3: all $a_{ij} = 0$.} Then $Q$ is identically zero and is
+already in canonical form (with all $\lambda_i = 0$).
+
+The recursion terminates after at most $n$ rounds, producing the
+required canonical form.
+\end{proof}
+
+\begin{proof}[\Cref{thm:sylvester}]
+\proofanchor{sylvester}
+Both parts follow once we prove (a); part~(b) is then obtained by
+applying~(a) to~$-Q$, whose matrix is~$-\mat{A}$ with leading
+principal minors $(-1)^k M_k$.
+
+\emph{(a)~$\Rightarrow$.} Suppose $Q$ is positive definite. For each
+$k = 1, \dots, n$ the restriction of~$Q$ to
+$U_k = \spn(\vect{e}_1, \dots, \vect{e}_k) \subseteq V$ is also
+positive definite (the restriction satisfies the same defining
+inequality on a subset of nonzero vectors). The matrix of $Q|_{U_k}$
+in the basis $\{\vect{e}_1, \dots, \vect{e}_k\}$ is precisely the
+upper-left $k \times k$ block of~$\mat{A}$, whose determinant is~$M_k$.
+By \cref{thm:spectral} the symmetric matrix of $Q|_{U_k}$ has all
+real eigenvalues, and positive definiteness forces every eigenvalue to
+be positive (an eigenvector~$\vect{v}$ with eigenvalue~$\mu$ satisfies
+$Q|_{U_k}(\vect{v}) = \mu \|\vect{v}\|^2$). Hence $M_k$, the product of
+these eigenvalues, is positive.
+
+\emph{(a)~$\Leftarrow$.} Suppose all $M_k > 0$. We show by induction
+on~$k$ that the Lagrange algorithm in the basis
+$\{\vect{e}_1, \dots, \vect{e}_n\}$ never falls into Case~2 or Case~3
+of the proof of \cref{thm:lagrange-method}, and that it produces
+strictly positive diagonal entries
+$\mu_k = M_k / M_{k-1} > 0$ (with $M_0 := 1$). Thus~$Q$ is congruent
+to $\diag(\mu_1, \dots, \mu_n) = \diag(M_1, M_2/M_1, \dots, M_n/M_{n-1})$,
+all of whose diagonal entries are positive, and~$Q$ is positive
+definite by \cref{thm:inertia}. The verification that the Lagrange
+elimination produces those ratios is the standard step-by-step
+calculation
+(see \cite{Beklemishev2025} for the detailed bookkeeping).
+\end{proof}
 
 \subsection*{Examples}
-% TODO
+
+\begin{example}[Lagrange reduction of a positive-definite form]
+\label{ex:lagrange-pos-def}
+Reduce $Q(x, y) = 2x^2 + 4xy + 5y^2$ to canonical form. Complete the
+square in~$x$:
+\[
+  Q = 2\bigl(x^2 + 2xy\bigr) + 5y^2 = 2(x + y)^2 - 2y^2 + 5y^2 = 2(x + y)^2 + 3y^2.
+\]
+Setting $u = x + y$, $v = y$ gives $Q = 2u^2 + 3v^2$, with both
+coefficients positive. Hence~$Q$ is positive definite.
+
+Sylvester check: the matrix is $\mat{A} = \begin{pmatrix} 2 & 2 \\ 2 & 5 \end{pmatrix}$,
+with $M_1 = 2 > 0$ and $M_2 = 10 - 4 = 6 > 0$, in agreement with
+\cref{thm:sylvester}\,(a).
+\end{example}
+
+\begin{example}[Indefinite form]
+\label{ex:lagrange-indefinite}
+For $Q(x, y) = x^2 - 4xy + 3y^2$, complete the square in~$x$:
+\[
+  Q = (x - 2y)^2 - 4y^2 + 3y^2 = (x - 2y)^2 - y^2.
+\]
+Setting $u = x - 2y$, $v = y$ gives $Q = u^2 - v^2$, signature
+$(n_+, n_-) = (1, 1)$. So $Q$ is \emph{indefinite}: $Q(1, 0) = 1 > 0$
+and $Q(2, 1) = -1 < 0$.
+
+Sylvester: $M_1 = 1 > 0$ and $M_2 = 3 - 4 = -1 < 0$, so neither (a)
+nor (b) of \cref{thm:sylvester} holds, confirming~$Q$ is neither
+positive nor negative definite.
+\end{example}
+
+\begin{example}[All-off-diagonal: $Q = 2xy$]
+\label{ex:lagrange-off-diagonal}
+For $Q(x, y) = 2xy$ all diagonal entries vanish, so we are in Case~2
+of the Lagrange algorithm. Substitute $x = u + v$, $y = u - v$:
+\[
+  Q = 2(u + v)(u - v) = 2u^2 - 2v^2.
+\]
+Signature $(1, 1)$, indefinite. Sylvester: $M_1 = 0$, $M_2 = -1$.
+The criterion in \cref{thm:sylvester}\,(a) fails at the very first
+step ($M_1 \not> 0$), and (b) fails at $M_1$ too ($M_1 \not< 0$); the
+form is not definite of either sign.
+\end{example}
+
+\begin{problem}
+\label{prob:sylvester-parameter}
+For which values of $\lambda \in \R$ is the form
+\[
+  Q(x, y, z) \;=\; x^2 + 2y^2 + \lambda z^2 + 2xy + 2yz
+\]
+positive definite?
+\end{problem}
+
+\begin{proof}[Solution]
+The matrix of~$Q$ is
+\[
+  \mat{A} = \begin{pmatrix} 1 & 1 & 0 \\ 1 & 2 & 1 \\ 0 & 1 & \lambda \end{pmatrix},
+\]
+with leading principal minors $M_1 = 1$, $M_2 = 2 - 1 = 1$, and (by
+expansion along the third row)
+\[
+  M_3 = \det \mat{A} = 0 - 1 \cdot (1 \cdot 1 - 0 \cdot 1) + \lambda \cdot (1 \cdot 2 - 1 \cdot 1)
+      = -1 + \lambda = \lambda - 1.
+\]
+By \cref{thm:sylvester}\,(a), $Q$ is positive definite iff
+$M_1, M_2, M_3 > 0$, i.e.\ iff $\lambda > 1$.
+
+A sanity check at $\lambda = 1$ (the boundary): $M_3 = 0$ means
+$\mat{A}$ is singular, so $Q$ is positive semidefinite but not
+positive definite ($Q$ vanishes on a nonzero kernel direction; one
+can verify $Q(1, -1, 1) = 1 + 2 + 1 - 2 - 2 = 0$).
+\end{proof}
