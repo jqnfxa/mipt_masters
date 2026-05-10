@@ -8,10 +8,250 @@ Empirical distribution function. Statistical hypothesis, sample, critical region
 \end{ticket}
 
 \subsection*{Theory}
-% TODO
+
+\emph{Goodness-of-fit} testing asks whether observed data are
+plausibly drawn from a specified distribution. Two classical
+non-parametric tests cover the bulk of textbook practice: the
+Kolmogorov–Smirnov test (continuous $F$) and the Pearson
+chi-squared test (discrete or binned data). Both rely on the
+asymptotic distribution of an explicit test statistic; the
+relevant percentiles are tabulated.
+
+\medskip
+\noindent\textbf{Empirical distribution function.}
+
+\begin{definition}[Empirical CDF]
+\label{def:empirical-cdf}
+Let $X_1, \dots, X_n$ be a sample (i.i.d.\ observations) with
+common CDF~$F$. The \emph{empirical distribution function} is
+\[
+  F_n(x) \;=\; \frac{1}{n} \sum_{i=1}^{n} \mathbf{1}_{\{X_i \leq x\}}, \qquad x \in \R.
+\]
+For each fixed~$x$, $n F_n(x) \sim \mathrm{Bin}(n, F(x))$, so
+$\E F_n(x) = F(x)$ and $\Var F_n(x) = F(x)(1 - F(x))/n$.
+\end{definition}
+
+\begin{theorem}[Glivenko–Cantelli]
+\label{thm:glivenko-cantelli}
+For an i.i.d.\ sample with continuous CDF~$F$,
+\[
+  \sup_{x \in \R}\, |F_n(x) - F(x)| \;\xrightarrow{\text{a.s.}}\; 0 \qquad (n \to \infty).
+\]
+\end{theorem}
+\proofof{glivenko-cantelli}
+
+The Glivenko–Cantelli theorem says the empirical CDF is a uniformly
+consistent estimator of the population CDF. Goodness-of-fit
+statistics quantify the rate of this convergence.
+
+\medskip
+\noindent\textbf{Kolmogorov–Smirnov test.}
+
+\begin{theorem}[Kolmogorov]
+\label{thm:kolmogorov-test}
+Under the simple null $H_0: X_i \sim F$ with $F$ continuous, the
+statistic
+\[
+  D_n \;=\; \sqrt n\, \sup_{x \in \R} |F_n(x) - F(x)|
+\]
+converges in distribution to the \emph{Kolmogorov distribution}
+$K$, with CDF
+\[
+  Q(t) = 1 - 2 \sum_{k=1}^{\infty} (-1)^{k-1} e^{-2 k^2 t^2}, \qquad t \geq 0.
+\]
+The distribution is \emph{distribution-free}: it does not depend
+on~$F$.
+\end{theorem}
+\proofof{kolmogorov-test}
+
+The \emph{Kolmogorov goodness-of-fit test} of size~$\alpha$ rejects
+$H_0$ when $D_n$ exceeds the upper-$\alpha$ quantile $K_\alpha$ of
+$K$ (tabulated; e.g., $K_{0.05} \approx 1.358$). The test is
+asymptotically distribution-free, and consistent against any
+fixed continuous alternative $G \neq F$ (since $\sup |F_n - F|$
+converges to $\sup |G - F| > 0$ on the alternative, while
+$\sup |F_n - F|$ vanishes under the null).
+
+\medskip
+\noindent\textbf{Pearson chi-squared test.}
+
+\begin{definition}[Multinomial setup]
+\label{def:multinomial}
+Partition the support of~$F$ into $r$ disjoint cells $A_1, \dots, A_r$.
+Set $p_k = \Prob_F(X \in A_k)$ (the cell probabilities under~$F$)
+and $n_k = \#\{i : X_i \in A_k\}$ (observed counts). Then
+$(n_1, \dots, n_r) \sim \mathrm{Multinomial}(n; p_1, \dots, p_r)$
+with $\E n_k = n p_k$ and $\Var n_k = n p_k (1 - p_k)$.
+\end{definition}
+
+\begin{theorem}[Pearson chi-squared]
+\label{thm:pearson-chi2}
+Under $H_0 : (n_1, \dots, n_r) \sim \mathrm{Multinomial}(n; p_1, \dots, p_r)$
+with all $p_k > 0$, the statistic
+\[
+  \chi^2 \;=\; \sum_{k=1}^{r} \frac{(n_k - n p_k)^2}{n p_k}
+\]
+converges in distribution to $\chi^2_{r - 1}$ as $n \to \infty$.
+\end{theorem}
+\proofof{pearson-chi2}
+
+The \emph{Pearson chi-squared test} of size~$\alpha$ rejects when
+$\chi^2 > \chi^2_{\alpha, r - 1}$ (upper-$\alpha$ quantile of
+$\chi^2_{r-1}$, tabulated). The standard rule of thumb requires
+$n p_k \geq 5$ in every cell for the asymptotic to be reliable.
+
+\begin{theorem}[Cramér: parametric chi-squared]
+\label{thm:cramer-parametric}
+Suppose $H_0$ is composite, of the form
+``$F \in \{F_\theta : \theta \in \Theta\}$'' with $\Theta \subseteq \R^s$,
+and that $\hat \theta$ is an efficient (e.g., maximum-likelihood)
+estimator of~$\theta$. Define cell probabilities by
+$\hat p_k = \Prob_{\hat \theta}(X \in A_k)$. Then under $H_0$,
+\[
+  \chi^2 \;=\; \sum_{k=1}^{r} \frac{(n_k - n \hat p_k)^2}{n \hat p_k} \;\xrightarrow{d}\; \chi^2_{r - 1 - s}.
+\]
+\end{theorem}
+\proofof{cramer-parametric}
+
+\begin{remark}
+Each parameter \emph{estimated from the same data} subtracts one
+degree of freedom from the limiting $\chi^2$. The same recipe
+underlies tests of independence in contingency tables ($r$ rows,
+$c$ columns; $df = (r - 1)(c - 1)$). For the non-asymptotic version
+of the chi-squared test for finite samples, see
+\cite[Ch.~VIII]{Sevastyanov1982}; statistical tables for $K$,
+$\chi^2$, $t$, and $F$ are conventionally indexed by the upper-tail
+probability.
+\end{remark}
 
 \subsection*{Proofs}
-% TODO
+
+\begin{proof}[\Cref{thm:glivenko-cantelli}, sketch]
+\proofanchor{glivenko-cantelli}
+Apply the SLLN (\cref{thm:slln}) at each fixed~$x$ to the indicator
+variables $\mathbf{1}_{\{X_i \leq x\}}$, which are i.i.d.\ with
+mean~$F(x)$: the result is $F_n(x) \to F(x)$ a.s. The reinforcement
+to a uniform statement uses (i) the monotonicity of both $F_n$
+and $F$, and (ii) the right-continuity / left-limits of $F$. Pick a
+finite grid
+$-\infty = x_0 < x_1 < \cdots < x_m = +\infty$ such that
+$F(x_j) - F(x_{j-1}^{-}) < \varepsilon$ for every~$j$ (possible by
+choosing $x_j$ at quantiles of~$F$). On the almost-sure event where
+$F_n(x_j) \to F(x_j)$ and $F_n(x_j^-) \to F(x_j^-)$ for every~$j$
+(intersection of countably many full-probability events, hence
+itself a.s.), monotonicity sandwiches $F_n(x)$ between
+$F_n(x_{j-1})$ and $F_n(x_j)$ for $x \in [x_{j-1}, x_j)$ and
+$\sup |F_n - F|$ on the whole real line is $\leq \varepsilon$
+plus a vanishing pointwise discrepancy. Send $\varepsilon \to 0$.
+Full proof: \cite[Ch.~II, \S~10]{Shiryaev1989}.
+\end{proof}
+
+\begin{proof}[\Cref{thm:kolmogorov-test}, idea]
+\proofanchor{kolmogorov-test}
+The probability integral transform $U_i = F(X_i) \sim \mathrm{Uniform}(0, 1)$
+makes the statistic distribution-free: $D_n$ for sample $(X_i)$
+under $F$ equals $D_n$ for sample $(U_i)$ under the uniform CDF.
+The empirical process $\sqrt n (F_n - F)$ converges (by Donsker's
+theorem, the functional CLT) to the \emph{Brownian bridge}
+$B^0_t$ on $[0, 1]$, whose supremum has the distribution
+$\sup_t |B^0_t| \sim K$. Computing
+$\Prob(\sup_t |B^0_t| \leq t)$ yields the alternating-sum formula
+$Q(t)$ via the reflection principle for Brownian motion. See
+\cite[Ch.~XII]{Shiryaev1989} for the functional-CLT route or the
+elementary combinatorial derivation in
+\cite[Ch.~IX]{Sevastyanov1982}.
+\end{proof}
+
+\begin{proof}[\Cref{thm:pearson-chi2}, sketch]
+\proofanchor{pearson-chi2}
+Define normalised counts $Y_k = (n_k - n p_k)/\sqrt{n p_k}$. By the
+multivariate CLT applied to the multinomial vector, the random
+vector $(Y_1, \dots, Y_r)$ converges in distribution to a centred
+Gaussian $\vect{Y} \sim \mathcal{N}(\vect{0}, \mat{I}_r - \sqrt{\vect{p}}\,\sqrt{\vect{p}}\T)$,
+where $\sqrt{\vect{p}} = (\sqrt{p_1}, \dots, \sqrt{p_r})\T$ is a
+unit vector ($\|\sqrt{\vect{p}}\|^2 = \sum p_k = 1$). The covariance
+matrix $\mat{I} - \sqrt{\vect{p}}\,\sqrt{\vect{p}}\T$ is the
+projector onto the $(r - 1)$-dimensional hyperplane
+$\sqrt{\vect{p}}^{\perp}$, a symmetric idempotent of rank $r - 1$.
+
+The Pearson statistic $\chi^2 = \sum Y_k^2 = \|\vect{Y}\|^2$
+therefore converges in distribution to the squared norm of a
+standard Gaussian on $\sqrt{\vect{p}}^{\perp}$, which is
+$\chi^2_{r - 1}$ by \cref{def:chi-squared} (any orthonormal basis
+of the $(r-1)$-dimensional subspace gives $r - 1$ independent
+standard normals).
+\end{proof}
+
+\begin{proof}[\Cref{thm:cramer-parametric}, idea]
+\proofanchor{cramer-parametric}
+Replace true cell probabilities $p_k(\theta_0)$ by their estimates
+$p_k(\hat \theta)$ in the Pearson statistic. Taylor-expanding around
+the true~$\theta_0$ shows that $\sqrt n (\hat \theta - \theta_0)$
+absorbs $s$ degrees of freedom from the limiting Gaussian: the
+limit lives in the orthogonal complement of both
+$\sqrt{\vect{p}(\theta_0)}$ \emph{and} an $s$-dimensional subspace
+spanned by the normalised gradients
+$\sqrt{n}\, \partial p_k/\partial \theta_j$ at $\theta_0$. The
+resulting limiting distribution is $\chi^2_{r - 1 - s}$. The
+condition that $\hat \theta$ is efficient (asymptotically variance
+matching the Cramér–Rao bound) is what makes the projection-
+geometry argument work; otherwise the limit is a non-central or
+weighted-$\chi^2$ rather than a clean $\chi^2$. Detailed
+derivation in \cite[Ch.~IX, \S~3]{Sevastyanov1982}.
+\end{proof}
 
 \subsection*{Examples}
-% TODO
+
+\begin{example}[Fair die, Pearson chi-squared]
+\label{ex:fair-die-test}
+A die is rolled $n = 600$ times with observed counts
+$(n_1, \dots, n_6) = (95, 105, 100, 110, 90, 100)$. Test
+$H_0$: the die is fair, i.e.\ $p_k = 1/6$ for all~$k$. Expected
+counts under $H_0$: $n p_k = 100$. The Pearson statistic equals
+\[
+  \chi^2 = \frac{(-5)^2 + 5^2 + 0 + 10^2 + (-10)^2 + 0}{100} = \frac{25 + 25 + 100 + 100}{100} = 2.5.
+\]
+Compare to the upper-$0.05$ quantile of $\chi^2_5$,
+$\chi^2_{0.05, 5} \approx 11.07$. Since $2.5 \ll 11.07$, do not
+reject $H_0$ at level $0.05$ — the data are consistent with a
+fair die.
+\end{example}
+
+\begin{example}[Kolmogorov–Smirnov against the uniform]
+\label{ex:ks-uniform}
+A sample of size $n = 100$ is hypothesised to come from
+$\mathrm{Uniform}(0, 1)$, and the largest discrepancy
+$\sup_x |F_n(x) - x|$ is observed to be $0.10$. Then
+$D_n = \sqrt{100} \cdot 0.10 = 1.00$. The upper-$0.05$ quantile of
+the Kolmogorov distribution is $K_{0.05} \approx 1.358$. Since
+$1.00 < 1.358$, the test does not reject the null at level $0.05$.
+A larger discrepancy of $0.15$ would yield $D_n = 1.5 > 1.358$ and
+lead to rejection.
+\end{example}
+
+\begin{problem}
+\label{prob:cramer-parametric-poisson}
+A factory produces light bulbs whose lifetimes are tested in
+batches of $n = 200$. Lifetime is hypothesised to follow
+$\mathrm{Exp}(\lambda)$ with $\lambda$ unknown. The lifetimes are
+binned into $r = 5$ intervals; the observed counts and (estimated)
+expected counts are
+$\vect{n} = (52, 38, 39, 35, 36)$ and
+$n \hat{\vect{p}} = (50, 42, 35, 31, 42)$, where
+$\hat \lambda$ is the MLE. Compute the chi-squared statistic and
+state the testing decision at level $\alpha = 0.05$.
+\end{problem}
+
+\begin{proof}[Solution]
+Substitute into the Pearson statistic:
+\[
+  \chi^2 = \frac{4}{50} + \frac{16}{42} + \frac{16}{35} + \frac{16}{31} + \frac{36}{42} \approx 0.080 + 0.381 + 0.457 + 0.516 + 0.857 \approx 2.29.
+\]
+By Cramér's theorem (\cref{thm:cramer-parametric}), since $s = 1$
+parameter ($\lambda$) was estimated from the same data, the
+limiting distribution is $\chi^2_{r - 1 - s} = \chi^2_3$. The
+upper-$0.05$ quantile of $\chi^2_3$ is~$7.815$. Since
+$2.29 \ll 7.815$, we do not reject the exponential null at
+level~$0.05$ — the data are consistent with an exponential lifetime
+model.
+\end{proof}
