@@ -245,7 +245,9 @@ $L = \begin{pmatrix} 1 & 0 & 0 \\ 2 & 1 & 0 \\ 4 & 3 & 1 \end{pmatrix}$,
 $U = \begin{pmatrix} 2 & 1 & 1 \\ 0 & 1 & 1 \\ 0 & 0 & 2 \end{pmatrix}$.
 A direct check verifies $LU = A$. Solving $A \vect{x} = (4, 11, 29)\T$
 by forward then back substitution yields
-$\vect{y} = (4, 3, 4)\T$ and $\vect{x} = (1, 1, 2)\T$.
+$\vect{y} = (4, 3, 4)\T$ and $\vect{x} = (\tfrac{1}{2}, 1, 2)\T$;
+the back-substitution last step is $2 x_1 + x_2 + x_3 = 4$ with
+$x_2 = 1, x_3 = 2$, giving $x_1 = \tfrac{1}{2}$.
 \end{example}
 
 \begin{example}[Jacobi on a small SPD system]

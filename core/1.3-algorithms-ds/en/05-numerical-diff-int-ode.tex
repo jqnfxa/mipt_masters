@@ -34,10 +34,10 @@ For sufficiently smooth $f$ and step $h > 0$:
 \begin{theorem}[Truncation error of finite differences]
 \label{thm:finite-diff-error}
 If $f \in C^2$ in a neighbourhood of~$x$, then
-$D_+ f(x) - f'(x) = -\tfrac{h}{2} f''(\xi_+)$ for some $\xi_+ \in (x, x + h)$;
+$D_+ f(x) - f'(x) = \tfrac{h}{2} f''(\xi_+)$ for some $\xi_+ \in (x, x + h)$;
 hence $D_+ f(x) = f'(x) + O(h)$. The same first-order error holds for
 $D_-$. If $f \in C^3$, then
-$D_0 f(x) - f'(x) = -\tfrac{h^2}{6} f'''(\xi_0)$ for some
+$D_0 f(x) - f'(x) = \tfrac{h^2}{6} f'''(\xi_0)$ for some
 $\xi_0 \in (x - h, x + h)$; hence $D_0 f(x) = f'(x) + O(h^2)$.
 \end{theorem}
 \proofof{finite-diff-error}
@@ -150,9 +150,7 @@ fewer evaluations of~$f$ for the same accuracy when $f$ is smooth.
 \]
 Solve for $D_+ f(x) = (f(x + h) - f(x))/h$:
 $D_+ f(x) = f'(x) + \tfrac{h}{2} f''(\xi_+)$, hence
-$D_+ f(x) - f'(x) = \tfrac{h}{2} f''(\xi_+)$. The sign convention in
-the statement comes from writing the error as
-$D_+ f(x) = f'(x) + O(h)$.
+$D_+ f(x) - f'(x) = \tfrac{h}{2} f''(\xi_+)$, of order~$h$.
 
 \emph{Central.} Two Taylor expansions with the third-derivative term:
 \begin{align*}
@@ -164,8 +162,8 @@ divide by $2h$:
 $D_0 f(x) = f'(x) + \tfrac{h^2}{12}(f'''(\xi_1) + f'''(\xi_2))$.
 By the intermediate-value property of $f'''$ on the interval
 $(x - h, x + h)$, the average $(f'''(\xi_1) + f'''(\xi_2))/2$ equals
-$f'''(\xi_0)$ for some $\xi_0$ in that interval, giving the stated
-$\tfrac{h^2}{6} f'''(\xi_0)$ form (up to the sign convention).
+$f'''(\xi_0)$ for some $\xi_0$ in that interval, giving
+$D_0 f(x) - f'(x) = \tfrac{h^2}{6} f'''(\xi_0)$.
 \end{proof}
 
 \begin{proof}[\Cref{thm:quadrature-error}]

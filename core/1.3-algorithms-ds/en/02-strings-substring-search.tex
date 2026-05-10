@@ -265,9 +265,9 @@ With the pattern $P = \texttt{ababaca}$ above and text
 $T = \texttt{abababacaba}$, the KMP scan visits each character of~$T$
 exactly once, never re-comparing characters that the prefix function
 has already certified. The reader can check the algorithm reports an
-occurrence at shift~$3$ (so $P$ aligns to $T[4..10]$) and no others;
-the total number of character comparisons is~$11 + 7 = 18$, versus
-$33$ for the naive algorithm on the same input.
+occurrence at shift~$2$ (so $P$ aligns to $T[3..9]$) and no others;
+the total number of character comparisons is at most~$n + m = 11 + 7 = 18$, versus
+$\Theta(nm)$ in the worst case for the naive algorithm.
 \end{example}
 
 \begin{problem}[Cost of repeated string concatenation]
