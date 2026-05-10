@@ -152,16 +152,32 @@ $\alpha \in (0, 1]$ в точке~$x$, в частности если~$f$ диф
 
 \begin{proof}[\Cref{thm:bessel}]
 \proofanchor{bessel}
-Пусть $T_N$~--- тригонометрический многочлен $S_N(\cdot; f)$. Прямое
-раскрытие с использованием ортогональности даёт
+Пусть $T_N(x) = \tfrac{a_0}{2} + \sum_{n=1}^{N} (a_n \cos(nx) + b_n \sin(nx))$~---
+$N$-я частичная сумма ряда Фурье. Воспользуемся ортогональностью
+тригонометрической системы на $[-\pi, \pi]$:
+$\int_{-\pi}^{\pi} \cos(mx)\cos(nx) = \pi\,\delta_{mn}$ при $m, n \ge 1$,
+$\int_{-\pi}^{\pi} \sin(mx)\sin(nx) = \pi\,\delta_{mn}$ при $m, n \ge 1$,
+$\int_{-\pi}^{\pi} \cos(mx)\sin(nx) = 0$, $\int_{-\pi}^{\pi} 1\,dx = 2\pi$,
+$\int_{-\pi}^{\pi} 1 \cdot \cos(nx)\,dx = \int_{-\pi}^{\pi} 1 \cdot \sin(nx)\,dx = 0$.
+
+Раскрывая $T_N^2$ по этим формулам, выживают только диагональные члены:
 \[
   \frac{1}{\pi} \int_{-\pi}^{\pi} T_N(x)^2\, dx
-  \;=\; \frac{a_0^2}{2} + \sum_{n=1}^{N} (a_n^2 + b_n^2),
+  \;=\; \frac{a_0^2}{4} \cdot \frac{2\pi}{\pi} + \sum_{n=1}^{N}\Bigl(a_n^2 \cdot \frac{\pi}{\pi} + b_n^2 \cdot \frac{\pi}{\pi}\Bigr)
+  \;=\; \frac{a_0^2}{2} + \sum_{n=1}^{N}(a_n^2 + b_n^2).
 \]
-а аналогичное вычисление перекрёстного члена показывает, что
-$\tfrac{1}{\pi} \int f \, T_N\, dx$ равен той же величине. Поэтому
+Перекрёстный член по определению коэффициентов:
+$\tfrac{1}{\pi} \int f \cdot \cos(nx) = a_n$, $\tfrac{1}{\pi} \int f \cdot \sin(nx) = b_n$,
+$\tfrac{1}{\pi} \int f \cdot 1 = a_0$, поэтому
+\[
+  \frac{1}{\pi} \int_{-\pi}^{\pi} f \cdot T_N\, dx
+  \;=\; \frac{a_0}{2} \cdot a_0 + \sum_{n=1}^{N}(a_n \cdot a_n + b_n \cdot b_n)
+  \;=\; \frac{a_0^2}{2} + \sum_{n=1}^{N}(a_n^2 + b_n^2).
+\]
+Тогда
 \[
   0 \;\le\; \frac{1}{\pi} \int_{-\pi}^{\pi} (f - T_N)^2\, dx
+  \;=\; \frac{1}{\pi} \int_{-\pi}^{\pi} f^2\, dx - 2 \cdot \tfrac{1}{\pi} \int f T_N\, dx + \tfrac{1}{\pi} \int T_N^2\, dx
   \;=\; \frac{1}{\pi} \int_{-\pi}^{\pi} f^2\, dx
   - \Bigl(\frac{a_0^2}{2} + \sum_{n=1}^{N} (a_n^2 + b_n^2)\Bigr).
 \]

@@ -37,6 +37,13 @@ $\vect{a} \in \R^n$ for which
 \]
 The vector $\vect{a}$ is then unique; it is called the \emph{gradient}
 of~$f$ at~$\vect{x}$ and denoted $\nabla f(\vect{x})$.
+
+\emph{Uniqueness.} If $\vect{a}$ and $\vect{a}'$ both satisfy the
+expansion above, subtracting yields
+$\langle \vect{a} - \vect{a}', \vect{h} \rangle = o(\|\vect{h}\|)$.
+Setting $\vect{h} = t\,(\vect{a} - \vect{a}')$ with $t \to 0^{+}$ and
+dividing by~$t$ gives $\|\vect{a} - \vect{a}'\|^2 = o(1)$, i.e.\
+$\vect{a} = \vect{a}'$.
 \end{definition}
 
 \begin{proposition}[Differentiable $\Rightarrow$ partials and gradient]

@@ -244,9 +244,11 @@ unique critical point $\vect{x}_* = (1, -2)$. The Hessian is the
 constant matrix $H_f = \begin{pmatrix} 2 & 0 \\ 0 & 2 \end{pmatrix} = 2 \mat{I}$,
 which is positive definite (Sylvester: $M_1 = 2 > 0$, $M_2 = 4 > 0$).
 By \cref{thm:sufficient-uncon}\,(a), $\vect{x}_*$ is a strict local
-minimum, with $f(\vect{x}_*) = 1 + 4 - 2 - 8 = -5$. Since $f$ is a
-positive-definite quadratic, this local minimum is also the unique
-global minimum.
+minimum, with $f(\vect{x}_*) = 1 + 4 - 2 - 8 = -5$. The constant
+Hessian $2\mat{I}$ makes~$f$ strictly convex everywhere on~$\R^2$
+(Taylor's formula with Lagrange remainder reproduces the quadratic
+term exactly, with no $o$-correction), so the unique critical point is
+the global minimum.
 \end{example}
 
 \begin{example}[Lagrange on a circle]

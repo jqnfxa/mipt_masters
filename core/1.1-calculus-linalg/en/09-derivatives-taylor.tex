@@ -82,6 +82,7 @@ and $f'(x) < 0$ for $x > x_0$ near~$x_0$, then~$f$ has a strict
 local maximum at~$x_0$. The mirror sign pattern gives a strict local
 minimum.
 \end{theorem}
+\proofof{first-deriv-test}
 
 \begin{theorem}[Taylor's formula with Peano remainder]
 \label{thm:taylor-peano}
@@ -171,6 +172,28 @@ differentiable on $(a, b)$. Rolle gives some $c \in (a, b)$ with
 $g'(c) = 0$, i.e.\ $f'(c) = (f(b) - f(a))/(b - a)$.
 \end{proof}
 
+\begin{proof}[\Cref{thm:first-deriv-test}]
+\proofanchor{first-deriv-test}
+Consider the case $f' > 0$ on the left of~$x_0$ and $f' < 0$ on the
+right (the mirror sign pattern is handled symmetrically). Choose
+$\delta > 0$ such that~$f$ is continuous on $(x_0 - \delta, x_0 + \delta)$,
+differentiable on $(x_0 - \delta, x_0) \cup (x_0, x_0 + \delta)$, with
+$f' > 0$ on the left and $f' < 0$ on the right.
+
+For $x \in (x_0 - \delta, x_0)$, apply the mean-value theorem
+(\cref{thm:lagrange-mvt}) to~$f$ on $[x, x_0]$: there is
+$\xi \in (x, x_0)$ with $f(x_0) - f(x) = f'(\xi)(x_0 - x)$. Both
+$f'(\xi) > 0$ (since $\xi$ is on the left) and $x_0 - x > 0$, so
+$f(x_0) > f(x)$.
+
+For $x \in (x_0, x_0 + \delta)$, applying the mean-value theorem on
+$[x_0, x]$ gives $\eta \in (x_0, x)$ with $f(x) - f(x_0) = f'(\eta)(x - x_0)$.
+Now $f'(\eta) < 0$ and $x - x_0 > 0$, so $f(x) < f(x_0)$.
+
+In both cases $f(x_0) > f(x)$ for $x \neq x_0$ with $|x - x_0| < \delta$,
+witnessing a strict local maximum.
+\end{proof}
+
 \begin{proof}[\Cref{thm:taylor-peano}]
 \proofanchor{taylor-peano}
 Let $T_n(x) = \sum_{k=0}^{n} \frac{f^{(k)}(x_0)}{k!} (x - x_0)^k$ be
@@ -179,22 +202,36 @@ $r_n(x) = o((x - x_0)^n)$ as $x \to x_0$.
 
 By construction $r_n(x_0) = 0$ and $r_n^{(k)}(x_0) = 0$ for
 $k = 0, 1, \dots, n$ (the $k$-th derivatives of $T_n$ and~$f$
-agree at $x_0$ up to order~$n$). Apply l'Hôpital-style reasoning:
-the ratio
+agree at $x_0$ up to order~$n$).
+
+Apply Cauchy's generalized MVT iteratively. For each~$x$ near~$x_0$
+there exists~$\xi_1$ strictly between $x_0$ and~$x$ with
 \[
   \frac{r_n(x)}{(x - x_0)^n}
+  \;=\; \frac{r_n(x) - r_n(x_0)}{(x - x_0)^n - 0}
+  \;=\; \frac{r_n'(\xi_1)}{n\,(\xi_1 - x_0)^{n-1}}.
 \]
-is of the form $0/0$, and so are the ratios obtained by differentiating
-numerator and denominator $1, 2, \dots, n - 1$ times. After $n - 1$
-differentiations the ratio becomes
+Applying the same theorem to $r_n'$ and $(\,\cdot\, - x_0)^{n-1}$ on
+the interval between $x_0$ and~$\xi_1$, using $r_n'(x_0) = 0$, gives
+$\xi_2$ strictly between $x_0$ and~$\xi_1$ with
 \[
-  \frac{r_n^{(n-1)}(x)}{n!\,(x - x_0)/1} \;=\; \frac{r_n^{(n-1)}(x)}{n!\,(x - x_0)},
+  \frac{r_n'(\xi_1)}{n\,(\xi_1 - x_0)^{n-1}}
+  \;=\; \frac{r_n''(\xi_2)}{n(n-1)\,(\xi_2 - x_0)^{n-2}}.
 \]
-whose limit as $x \to x_0$ is, by the very definition of the
-$n$-th derivative,
-$\frac{1}{n!}\bigl[r_n^{(n-1)}(x) - r_n^{(n-1)}(x_0)\bigr] / (x - x_0) \to r_n^{(n)}(x_0)/n! = 0$.
-Cauchy's MVT chained $n - 1$ times propagates this limit back, giving
-$r_n(x)/(x - x_0)^n \to 0$, that is $r_n(x) = o((x - x_0)^n)$.
+Continuing for $n - 1$ steps yields $\xi_{n-1}$ strictly between
+$x_0$ and~$x$ with
+\[
+  \frac{r_n(x)}{(x - x_0)^n}
+  \;=\; \frac{r_n^{(n-1)}(\xi_{n-1})}{n!\,(\xi_{n-1} - x_0)}.
+\]
+As $x \to x_0$, every $\xi_k \to x_0$, and by the definition of the
+$n$-th derivative (applied to $r_n^{(n-1)}$),
+\[
+  \lim_{\xi \to x_0} \frac{r_n^{(n-1)}(\xi) - r_n^{(n-1)}(x_0)}{n!\,(\xi - x_0)}
+  \;=\; \frac{r_n^{(n)}(x_0)}{n!} \;=\; 0,
+\]
+using $r_n^{(n-1)}(x_0) = 0$ and $r_n^{(n)}(x_0) = 0$.
+Therefore $r_n(x)/(x - x_0)^n \to 0$, i.e.\ $r_n(x) = o((x - x_0)^n)$.
 \end{proof}
 
 \begin{proof}[\Cref{thm:taylor-lagrange}]

@@ -153,17 +153,35 @@ the Fourier series of~$f$ converges absolutely.
 
 \begin{proof}[\Cref{thm:bessel}]
 \proofanchor{bessel}
-Let $T_N$ be the trigonometric polynomial $S_N(\cdot; f)$. Direct
-expansion using orthogonality gives
+Let $T_N(x) = \tfrac{a_0}{2} + \sum_{n=1}^{N} (a_n \cos(nx) + b_n \sin(nx))$
+be the $N$-th partial sum of the Fourier series. Use orthogonality of
+the trigonometric system on $[-\pi, \pi]$:
+$\int_{-\pi}^{\pi} \cos(mx)\cos(nx) = \pi\,\delta_{mn}$ for $m, n \ge 1$,
+$\int_{-\pi}^{\pi} \sin(mx)\sin(nx) = \pi\,\delta_{mn}$ for $m, n \ge 1$,
+$\int_{-\pi}^{\pi} \cos(mx)\sin(nx) = 0$,
+$\int_{-\pi}^{\pi} 1\,dx = 2\pi$, and
+$\int_{-\pi}^{\pi} \cos(nx)\,dx = \int_{-\pi}^{\pi} \sin(nx)\,dx = 0$
+for $n \ge 1$.
+
+Expanding $T_N^2$ with these orthogonality relations leaves only the
+diagonal contributions:
 \[
   \frac{1}{\pi} \int_{-\pi}^{\pi} T_N(x)^2\, dx
-  \;=\; \frac{a_0^2}{2} + \sum_{n=1}^{N} (a_n^2 + b_n^2),
+  \;=\; \frac{a_0^2}{4} \cdot \frac{2\pi}{\pi} + \sum_{n=1}^{N}\Bigl(a_n^2 \cdot \frac{\pi}{\pi} + b_n^2 \cdot \frac{\pi}{\pi}\Bigr)
+  \;=\; \frac{a_0^2}{2} + \sum_{n=1}^{N}(a_n^2 + b_n^2).
 \]
-and a similar expansion of the cross term yields
-$\tfrac{1}{\pi} \int f \, T_N\, dx$ equal to the same quantity.
+For the cross term, the definitions of the Fourier coefficients give
+$\tfrac{1}{\pi} \int f \cos(nx) = a_n$, $\tfrac{1}{\pi} \int f \sin(nx) = b_n$,
+$\tfrac{1}{\pi} \int f \cdot 1 = a_0$, so
+\[
+  \frac{1}{\pi} \int_{-\pi}^{\pi} f \cdot T_N\, dx
+  \;=\; \frac{a_0}{2} \cdot a_0 + \sum_{n=1}^{N}(a_n \cdot a_n + b_n \cdot b_n)
+  \;=\; \frac{a_0^2}{2} + \sum_{n=1}^{N}(a_n^2 + b_n^2).
+\]
 Therefore
 \[
   0 \;\le\; \frac{1}{\pi} \int_{-\pi}^{\pi} (f - T_N)^2\, dx
+  \;=\; \frac{1}{\pi} \int_{-\pi}^{\pi} f^2\, dx - 2 \cdot \tfrac{1}{\pi} \int f T_N\, dx + \tfrac{1}{\pi} \int T_N^2\, dx
   \;=\; \frac{1}{\pi} \int_{-\pi}^{\pi} f^2\, dx
   - \Bigl(\frac{a_0^2}{2} + \sum_{n=1}^{N} (a_n^2 + b_n^2)\Bigr).
 \]
