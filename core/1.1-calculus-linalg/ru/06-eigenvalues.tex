@@ -8,10 +8,432 @@
 \end{ticket}
 
 \subsection*{Теория}
-% TODO
+
+Все векторные пространства в этом разделе по-прежнему конечномерны и
+рассматриваются над полем~$\F$. Пусть $T \colon V \to V$~--- линейный
+оператор (\cref{def:linear-map}), а $I \colon V \to V$~--- тождественный
+оператор.
+
+\begin{definition}
+\label{def:eigenvector-value-space}
+Ненулевой вектор $\vect{v} \in V$ называется \emph{собственным
+вектором} оператора~$T$, если $T\vect{v} = \lambda \vect{v}$ при
+некотором $\lambda \in \F$. Соответствующий скаляр~$\lambda$ называется
+\emph{собственным значением}. Для каждого $\lambda \in \F$
+\emph{собственное подпространство} определяется равенством
+\[
+  V_\lambda \;=\; \ker(T - \lambda I) \;=\; \{\vect{v} \in V : T\vect{v} = \lambda\vect{v}\}.
+\]
+$V_\lambda$~--- подпространство в~$V$, содержащее~$\vect{0}$; его
+ненулевые элементы суть в точности собственные векторы со собственным
+значением~$\lambda$. Скаляр~$\lambda$ есть собственное значение
+оператора~$T$ тогда и только тогда, когда $V_\lambda \neq \{\vect{0}\}$.
+\end{definition}
+
+\begin{definition}
+\label{def:char-poly}
+Для квадратной матрицы $\mat{A} \in \F^{n \times n}$
+\emph{характеристическим многочленом} называется приведённый
+многочлен степени~$n$
+\[
+  p_{\mat{A}}(\lambda) \;=\; \det(\lambda \mat{I}_n - \mat{A}) \;\in\; \F[\lambda].
+\] Подобные матрицы имеют одинаковые
+характеристические многочлены: для произвольной обратимой~$\mat{T}$
+\[
+  \det(\lambda \mat{I} - \mat{T}^{-1}\mat{A}\mat{T})
+  = \det(\mat{T}^{-1}(\lambda \mat{I} - \mat{A})\mat{T})
+  = \det(\lambda \mat{I} - \mat{A}).
+\]
+Поэтому корректно говорить о характеристическом многочлене $p_T(\lambda)$
+самого оператора~$T$, вычисленном в любом базисе.
+\end{definition}
+
+\begin{theorem}[Собственные значения~--- корни характеристического многочлена]
+\label{thm:eigvals-roots}
+Скаляр $\lambda \in \F$ есть собственное значение оператора~$T$ тогда и
+только тогда, когда $p_T(\lambda) = 0$.
+\end{theorem}
+\proofof{eigvals-roots}
+
+\begin{theorem}[Собственные векторы с различными собственными значениями линейно независимы]
+\label{thm:distinct-eig-li}
+Пусть $\vect{v}_1, \dots, \vect{v}_k$~--- собственные векторы
+оператора~$T$, отвечающие попарно различным собственным значениям
+$\lambda_1, \dots, \lambda_k$. Тогда $\vect{v}_1, \dots, \vect{v}_k$
+линейно независимы.
+\end{theorem}
+\proofof{distinct-eig-li}
+
+\begin{corollary}[Собственные подпространства образуют прямую сумму]
+\label{cor:eigspaces-direct-sum}
+Для попарно различных собственных значений $\lambda_1, \dots, \lambda_k$
+оператора~$T$ сумма $V_{\lambda_1} + \dots + V_{\lambda_k}$ прямая, то
+есть $V_{\lambda_1} \oplus \dots \oplus V_{\lambda_k}$.
+\end{corollary}
+
+\begin{definition}
+\label{def:diagonalizable}
+Оператор $T \colon V \to V$ называется \emph{диагонализуемым}, если
+в~$V$ существует базис из собственных векторов~$T$. Эквивалентно,
+матрица~$T$ в таком базисе диагональна, и на её диагонали стоят
+собственные значения.
+\end{definition}
+
+\begin{theorem}[Критерий диагонализуемости]
+\label{thm:diag-criterion}
+Пусть $\lambda_1, \dots, \lambda_k$~--- все различные собственные
+значения оператора~$T$ в~$\F$. Следующие условия равносильны:
+\begin{enumerate}[label=(\alph*)]
+  \item $T$ диагонализуем;
+  \item $V = V_{\lambda_1} \oplus \dots \oplus V_{\lambda_k}$;
+  \item $\dim V = \dim V_{\lambda_1} + \dots + \dim V_{\lambda_k}$.
+\end{enumerate}
+\end{theorem}
+\proofof{diag-criterion}
+
+\begin{corollary}
+\label{cor:distinct-implies-diag}
+Если оператор~$T$ имеет $\dim V$ попарно различных собственных
+значений, то~$T$ диагонализуем.
+\end{corollary}
+
+\medskip
+
+\noindent\textbf{Самосопряжённые операторы в евклидовом пространстве.}
+Перейдём к случаю $\F = \R$ и добавим геометрическую структуру.
+
+\begin{definition}
+\label{def:euclidean-space}
+\emph{Евклидовым пространством} называется конечномерное вещественное
+векторное пространство~$V$, снабжённое \emph{скалярным произведением}
+$\langle \cdot, \cdot \rangle \colon V \times V \to \R$~---
+симметричной билинейной формой, положительно определённой
+($\langle \vect{v}, \vect{v} \rangle > 0$ при $\vect{v} \neq \vect{0}$).
+Связанная норма: $\|\vect{v}\| = \sqrt{\langle \vect{v}, \vect{v} \rangle}$.
+Векторы $\vect{u}, \vect{v}$ называются \emph{ортогональными}, если
+$\langle \vect{u}, \vect{v} \rangle = 0$. Базис $\{\vect{e}_i\}$
+называется \emph{ортонормированным}, если
+$\langle \vect{e}_i, \vect{e}_j \rangle = \delta_{ij}$. Для подпространства
+$W \subseteq V$ \emph{ортогональным дополнением} называется
+$W^{\perp} = \{\vect{v} \in V : \langle \vect{v}, \vect{w} \rangle = 0
+\text{ для всех } \vect{w} \in W\}$, и всегда $V = W \oplus W^{\perp}$.
+\end{definition}
+
+\begin{definition}
+\label{def:self-adjoint}
+Линейный оператор $T \colon V \to V$ в евклидовом пространстве~$V$
+называется \emph{самосопряжённым} (или \emph{симметрическим}), если
+\[
+  \langle T\vect{u}, \vect{v} \rangle \;=\; \langle \vect{u}, T\vect{v} \rangle
+  \quad \text{для всех } \vect{u}, \vect{v} \in V.
+\]
+В любом ортонормированном базисе матрица самосопряжённого оператора
+симметрична ($\mat{A}\T = \mat{A}$); обратно, всякая вещественная
+симметрическая матрица представляет в каждом ортонормированном базисе
+самосопряжённый оператор.
+\end{definition}
+
+\begin{theorem}[Собственные значения самосопряжённого оператора вещественны]
+\label{thm:self-adj-eig-real}
+Все корни характеристического многочлена самосопряжённого оператора в
+евклидовом пространстве вещественны. В частности, всякий
+самосопряжённый оператор имеет хотя бы одно (вещественное) собственное
+значение.
+\end{theorem}
+\proofof{self-adj-eig-real}
+
+\begin{theorem}[Собственные векторы самосопряжённого оператора с различными собственными значениями ортогональны]
+\label{thm:self-adj-orthog}
+Пусть $T$ самосопряжён, $T\vect{v}_1 = \lambda_1 \vect{v}_1$ и
+$T\vect{v}_2 = \lambda_2 \vect{v}_2$, причём $\lambda_1 \neq \lambda_2$.
+Тогда $\langle \vect{v}_1, \vect{v}_2 \rangle = 0$.
+\end{theorem}
+\proofof{self-adj-orthog}
+
+\begin{theorem}[Спектральная теорема для самосопряжённых операторов]
+\label{thm:spectral}
+Для всякого самосопряжённого оператора~$T$ в конечномерном евклидовом
+пространстве~$V$ существует ортонормированный базис из собственных
+векторов. Эквивалентно, для всякой вещественной симметрической
+матрицы~$\mat{A}$ найдутся ортогональная матрица~$\mat{Q}$
+($\mat{Q}\T \mat{Q} = \mat{I}$) и вещественная диагональная
+матрица~$\mat{D}$, для которых $\mat{A} = \mat{Q}\mat{D}\mat{Q}\T$.
+\end{theorem}
+\proofof{spectral}
+
+\begin{remark}
+Углублённое изложение спектральной теоремы (включая комплексный
+эрмитов случай и нормальные операторы), а также жорданова нормальная
+форма, классифицирующая недиагонализуемые операторы, см.\ в
+\cite{Beklemishev2025}.
+\end{remark}
 
 \subsection*{Доказательства}
-% TODO
+
+\begin{proof}[\Cref{thm:eigvals-roots}]
+\proofanchor{eigvals-roots}
+$\lambda$~--- собственное значение тогда и только тогда, когда
+существует $\vect{v} \neq \vect{0}$ с $(T - \lambda I)\vect{v} = \vect{0}$,
+то есть $\ker(T - \lambda I) \neq \{\vect{0}\}$, то есть оператор
+$T - \lambda I$ необратим, то есть $\det(\lambda I - T) = 0$
+(\cref{thm:cofactor-inverse} и тождество
+$\det(\lambda I - T) = (-1)^n \det(T - \lambda I)$, чьи нули совпадают).
+Последнее условие записывается как $p_T(\lambda) = 0$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:distinct-eig-li}]
+\proofanchor{distinct-eig-li}
+Индукция по~$k$. База $k = 1$ очевидна: $\vect{v}_1 \neq \vect{0}$ сам
+по себе линейно независим.
+
+Пусть утверждение верно для $k - 1$ векторов. Предположим, что
+$c_1 \vect{v}_1 + \dots + c_k \vect{v}_k = \vect{0}$. Применим~$T$ к
+обеим частям:
+\[
+  c_1 \lambda_1 \vect{v}_1 + \dots + c_k \lambda_k \vect{v}_k = \vect{0}.
+\]
+Вычтем исходное соотношение, умноженное на $\lambda_k$:
+\[
+  c_1 (\lambda_1 - \lambda_k) \vect{v}_1 + \dots + c_{k-1}(\lambda_{k-1} - \lambda_k) \vect{v}_{k-1} = \vect{0}.
+\]
+По предположению индукции векторы $\vect{v}_1, \dots, \vect{v}_{k-1}$
+линейно независимы, так что каждый $c_i (\lambda_i - \lambda_k) = 0$.
+Поскольку $\lambda_i \neq \lambda_k$ при $i < k$, получаем
+$c_1 = \dots = c_{k-1} = 0$. Возвращаясь к исходному соотношению,
+$c_k \vect{v}_k = \vect{0}$ и $\vect{v}_k \neq \vect{0}$ дают $c_k = 0$.
+
+Тот же приём доказывает \cref{cor:eigspaces-direct-sum}: соотношение
+$\vect{u}_1 + \dots + \vect{u}_k = \vect{0}$ с
+$\vect{u}_i \in V_{\lambda_i}$ влечёт $\vect{u}_i = \vect{0}$ для всех
+$i$ (заменим~$\vect{v}_i$ на~$\vect{u}_i$ в рассуждении выше).
+\end{proof}
+
+\begin{proof}[\Cref{thm:diag-criterion}]
+\proofanchor{diag-criterion}
+$(a) \Leftrightarrow (b)$. Если~$T$ диагонализуем, базис из
+собственных векторов разбивается по собственным значениям; векторы
+с собственным значением~$\lambda_i$ лежат в~$V_{\lambda_i}$ и порождают
+его (всякий элемент~$V_{\lambda_i}$ есть линейная комбинация только
+тех базисных собственных векторов, у которых собственное
+значение~$\lambda_i$,~--- по рассуждению о единственности из
+\cref{cor:eigspaces-direct-sum}). Значит, $V = \sum V_{\lambda_i}$, а
+сумма прямая в силу следствия, так что
+$V = \bigoplus V_{\lambda_i}$. Обратно, если $V = \bigoplus V_{\lambda_i}$,
+возьмём в каждом~$V_{\lambda_i}$ по базису; их объединение по
+\cref{thm:direct-sum-equiv}\,(d) есть базис~$V$ и состоит из
+собственных векторов~$T$.
+
+$(b) \Leftrightarrow (c)$. Применяя ту же теорему к линейно независимой
+системе подпространств $\{V_{\lambda_i}\}$ (линейно независимой по
+\cref{cor:eigspaces-direct-sum}), получаем, что размерность прямой
+суммы равна сумме размерностей; она совпадает с $\dim V$ тогда и
+только тогда, когда прямая сумма исчерпывает всё~$V$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:self-adj-eig-real}]
+\proofanchor{self-adj-eig-real}
+Расширим~$V$ до его комплексификации $V_{\C} = V \oplus iV$ с
+эрмитовым скалярным произведением
+$\langle \vect{u}_1 + i\vect{v}_1, \vect{u}_2 + i\vect{v}_2 \rangle_{\C}
+= \bigl(\langle \vect{u}_1, \vect{u}_2 \rangle + \langle \vect{v}_1, \vect{v}_2 \rangle\bigr)
++ i\bigl(\langle \vect{v}_1, \vect{u}_2 \rangle - \langle \vect{u}_1, \vect{v}_2 \rangle\bigr)$.
+Оператор~$T$ продолжается до $\C$-линейного оператора
+$T_{\C} \colon V_{\C} \to V_{\C}$, для которого по-прежнему
+$\langle T_{\C}\vect{x}, \vect{y} \rangle_{\C} = \langle \vect{x}, T_{\C}\vect{y} \rangle_{\C}$.
+Характеристический многочлен $T_\C$ над~$\C$ совпадает с
+характеристическим многочленом~$T$ над~$\R$.
+
+По основной теореме алгебры $p_{T_\C}$ имеет хотя бы один комплексный
+корень~$\lambda$. Возьмём ненулевой $\vect{v} \in V_{\C}$, для которого
+$T_{\C}\vect{v} = \lambda \vect{v}$. Тогда
+\[
+  \lambda \langle \vect{v}, \vect{v} \rangle_{\C}
+  = \langle T_{\C}\vect{v}, \vect{v} \rangle_{\C}
+  = \langle \vect{v}, T_{\C}\vect{v} \rangle_{\C}
+  = \overline{\lambda} \langle \vect{v}, \vect{v} \rangle_{\C}.
+\]
+Так как $\langle \vect{v}, \vect{v} \rangle_{\C} > 0$, получаем
+$\lambda = \overline{\lambda}$, то есть $\lambda \in \R$.
+
+Тем самым каждый корень $p_T$ вещественен; в частности, $p_T$ имеет
+хотя бы один вещественный корень, и у~$T$ существуют (вещественное)
+собственное значение и отвечающий ему ненулевой вещественный
+собственный вектор.
+\end{proof}
+
+\begin{proof}[\Cref{thm:self-adj-orthog}]
+\proofanchor{self-adj-orthog}
+Самосопряжённость даёт
+\[
+  \lambda_1 \langle \vect{v}_1, \vect{v}_2 \rangle
+  = \langle \lambda_1 \vect{v}_1, \vect{v}_2 \rangle
+  = \langle T\vect{v}_1, \vect{v}_2 \rangle
+  = \langle \vect{v}_1, T\vect{v}_2 \rangle
+  = \langle \vect{v}_1, \lambda_2 \vect{v}_2 \rangle
+  = \lambda_2 \langle \vect{v}_1, \vect{v}_2 \rangle.
+\]
+Отсюда $(\lambda_1 - \lambda_2) \langle \vect{v}_1, \vect{v}_2 \rangle = 0$,
+и условие $\lambda_1 \neq \lambda_2$ даёт
+$\langle \vect{v}_1, \vect{v}_2 \rangle = 0$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:spectral}]
+\proofanchor{spectral}
+Индукция по $n = \dim V$.
+
+\emph{База $n = 1$.} Любой ненулевой $\vect{v}_1 \in V$ автоматически
+является собственным ($T\vect{v}_1 = \lambda \vect{v}_1$ для
+единственного $\lambda \in \R$, для которого $T\vect{v}_1 = \lambda \vect{v}_1$);
+нормируем его до $\vect{v}_1 / \|\vect{v}_1\|$.
+
+\emph{Шаг $n - 1 \Rightarrow n$.} По \cref{thm:self-adj-eig-real}
+выберем вещественный собственный вектор $\vect{e}_1$ с собственным
+значением~$\lambda_1$, нормированный условием $\|\vect{e}_1\| = 1$.
+Положим
+$W = \vect{e}_1^{\perp} = \{\vect{w} \in V : \langle \vect{w}, \vect{e}_1 \rangle = 0\}$~---
+подпространство размерности $n - 1$.
+
+\emph{Утверждение:} $T(W) \subseteq W$. Действительно, для
+$\vect{w} \in W$
+\[
+  \langle T\vect{w}, \vect{e}_1 \rangle
+  = \langle \vect{w}, T\vect{e}_1 \rangle
+  = \lambda_1 \langle \vect{w}, \vect{e}_1 \rangle = 0,
+\]
+поэтому $T\vect{w} \in W$.
+
+Сужение $T|_W \colon W \to W$ наследует самосопряжённость от~$T$. По
+предположению индукции в~$W$ существует ортонормированный базис
+$\vect{e}_2, \dots, \vect{e}_n$ из собственных векторов $T|_W$. Вместе
+с $\vect{e}_1$ это~--- ортонормированный базис~$V$ из собственных
+векторов~$T$.
+
+Матричная форма утверждения вытекает отсюда: пусть
+$\vect{e}_1, \dots, \vect{e}_n$~--- ортонормированный собственный базис
+с $T\vect{e}_i = \lambda_i \vect{e}_i$; запишем эти векторы как
+столбцы~$\mat{Q}$. Тогда $\mat{Q}\T \mat{Q} = \mat{I}$
+(ортонормированность), а $\mat{A}\mat{Q} = \mat{Q}\mat{D}$ при
+$\mat{D} = \diag(\lambda_1, \dots, \lambda_n)$, откуда
+$\mat{A} = \mat{Q}\mat{D}\mat{Q}\T$.
+\end{proof}
 
 \subsection*{Примеры}
-% TODO
+
+\begin{example}[Диагонализуемый: различные вещественные собственные значения]
+\label{ex:diag-distinct}
+Возьмём $\mat{A} = \begin{pmatrix} 2 & 1 \\ 1 & 2 \end{pmatrix}$ как
+матрицу оператора $T \colon \R^2 \to \R^2$ в стандартном базисе.
+Характеристический многочлен:
+$p_T(\lambda) = (2 - \lambda)^2 - 1 = \lambda^2 - 4\lambda + 3 = (\lambda - 1)(\lambda - 3)$,
+поэтому собственные значения суть $\lambda_1 = 1$ и $\lambda_2 = 3$.
+
+При $\lambda = 1$ уравнение $(\mat{A} - \mat{I})\vect{v} = \vect{0}$
+сводится к $x + y = 0$ и даёт собственный вектор $(1, -1)$. При
+$\lambda = 3$ уравнение $(\mat{A} - 3\mat{I})\vect{v} = \vect{0}$
+сводится к $-x + y = 0$ и даёт собственный вектор $(1, 1)$.
+
+Эти собственные векторы линейно независимы (\cref{thm:distinct-eig-li}),
+поэтому образуют базис~$\R^2$ и оператор~$T$ диагонализуем
+(\cref{cor:distinct-implies-diag}). В этом базисе матрица равна
+$\diag(1, 3)$~--- что согласуется с результатом
+\cref{prob:operator-similarity}.
+\end{example}
+
+\begin{example}[Недиагонализуемый: жорданова клетка]
+\label{ex:not-diag}
+Для $\mat{A} = \begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix}$
+характеристический многочлен равен $(1 - \lambda)^2$, так что
+$\lambda = 1$~--- единственное собственное значение алгебраической
+кратности~$2$. Собственное подпространство $V_1$~--- ядро матрицы
+$\mat{A} - \mat{I} = \begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix}$,
+то есть $\spn\bigl((1, 0)\T\bigr)$ размерности~$1$. Поскольку
+$\dim V_1 = 1 \neq 2 = \dim \R^2$, условие из
+\cref{thm:diag-criterion}\,(c) не выполнено, и матрица~$\mat{A}$
+недиагонализуема.
+\end{example}
+
+\begin{example}[Самосопряжённый: ортогональные собственные векторы]
+\label{ex:self-adj}
+Матрица $\mat{A} = \begin{pmatrix} 3 & 1 \\ 1 & 3 \end{pmatrix}$
+вещественна и симметрична, а значит (в стандартном скалярном
+произведении на~$\R^2$) самосопряжена. Характеристический многочлен
+$(3 - \lambda)^2 - 1 = (\lambda - 2)(\lambda - 4)$ даёт собственные
+значения $2$ и~$4$.
+
+При $\lambda = 2$ уравнение $(\mat{A} - 2\mat{I})\vect{v} = \vect{0}$
+даёт $\vect{v}_1 = (1, -1)$; при $\lambda = 4$ уравнение
+$(\mat{A} - 4\mat{I})\vect{v} = \vect{0}$ даёт $\vect{v}_2 = (1, 1)$.
+Скалярное произведение: $\langle \vect{v}_1, \vect{v}_2 \rangle = 1 - 1 = 0$,
+что согласуется с \cref{thm:self-adj-orthog}. После нормировки
+$\vect{e}_1 = \tfrac{1}{\sqrt{2}}(1, -1)$ и
+$\vect{e}_2 = \tfrac{1}{\sqrt{2}}(1, 1)$ образуют ортонормированный
+собственный базис~--- иллюстрация \cref{thm:spectral}.
+\end{example}
+
+\begin{problem}
+\label{prob:spectral-3x3}
+Матрица
+\[
+  \mat{A} = \begin{pmatrix}
+    1 & 1 & 0 \\
+    1 & 1 & 0 \\
+    0 & 0 & 2
+  \end{pmatrix}
+\]
+вещественна и симметрична. Найдите её собственные значения,
+собственные подпространства и ортонормированный базис~$\R^3$ из
+собственных векторов. Проверьте спектральное разложение
+$\mat{A} = \mat{Q}\mat{D}\mat{Q}\T$.
+\end{problem}
+
+\begin{proof}[Решение]
+Раскладывая определитель по третьей строке, находим
+\[
+  p_{\mat{A}}(\lambda) = (2 - \lambda)\bigl[(1 - \lambda)^2 - 1\bigr]
+  = (2 - \lambda) \cdot \lambda \cdot (\lambda - 2)
+  = -\lambda(\lambda - 2)^2.
+\]
+Собственные значения: $\lambda = 0$ алгебраической кратности~$1$ и
+$\lambda = 2$ алгебраической кратности~$2$.
+
+\emph{$V_0$.} Решая $\mat{A}\vect{v} = \vect{0}$: первые две строки
+дают $x + y = 0$, третья~--- $z = 0$. Тогда $V_0 = \spn\bigl((1, -1, 0)\T\bigr)$
+и $\dim V_0 = 1$.
+
+\emph{$V_2$.} Решая $(\mat{A} - 2\mat{I})\vect{v} = \vect{0}$, имеем
+$-x + y = 0$, $x - y = 0$, $0 = 0$. Значит, $x = y$, а $z$
+свободно, откуда $V_2 = \spn\bigl((1, 1, 0)\T,\, (0, 0, 1)\T\bigr)$ и
+$\dim V_2 = 2$.
+
+В сумме $\dim V_0 + \dim V_2 = 1 + 2 = 3 = \dim \R^3$, что
+подтверждает диагонализуемость (\cref{thm:diag-criterion}). Выбранные
+три собственных вектора попарно ортогональны (для разных собственных
+подпространств~--- по \cref{thm:self-adj-orthog}; внутри $V_2$
+векторы $(1, 1, 0)$ и $(0, 0, 1)$ ортогональны явно). После нормировки
+\[
+  \vect{e}_1 = \tfrac{1}{\sqrt{2}}(1, -1, 0)\T,\quad
+  \vect{e}_2 = \tfrac{1}{\sqrt{2}}(1, 1, 0)\T,\quad
+  \vect{e}_3 = (0, 0, 1)\T
+\]
+получаем ортонормированный собственный базис с собственными
+значениями $0, 2, 2$.
+
+\emph{Спектральное разложение.} Положим
+\[
+  \mat{Q} = \begin{pmatrix}
+    1/\sqrt{2} & 1/\sqrt{2} & 0 \\
+    -1/\sqrt{2} & 1/\sqrt{2} & 0 \\
+    0 & 0 & 1
+  \end{pmatrix}, \qquad
+  \mat{D} = \diag(0, 2, 2).
+\]
+Прямое перемножение даёт
+\[
+  \mat{Q}\mat{D}\mat{Q}\T = \begin{pmatrix}
+    1 & 1 & 0 \\
+    1 & 1 & 0 \\
+    0 & 0 & 2
+  \end{pmatrix} = \mat{A},
+\]
+что согласуется с \cref{thm:spectral}.
+\end{proof}
