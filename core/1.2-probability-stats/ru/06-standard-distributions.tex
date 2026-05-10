@@ -8,10 +8,204 @@
 \end{ticket}
 
 \subsection*{Теория}
-% TODO
+
+В этом разделе собран рабочий ``зоопарк'' распределений, которые поступающий должен опознавать с одного взгляда, а вместе с ним~--- аналитический инструмент, организующий весь список: характеристические функции.
+
+\medskip
+\noindent\textbf{Дискретные распределения.}
+
+\begin{definition}[Бернулли, биномиальное, геометрическое, Пуассона]
+\label{def:discrete-distributions}
+\hphantom{x}
+\begin{itemize}
+  \item $X \sim \mathrm{Bernoulli}(p)$, $p \in [0,1]$: $\Prob(X = 1) = p$, $\Prob(X = 0) = 1 - p$. Тогда $\E X = p$, $\Var X = p(1 - p)$.
+  \item $X \sim \mathrm{Bin}(n, p)$, $n \in \N$, $p \in [0, 1]$: величина~$X$ принимает значения в $\{0, 1, \dots, n\}$ с $\Prob(X = k) = \binom{n}{k} p^k (1 - p)^{n-k}$. Тогда $\E X = np$, $\Var X = np(1 - p)$. Эквивалентно,~$X$~--- сумма~$n$ независимых одинаково распределённых $\mathrm{Bernoulli}(p)$.
+  \item $X \sim \mathrm{Geom}(p)$, $p \in (0, 1]$ (в соглашении ``номер первого успешного испытания''): $X \in \{1, 2, \dots\}$ с $\Prob(X = k) = (1 - p)^{k-1} p$. Тогда $\E X = 1/p$, $\Var X = (1 - p)/p^2$.
+  \item $X \sim \mathrm{Poisson}(\lambda)$, $\lambda > 0$: $X \in \{0, 1, 2, \dots\}$ с $\Prob(X = k) = e^{-\lambda} \lambda^k / k!$. Тогда $\E X = \lambda$, $\Var X = \lambda$.
+\end{itemize}
+\end{definition}
+
+\medskip
+\noindent\textbf{Непрерывные распределения.}
+
+\begin{definition}[Равномерное, показательное, нормальное]
+\label{def:continuous-distributions}
+\hphantom{x}
+\begin{itemize}
+  \item $X \sim \mathrm{Uniform}(a, b)$, $a < b$: плотность $f_X(x) = \frac{1}{b - a}\, \mathbf{1}_{[a, b]}(x)$. Тогда $\E X = (a + b)/2$, $\Var X = (b - a)^2 / 12$.
+  \item $X \sim \mathrm{Exp}(\lambda)$, $\lambda > 0$: плотность $f_X(x) = \lambda e^{-\lambda x} \mathbf{1}_{\{x \geq 0\}}$. Тогда $\E X = 1/\lambda$, $\Var X = 1/\lambda^2$.
+  \item $X \sim \mathcal{N}(\mu, \sigma^2)$, $\mu \in \R$, $\sigma > 0$: плотность
+        \[
+          f_X(x) = \frac{1}{\sigma \sqrt{2\pi}} \exp\!\Bigl(-\frac{(x - \mu)^2}{2\sigma^2}\Bigr).
+        \]
+        Тогда $\E X = \mu$, $\Var X = \sigma^2$. Случай $\mu = 0$, $\sigma = 1$ называется \emph{стандартным нормальным распределением}, его функция распределения~--- $\Phi(x) = \int_{-\infty}^{x} \tfrac{1}{\sqrt{2\pi}} e^{-t^2/2}\, dt$.
+\end{itemize}
+\end{definition}
+
+Семейства Пуассона и показательное связаны структурно: число событий пуассоновского процесса с интенсивностью~$\lambda$ за единицу времени имеет распределение $\mathrm{Poisson}(\lambda)$, а интервалы между последовательными событиями~--- независимые $\mathrm{Exp}(\lambda)$, см.~\cite[гл.~II, \S~3]{Sevastyanov1982}. Геометрическое и показательное распределения объединяет также свойство ``отсутствия последействия'' (\cref{prop:memorylessness}).
+
+\begin{proposition}[Отсутствие последействия (свойство ``без памяти'')]
+\label{prop:memorylessness}
+\hphantom{x}
+\begin{enumerate}[label=(\alph*)]
+  \item Если $X \sim \mathrm{Geom}(p)$, то для любых $m, n \in \N$ выполнено $\Prob(X > m + n \mid X > m) = \Prob(X > n)$.
+  \item Если $X \sim \mathrm{Exp}(\lambda)$, то для любых $s, t \geq 0$ выполнено $\Prob(X > s + t \mid X > s) = \Prob(X > t)$.
+\end{enumerate}
+Геометрическое и показательное распределения~--- единственные на~$\N$ (соответственно на $[0, \infty)$), обладающие этим свойством.
+\end{proposition}
+\proofof{memorylessness}
+
+\medskip
+\noindent\textbf{Характеристические функции.} Аналитический инструмент, объединяющий все перечисленные семейства (и движущая сила доказательства ЦПТ из~\cref{thm:clt}).
+
+\begin{definition}[Характеристическая функция]
+\label{def:char-function}
+\emph{Характеристической функцией} случайной величины~$X$ называется
+\[
+  \varphi_X(t) \;=\; \E\, e^{itX} \;=\; \E \cos(tX) + i\, \E \sin(tX), \qquad t \in \R.
+\]
+\end{definition}
+
+Математическое ожидание корректно определено: $|e^{itX}| = 1$, поэтому подынтегральное выражение по модулю не превосходит~$1$. Сама функция $\varphi_X$~--- комплекснозначная функция вещественного аргумента.
+
+\begin{proposition}[Свойства характеристических функций]
+\label{prop:char-properties}
+Для произвольной случайной величины~$X$ функция $\varphi_X$ удовлетворяет условиям:
+\begin{enumerate}[label=(\alph*)]
+  \item $\varphi_X(0) = 1$ и $|\varphi_X(t)| \leq 1$ при всех~$t$;
+  \item $\varphi_X(-t) = \overline{\varphi_X(t)}$;
+  \item $\varphi_X$ равномерно непрерывна на~$\R$;
+  \item если $\E |X|^k < \infty$, то $\varphi_X$ имеет в нуле производные до порядка~$k$ и $\varphi_X^{(j)}(0) = i^j \E X^j$ при $j \leq k$;
+  \item \emph{(мультипликативность по независимости)} если~$X, Y$ независимы, то $\varphi_{X + Y}(t) = \varphi_X(t)\, \varphi_Y(t)$.
+\end{enumerate}
+\end{proposition}
+\proofof{char-properties}
+
+\begin{theorem}[Единственность и формула обращения]
+\label{thm:char-uniqueness}
+Характеристическая функция определяет распределение однозначно: если $\varphi_X = \varphi_Y$ поточечно, то~$X$ и~$Y$ имеют одинаковое распределение. Если, кроме того, $\varphi_X$ интегрируема ($\int_{\R} |\varphi_X(t)|\, dt < \infty$), то~$X$ имеет непрерывную плотность~$f_X$, задаваемую формулой
+\[
+  f_X(x) \;=\; \frac{1}{2\pi} \int_{\R} e^{-itx} \varphi_X(t)\, dt.
+\]
+\end{theorem}
+\proofof{char-uniqueness}
+
+\begin{theorem}[Теорема непрерывности Леви]
+\label{thm:levy-continuity}
+Пусть $(X_n)$~--- последовательность случайных величин с характеристическими функциями~$\varphi_n$. Если $\varphi_n(t) \to \varphi(t)$ поточечно при каждом $t \in \R$, причём $\varphi$ непрерывна в нуле, то $\varphi$ является характеристической функцией некоторой случайной величины~$X$ и $X_n \xrightarrow{d} X$.
+\end{theorem}
+\proofof{levy-continuity}
+
+\begin{remark}
+Краткая таблица характеристических функций, которую полезно помнить наизусть:
+\[
+  \begin{array}{l|l}
+    X & \varphi_X(t) \\ \hline
+    \mathrm{Bernoulli}(p)        & 1 - p + p\, e^{it} \\
+    \mathrm{Bin}(n, p)           & (1 - p + p\, e^{it})^n \\
+    \mathrm{Poisson}(\lambda)    & \exp\!\bigl(\lambda(e^{it} - 1)\bigr) \\
+    \mathrm{Exp}(\lambda)        & \lambda / (\lambda - it) \\
+    \mathcal{N}(\mu, \sigma^2)   & \exp\!\bigl(i \mu t - \tfrac{1}{2} \sigma^2 t^2\bigr) \\
+    \mathrm{Uniform}(a, b)       & (e^{itb} - e^{ita}) / (it(b - a))
+  \end{array}
+\]
+В случае Пуассона и нормального закона характеристические функции являются экспонентами от многочленов по~$t$, что делает свойство мультипликативности на суммах (\cref{prop:char-properties}\,(e)) для них особенно мощным.
+\end{remark}
 
 \subsection*{Доказательства}
-% TODO
+
+Ниже приведены вычисления математических ожиданий и дисперсий для нескольких представительных случаев и доказательства основных утверждений о характеристических функциях; остальные распределения разбираются совершенно аналогично, см.~\cite[гл.~II, \S\S~3-4]{Shiryaev1989}.
+
+\begin{proof}[Среднее и дисперсия $\mathrm{Bin}(n, p)$ и $\mathrm{Poisson}(\lambda)$]
+\proofanchor{discrete-distributions}
+Для биномиального закона запишем $X = X_1 + \cdots + X_n$ с независимыми одинаково распределёнными $X_i \sim \mathrm{Bernoulli}(p)$. По линейности $\E X = n \E X_1 = np$, а по независимости (\cref{cor:var-sum-indep}) $\Var X = n \Var X_1 = n p (1 - p)$.
+
+Для пуассоновского закона $\E X = \sum_{k = 0}^{\infty} k\, e^{-\lambda} \lambda^k / k! = \lambda e^{-\lambda} \sum_{k = 1}^{\infty} \lambda^{k-1}/(k-1)! = \lambda$. Аналогичное вычисление с $k(k - 1)$ даёт $\E X(X-1) = \lambda^2$, поэтому $\E X^2 = \lambda^2 + \lambda$ и $\Var X = \lambda^2 + \lambda - \lambda^2 = \lambda$.
+\end{proof}
+
+\begin{proof}[Среднее и дисперсия $\mathrm{Uniform}(a, b)$ и $\mathrm{Exp}(\lambda)$]
+\proofanchor{continuous-distributions}
+Для $\mathrm{Uniform}(a, b)$ имеем $\E X = \int_a^b x/(b - a)\, dx = (a + b)/2$ и $\E X^2 = \int_a^b x^2/(b - a)\, dx = (b^3 - a^3)/(3(b - a)) = (a^2 + ab + b^2)/3$. После центрирования $\Var X = (a^2 + ab + b^2)/3 - (a + b)^2/4 = (b - a)^2/12$.
+
+Для $\mathrm{Exp}(\lambda)$ дважды применяем интегрирование по частям и получаем $\E X = \int_0^{\infty} x \lambda e^{-\lambda x}\, dx = 1/\lambda$ и $\E X^2 = \int_0^{\infty} x^2 \lambda e^{-\lambda x}\, dx = 2/\lambda^2$, откуда $\Var X = 2/\lambda^2 - 1/\lambda^2 = 1/\lambda^2$.
+
+Для $\mathcal{N}(\mu, \sigma^2)$ замена $z = (x - \mu)/\sigma$ сводит оба момента к интегралам стандартного гауссовского закона; используя $\int e^{-z^2/2}\, dz = \sqrt{2\pi}$ и $\int z^2 e^{-z^2/2}\, dz = \sqrt{2\pi}$ (через интегрирование по частям), получаем $\E X = \mu$ и $\Var X = \sigma^2$.
+\end{proof}
+
+\begin{proof}[\Cref{prop:memorylessness}]
+\proofanchor{memorylessness}
+\emph{(a)} Для $X \sim \mathrm{Geom}(p)$ в принятом соглашении $\Prob(X > k) = (1 - p)^k$ (первые~$k$ испытаний неудачны). Тогда $\Prob(X > m + n)/\Prob(X > m) = (1 - p)^{m + n}/(1 - p)^m = (1 - p)^n = \Prob(X > n)$.
+
+\emph{(b)} Для $X \sim \mathrm{Exp}(\lambda)$ имеем $\Prob(X > t) = \int_t^{\infty} \lambda e^{-\lambda x}\, dx = e^{-\lambda t}$, и та же выкладка даёт отсутствие последействия.
+
+Доказательство единственности: пусть~$X$ на $[0, \infty)$ удовлетворяет $\Prob(X > s + t) = \Prob(X > s) \Prob(X > t)$ для всех $s, t \geq 0$. Функция $G(t) = \Prob(X > t)$ непрерывна справа, монотонно убывает, $G(0) = 1$ и удовлетворяет уравнению Коши на мультипликативность; единственные такие функции~--- $G(t) = e^{-\lambda t}$ при некотором $\lambda \geq 0$, что в точности соответствует семейству показательных распределений. Дискретный случай разбирается аналогично.
+\end{proof}
+
+\begin{proof}[\Cref{prop:char-properties}]
+\proofanchor{char-properties}
+\emph{(a)} $\varphi_X(0) = \E e^{i \cdot 0 \cdot X} = \E 1 = 1$; $|\varphi_X(t)| \leq \E |e^{itX}| = 1$ по неравенству треугольника для математического ожидания (\cref{prop:exp-properties}\,(d)).
+
+\emph{(b)} $e^{i(-t)X} = \overline{e^{itX}}$, поскольку~$X$~--- вещественнозначная случайная величина.
+
+\emph{(c)} При произвольном $h \in \R$ выполнено
+\[
+  |\varphi_X(t + h) - \varphi_X(t)| \leq \E |e^{itX} (e^{ihX} - 1)| = \E |e^{ihX} - 1|,
+\]
+а правая часть от~$t$ не зависит и при $h \to 0$ стремится к нулю по теореме о мажорированной сходимости ($|e^{ihX} - 1| \leq 2$ поточечно и стремится к~$0$ почти наверное).
+
+\emph{(d)} Дифференцирование под знаком математического ожидания законно по теореме о мажорированной сходимости с мажорантой~$|X|^j$ (интегрируемой по предположению): $\varphi_X^{(j)}(t) = \E (iX)^j e^{itX}$, а в точке $t = 0$ это даёт $i^j \E X^j$.
+
+\emph{(e)} Если~$X, Y$ независимы, то и величины $e^{itX}$, $e^{itY}$ независимы (как борелевские функции от независимых величин), поэтому по~\cref{thm:indep-multiplicative} (с распространением на комплекснозначные функции по линейности на действительной и мнимой частях) $\E e^{it(X + Y)} = \E e^{itX} \E e^{itY}$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:char-uniqueness} и \Cref{thm:levy-continuity}]
+\proofanchor{char-uniqueness}
+\proofanchor{levy-continuity}
+Оба утверждения~--- стандартные следствия фурье-аналитических рассуждений на~$\R$. Единственность вытекает из тождества типа Планшереля
+\[
+  \int_{\R} e^{-\sigma^2 t^2 / 2} \varphi_X(t)\, dt = \sqrt{2\pi/\sigma^2}\; \E\, e^{-X^2/(2\sigma^2)}
+\]
+(индикатор интервала аппроксимируется гауссианами при $\sigma \to 0$); формула обращения в интегрируемом случае~--- это стандартное $L^1$-обращение преобразования Фурье. Теорема Леви получается комбинацией поточечной сходимости с теоремой Хелли о выборе и плотностного аргумента, обеспечиваемого непрерывностью~$\varphi$ в нуле. Полные доказательства приведены в~\cite[гл.~II, \S~12]{Shiryaev1989} и~\cite[гл.~VIII]{Gnedenko2001}.
+\end{proof}
 
 \subsection*{Примеры}
-% TODO
+
+\begin{example}[Сумма независимых пуассоновских величин~--- пуассоновская]
+\label{ex:poisson-sum}
+Пусть $X \sim \mathrm{Poisson}(\lambda)$ и $Y \sim \mathrm{Poisson}(\mu)$ независимы. Их характеристические функции равны $\varphi_X(t) = \exp(\lambda(e^{it} - 1))$ и $\varphi_Y(t) = \exp(\mu(e^{it} - 1))$, поэтому по~\cref{prop:char-properties}\,(e)
+\[
+  \varphi_{X + Y}(t) = \exp\bigl((\lambda + \mu)(e^{it} - 1)\bigr),
+\]
+а это характеристическая функция $\mathrm{Poisson}(\lambda + \mu)$. По~\cref{thm:char-uniqueness} $X + Y \sim \mathrm{Poisson}(\lambda + \mu)$.
+\end{example}
+
+\begin{example}[Сумма независимых нормальных величин~--- нормальная]
+\label{ex:normal-sum}
+Если $X \sim \mathcal{N}(\mu_1, \sigma_1^2)$ и $Y \sim \mathcal{N}(\mu_2, \sigma_2^2)$ независимы, то
+\[
+  \varphi_{X + Y}(t) = \exp\bigl(i \mu_1 t - \tfrac{1}{2} \sigma_1^2 t^2\bigr) \exp\bigl(i \mu_2 t - \tfrac{1}{2} \sigma_2^2 t^2\bigr) = \exp\bigl(i(\mu_1 + \mu_2) t - \tfrac{1}{2}(\sigma_1^2 + \sigma_2^2) t^2\bigr),
+\]
+то есть характеристическая функция $\mathcal{N}(\mu_1 + \mu_2, \sigma_1^2 + \sigma_2^2)$. Значит, $X + Y \sim \mathcal{N}(\mu_1 + \mu_2, \sigma_1^2 + \sigma_2^2)$~--- нормальное семейство замкнуто относительно сложения независимых величин с покомпонентным сложением математических ожиданий и дисперсий.
+\end{example}
+
+\begin{example}[Пуассоновское приближение биномиального распределения]
+\label{ex:poisson-approx-binomial}
+Пусть $X_n \sim \mathrm{Bin}(n, \lambda/n)$ при фиксированном $\lambda > 0$ и большом~$n$. Тогда
+\[
+  \varphi_{X_n}(t) = \bigl(1 - \tfrac{\lambda}{n} + \tfrac{\lambda}{n} e^{it}\bigr)^n = \Bigl(1 + \tfrac{\lambda(e^{it} - 1)}{n}\Bigr)^n \to \exp\bigl(\lambda(e^{it} - 1)\bigr),
+\]
+то есть характеристическая функция $\mathrm{Poisson}(\lambda)$. По~\cref{thm:levy-continuity} $X_n \xrightarrow{d} \mathrm{Poisson}(\lambda)$~--- закон редких событий.
+\end{example}
+
+\begin{problem}
+\label{prob:exponential-min}
+Пусть $X_1, \dots, X_n$ независимы, $X_i \sim \mathrm{Exp}(\lambda_i)$. Найдите распределение $M = \min(X_1, \dots, X_n)$.
+\end{problem}
+
+\begin{proof}[Решение]
+При $t \geq 0$ событие $\{M > t\}$ совпадает с $\{X_1 > t, \dots, X_n > t\}$, и по независимости
+\[
+  \Prob(M > t) = \prod_{i=1}^{n} \Prob(X_i > t) = \prod_{i=1}^{n} e^{-\lambda_i t} = \exp\bigl(-(\lambda_1 + \cdots + \lambda_n) t\bigr).
+\]
+Это функция выживания распределения $\mathrm{Exp}(\Lambda)$ с $\Lambda = \lambda_1 + \cdots + \lambda_n$, поэтому $M \sim \mathrm{Exp}(\lambda_1 + \cdots + \lambda_n)$. Конструкция ``конкурирующих экспонент'' лежит в основе непрерывных марковских цепей (\cref{sec:1.2.09-markov-chains}).
+\end{proof}
