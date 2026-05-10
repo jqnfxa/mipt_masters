@@ -8,10 +8,237 @@ Least squares method. Point estimation of a vector parameter. System of normal e
 \end{ticket}
 
 \subsection*{Theory}
-% TODO
+
+We are given $n$ noisy observations of a linear function of an
+unknown $p$-dimensional parameter and seek to estimate the parameter
+by minimising the sum of squared residuals. The framework formalises
+classical curve-fitting and is the prototype of every linear model
+in statistics.
+
+\begin{definition}[Linear regression model]
+\label{def:linear-regression-model}
+The \emph{linear regression model} (or \emph{linear measurement
+model}) consists of:
+\begin{itemize}
+  \item a known \emph{design matrix} $\mat{X} \in \R^{n \times p}$
+        of \emph{regressors} or covariates, with $n \geq p$;
+  \item an unknown parameter vector $\vect{\beta} \in \R^p$;
+  \item a vector $\vect{\varepsilon} \in \R^n$ of zero-mean,
+        uncorrelated, equal-variance noise:
+        $\E \vect{\varepsilon} = \vect{0}$ and
+        $\Cov(\vect{\varepsilon}) = \sigma^2 \mat{I}_n$ for some
+        unknown $\sigma^2 > 0$;
+  \item observations $\vect{y} = \mat{X} \vect{\beta} + \vect{\varepsilon} \in \R^n$.
+\end{itemize}
+\end{definition}
+
+\begin{definition}[Least-squares estimator]
+\label{def:ols-estimator}
+The \emph{ordinary least squares (OLS) estimator} of
+$\vect{\beta}$ is any minimiser
+\[
+  \hat{\vect{\beta}} \;\in\; \argmin_{\vect{b} \in \R^p}\, \|\vect{y} - \mat{X} \vect{b}\|^2,
+\]
+where $\|\cdot\|$ is the Euclidean norm on $\R^n$.
+\end{definition}
+
+\begin{theorem}[Normal equations]
+\label{thm:normal-equations}
+Every OLS estimator $\hat{\vect{\beta}}$ satisfies the
+\emph{normal equations}
+\[
+  \mat{X}\T \mat{X}\, \hat{\vect{\beta}} \;=\; \mat{X}\T \vect{y}.
+\]
+If $\mat{X}$ has full column rank $p$, then $\mat{X}\T \mat{X}$ is
+invertible and the OLS estimator is unique:
+\[
+  \hat{\vect{\beta}} \;=\; (\mat{X}\T \mat{X})^{-1} \mat{X}\T \vect{y}.
+\]
+\end{theorem}
+\proofof{normal-equations}
+
+The geometric content of the normal equations: $\mat{X} \hat{\vect{\beta}}$
+is the orthogonal projection of $\vect{y}$ onto the column space
+$\im \mat{X} = \{\mat{X} \vect{b} : \vect{b} \in \R^p\}$, and the
+residual $\vect{y} - \mat{X} \hat{\vect{\beta}}$ is orthogonal to
+every column of~$\mat{X}$.
+
+\begin{proposition}[Mean and covariance of the OLS estimator]
+\label{prop:ols-properties}
+Assume $\mat{X}$ has full column rank. Under
+\cref{def:linear-regression-model}:
+\begin{enumerate}[label=(\alph*)]
+  \item $\hat{\vect{\beta}}$ is unbiased: $\E \hat{\vect{\beta}} = \vect{\beta}$;
+  \item $\Cov(\hat{\vect{\beta}}) = \sigma^2 (\mat{X}\T \mat{X})^{-1}$;
+  \item the residual sum of squares
+        $\mathrm{RSS} = \|\vect{y} - \mat{X} \hat{\vect{\beta}}\|^2$
+        satisfies $\E \mathrm{RSS} = (n - p) \sigma^2$.
+\end{enumerate}
+\end{proposition}
+\proofof{ols-properties}
+
+The estimator $\hat{\sigma}^2 = \mathrm{RSS}/(n - p)$ is therefore an
+unbiased estimator of the noise variance.
+
+\begin{theorem}[Gauss–Markov]
+\label{thm:gauss-markov}
+Assume \cref{def:linear-regression-model} with $\mat{X}$ of full
+column rank. Among all \emph{linear unbiased estimators} of
+$\vect{\beta}$ — that is, estimators of the form $\tilde{\vect{\beta}} = \mat{C} \vect{y}$
+with $\mat{C} \in \R^{p \times n}$ and $\E \tilde{\vect{\beta}} = \vect{\beta}$
+identically in $\vect{\beta}$ — the OLS estimator $\hat{\vect{\beta}}$
+has minimum variance, in the sense that
+\[
+  \Cov(\tilde{\vect{\beta}}) - \Cov(\hat{\vect{\beta}}) \quad \text{is positive semi-definite.}
+\]
+Equivalently, for every linear functional $\vect{a}\T \vect{\beta}$
+of the parameter, $\vect{a}\T \hat{\vect{\beta}}$ is the
+\emph{best linear unbiased estimator} (BLUE) of $\vect{a}\T \vect{\beta}$:
+$\Var(\vect{a}\T \tilde{\vect{\beta}}) \geq \Var(\vect{a}\T \hat{\vect{\beta}})$
+for every linear unbiased $\tilde{\vect{\beta}}$.
+\end{theorem}
+\proofof{gauss-markov}
+
+\begin{remark}
+Gauss–Markov assumes only zero mean, equal variance, and lack of
+correlation of the noise — \emph{not} normality. If the noise is
+additionally Gaussian, $\hat{\vect{\beta}}$ is also the maximum
+likelihood estimator and attains the Cramér–Rao lower bound
+\cite[Ch.~VII, \S~6]{Shiryaev1989}; in that case it is BLUE among
+\emph{all} unbiased estimators (linear or not). If the noise has
+non-trivial covariance $\Cov(\vect{\varepsilon}) = \mat{\Sigma}$
+with known $\mat{\Sigma} \succ 0$, the BLUE is the
+\emph{generalised} least-squares estimator
+$\hat{\vect{\beta}}_{\mathrm{GLS}} = (\mat{X}\T \mat{\Sigma}^{-1} \mat{X})^{-1} \mat{X}\T \mat{\Sigma}^{-1} \vect{y}$.
+\end{remark}
 
 \subsection*{Proofs}
-% TODO
+
+\begin{proof}[\Cref{thm:normal-equations}]
+\proofanchor{normal-equations}
+The squared-error objective $L(\vect{b}) = \|\vect{y} - \mat{X} \vect{b}\|^2$
+expands as
+$L(\vect{b}) = \vect{y}\T \vect{y} - 2 \vect{b}\T \mat{X}\T \vect{y} + \vect{b}\T \mat{X}\T \mat{X}\, \vect{b}$.
+This is a convex quadratic in~$\vect{b}$, so the gradient
+\[
+  \nabla L(\vect{b}) = -2\, \mat{X}\T \vect{y} + 2\, \mat{X}\T \mat{X}\, \vect{b}
+\]
+vanishes precisely at the minimum (\cref{thm:cont-partials-diff}
+applied to the convex case is a sufficient condition for the
+critical point being global). Setting $\nabla L(\hat{\vect{\beta}}) = \vect{0}$
+gives $\mat{X}\T \mat{X}\, \hat{\vect{\beta}} = \mat{X}\T \vect{y}$.
+If $\mat{X}$ has full column rank, then $\mat{X}\T \mat{X}$ is
+invertible (it is a $p \times p$ Gram matrix of linearly independent
+columns; cf.\ \cref{sec:1.1.07-quadratic-forms}), so the solution
+is the unique $(\mat{X}\T \mat{X})^{-1} \mat{X}\T \vect{y}$.
+\end{proof}
+
+\begin{proof}[\Cref{prop:ols-properties}]
+\proofanchor{ols-properties}
+Let $\mat{H} = \mat{X} (\mat{X}\T \mat{X})^{-1} \mat{X}\T$ — the
+orthogonal projector onto $\im \mat{X}$. Note $\mat{H}$ is symmetric
+and idempotent: $\mat{H}\T = \mat{H}$, $\mat{H}^2 = \mat{H}$.
+
+\emph{(a)} Substitute $\vect{y} = \mat{X} \vect{\beta} + \vect{\varepsilon}$:
+$\hat{\vect{\beta}} = (\mat{X}\T \mat{X})^{-1} \mat{X}\T (\mat{X} \vect{\beta} + \vect{\varepsilon}) = \vect{\beta} + (\mat{X}\T \mat{X})^{-1} \mat{X}\T \vect{\varepsilon}$.
+Take expectation: $\E \hat{\vect{\beta}} = \vect{\beta} + (\mat{X}\T \mat{X})^{-1} \mat{X}\T \E \vect{\varepsilon} = \vect{\beta}$.
+
+\emph{(b)} From the same decomposition,
+$\Cov(\hat{\vect{\beta}}) = (\mat{X}\T \mat{X})^{-1} \mat{X}\T \Cov(\vect{\varepsilon}) \mat{X} (\mat{X}\T \mat{X})^{-1} = \sigma^2 (\mat{X}\T \mat{X})^{-1}$
+using $\Cov(\vect{\varepsilon}) = \sigma^2 \mat{I}_n$.
+
+\emph{(c)} The residual is
+$\vect{y} - \mat{X} \hat{\vect{\beta}} = (\mat{I}_n - \mat{H}) \vect{y} = (\mat{I}_n - \mat{H}) \vect{\varepsilon}$
+(since $(\mat{I} - \mat{H}) \mat{X} = \mat{0}$). Thus
+$\mathrm{RSS} = \vect{\varepsilon}\T (\mat{I}_n - \mat{H}) \vect{\varepsilon}$,
+a quadratic form in zero-mean noise. Taking expectation,
+$\E \mathrm{RSS} = \tr\bigl((\mat{I}_n - \mat{H}) \Cov(\vect{\varepsilon})\bigr) = \sigma^2 \tr(\mat{I}_n - \mat{H}) = \sigma^2 (n - \rank \mat{H}) = \sigma^2 (n - p)$,
+using the standard identity $\E[\vect{\varepsilon}\T \mat{A} \vect{\varepsilon}] = \tr(\mat{A} \Cov(\vect{\varepsilon}))$
+for zero-mean~$\vect{\varepsilon}$ and the fact that
+$\rank \mat{H} = \rank \mat{X} = p$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:gauss-markov}]
+\proofanchor{gauss-markov}
+Let $\tilde{\vect{\beta}} = \mat{C} \vect{y}$ be linear and unbiased.
+The constraint
+$\E \tilde{\vect{\beta}} = \mat{C} \mat{X} \vect{\beta} = \vect{\beta}$
+for every $\vect{\beta}$ forces $\mat{C} \mat{X} = \mat{I}_p$. Write
+$\mat{C} = (\mat{X}\T \mat{X})^{-1} \mat{X}\T + \mat{D}$ where
+$\mat{D} \in \R^{p \times n}$. Then $\mat{D} \mat{X} = \mat{0}_p$ from
+the constraint.
+
+The covariance is
+\[
+  \Cov(\tilde{\vect{\beta}}) = \mat{C}\, \Cov(\vect{\varepsilon})\, \mat{C}\T = \sigma^2\, \mat{C} \mat{C}\T.
+\]
+Expand $\mat{C} \mat{C}\T = \bigl((\mat{X}\T \mat{X})^{-1} \mat{X}\T + \mat{D}\bigr)\bigl(\mat{X} (\mat{X}\T \mat{X})^{-1} + \mat{D}\T\bigr)$.
+The cross terms vanish by $\mat{D} \mat{X} = \mat{0}$:
+\[
+  \mat{C} \mat{C}\T = (\mat{X}\T \mat{X})^{-1} + \mat{D} \mat{D}\T.
+\]
+Hence $\Cov(\tilde{\vect{\beta}}) - \Cov(\hat{\vect{\beta}}) = \sigma^2 \mat{D} \mat{D}\T$,
+which is positive semi-definite (a Gram matrix). Equality holds iff
+$\mat{D} = \mat{0}$, i.e.\ $\tilde{\vect{\beta}} = \hat{\vect{\beta}}$.
+
+The linear-functional version follows: for any
+$\vect{a} \in \R^p$,
+$\Var(\vect{a}\T \tilde{\vect{\beta}}) - \Var(\vect{a}\T \hat{\vect{\beta}}) = \sigma^2 \vect{a}\T \mat{D} \mat{D}\T \vect{a} = \sigma^2 \|\mat{D}\T \vect{a}\|^2 \geq 0$.
+\end{proof}
 
 \subsection*{Examples}
-% TODO
+
+\begin{example}[Simple linear regression]
+\label{ex:simple-linear-regression}
+Fit $y_i = a + b x_i + \varepsilon_i$ for $i = 1, \dots, n$ — the
+$p = 2$ case with
+$\mat{X} = \begin{pmatrix} 1 & x_1 \\ \vdots & \vdots \\ 1 & x_n \end{pmatrix}$.
+Setting $\bar x = \tfrac{1}{n}\sum x_i$ and $\bar y = \tfrac{1}{n}\sum y_i$,
+the normal equations
+$\mat{X}\T \mat{X} \begin{pmatrix} \hat a \\ \hat b \end{pmatrix} = \mat{X}\T \vect{y}$
+solve to
+\[
+  \hat b = \frac{\sum_{i} (x_i - \bar x)(y_i - \bar y)}{\sum_{i} (x_i - \bar x)^2}, \qquad
+  \hat a = \bar y - \hat b\, \bar x.
+\]
+By \cref{prop:ols-properties}\,(b),
+$\Var(\hat b) = \sigma^2 / \sum_i (x_i - \bar x)^2$ — the precision
+improves with the spread of the $x_i$.
+\end{example}
+
+\begin{example}[Numerical fit]
+\label{ex:numerical-fit}
+Data: $(x_i, y_i) = (1, 1), (2, 3), (3, 4), (4, 6), (5, 5)$.
+Compute $\bar x = 3$, $\bar y = 19/5 = 3.8$,
+$\sum (x_i - \bar x)(y_i - \bar y) = (-2)(-2.8) + (-1)(-0.8) + 0 + (1)(2.2) + (2)(1.2) = 5.6 + 0.8 + 0 + 2.2 + 2.4 = 11.0$,
+$\sum (x_i - \bar x)^2 = 4 + 1 + 0 + 1 + 4 = 10$. Hence $\hat b = 1.1$
+and $\hat a = 3.8 - 1.1 \cdot 3 = 0.5$. The fitted line is
+$\hat y = 0.5 + 1.1 x$.
+\end{example}
+
+\begin{problem}
+\label{prob:gauss-markov-comparison}
+For the simple linear regression of \cref{ex:simple-linear-regression}
+with $n = 3$ observations at $x_1 = -1, x_2 = 0, x_3 = 1$, consider
+the two competing estimators of the slope:
+\begin{itemize}
+  \item the OLS estimator $\hat b$ from the normal equations;
+  \item the naive ``two-point'' estimator $\tilde b = (y_3 - y_1)/(x_3 - x_1) = (y_3 - y_1)/2$.
+\end{itemize}
+Show both are linear and unbiased and compare their variances.
+\end{problem}
+
+\begin{proof}[Solution]
+With $\bar x = 0$, the OLS slope simplifies to
+$\hat b = \sum_i x_i (y_i - \bar y)/\sum_i x_i^2 = ((-1) y_1 + 0 \cdot y_2 + 1 \cdot y_3)/2 - \bar y \cdot 0 = (y_3 - y_1)/2$.
+So in this small symmetric design, the two estimators \emph{coincide}.
+$\hat b = \tilde b$ are equal as linear combinations of $\vect{y}$,
+hence have the same mean and variance — Gauss–Markov gives nothing
+to choose between them. The story changes if we add a fourth
+observation at $x_4 = 0$ which the two-point estimator simply
+ignores; OLS uses it (slightly improving precision) by reducing
+$\Var(\bar y)$, hence reducing the residual that affects the slope
+estimate. This is the practical content of Gauss–Markov: OLS uses
+\emph{all} information optimally under the linear-unbiased
+constraint.
+\end{proof}
