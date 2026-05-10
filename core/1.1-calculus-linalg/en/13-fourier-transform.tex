@@ -8,10 +8,299 @@ Fourier transform of an absolutely integrable function and its properties. Fouri
 \end{ticket}
 
 \subsection*{Theory}
-% TODO
+
+We work on the real line and use the space
+\[
+  L^1(\R) \;=\; \Bigl\{ f \colon \R \to \C \;:\; f \text{ measurable},\; \|f\|_1 := \int_{\R} |f(x)|\, dx < \infty \Bigr\}.
+\]
+A function in $L^1(\R)$ is called \emph{absolutely integrable}.
+References for the entire section are
+\cite[Vol.~II, Ch.~XVIII, \S~3]{Zorich1981} and
+\cite[Ch.~VIII]{KolmogorovFomin}.
+
+\subsubsection*{Definition and basic regularity}
+
+\begin{definition}[Fourier transform]
+\label{def:fourier-transform}
+For $f \in L^1(\R)$, the \emph{Fourier transform} of~$f$ is the
+function $\hat f \colon \R \to \C$ defined by
+\[
+  \hat f(\xi) \;=\; \int_{\R} f(x)\, e^{-i \xi x}\, dx, \qquad \xi \in \R.
+\]
+We also write $\mathcal{F}\{f\}(\xi)$ for $\hat f(\xi)$.
+\end{definition}
+
+\begin{remark}
+The convention chosen places no $2\pi$ in the forward transform; the
+constant reappears in the inversion formula
+(\cref{thm:fourier-inversion}). Other texts split the factor
+symmetrically as $1/\sqrt{2\pi}$ on both sides.
+\end{remark}
+
+\begin{proposition}[Boundedness]
+\label{prop:ft-bounded}
+For every $f \in L^1(\R)$ and every $\xi \in \R$,
+$|\hat f(\xi)| \leq \|f\|_1$. In particular $\hat f$ is bounded by
+$\|f\|_1$.
+\end{proposition}
+\proofof{ft-bounded}
+
+\begin{theorem}[Continuity of the Fourier transform]
+\label{thm:ft-continuous}
+For every $f \in L^1(\R)$, the function $\hat f$ is uniformly
+continuous on~$\R$.
+\end{theorem}
+\proofof{ft-continuous}
+
+\begin{theorem}[Riemann--Lebesgue lemma on $\R$]
+\label{thm:rl-line}
+For every $f \in L^1(\R)$,
+\[
+  \hat f(\xi) \;\to\; 0 \qquad \text{as } |\xi| \to \infty.
+\]
+\end{theorem}
+\proofof{rl-line}
+
+\subsubsection*{Algebraic properties}
+
+\begin{proposition}[Linearity, shift, modulation, scaling]
+\label{prop:ft-algebra}
+Let $f, g \in L^1(\R)$, $\alpha, \beta \in \C$, $a \in \R \setminus \{0\}$,
+$h \in \R$. The Fourier transform satisfies, for every $\xi \in \R$:
+\begin{enumerate}[label=(\alph*)]
+  \item \emph{linearity:} $\widehat{\alpha f + \beta g}(\xi) = \alpha \hat f(\xi) + \beta \hat g(\xi)$;
+  \item \emph{shift in space:} if $f_h(x) = f(x - h)$, then $\widehat{f_h}(\xi) = e^{-i \xi h} \hat f(\xi)$;
+  \item \emph{modulation:} if $g(x) = e^{i \omega x} f(x)$ for some $\omega \in \R$, then $\hat g(\xi) = \hat f(\xi - \omega)$;
+  \item \emph{scaling:} if $g(x) = f(a x)$, then $\hat g(\xi) = \tfrac{1}{|a|}\, \hat f\!\bigl(\tfrac{\xi}{a}\bigr)$.
+\end{enumerate}
+\end{proposition}
+\proofof{ft-algebra}
+
+\subsubsection*{Differentiation rules}
+
+The two key formulas of this ticket exchange smoothness with decay:
+differentiation of~$f$ is multiplication of $\hat f$ by~$i\xi$, and
+multiplication of~$f$ by~$x$ is differentiation of $\hat f$.
+
+\begin{theorem}[Fourier transform of a derivative]
+\label{thm:ft-of-derivative}
+Let $f \in L^1(\R)$ be everywhere differentiable with
+$f' \in L^1(\R)$, and assume $f(x) \to 0$ as $|x| \to \infty$. Then
+\[
+  \widehat{f'}(\xi) \;=\; i \xi \, \hat f(\xi), \qquad \xi \in \R.
+\]
+More generally, if $f$ is $k$~times differentiable with
+$f^{(j)} \in L^1(\R)$ for $j = 0, 1, \dots, k$ and
+$f^{(j)}(x) \to 0$ as $|x| \to \infty$ for $j = 0, \dots, k - 1$, then
+$\widehat{f^{(k)}}(\xi) = (i\xi)^k \, \hat f(\xi)$. In particular,
+$|\xi|^k\, |\hat f(\xi)| \leq \|f^{(k)}\|_1$, so smoother $f$ yields
+faster-decaying $\hat f$.
+\end{theorem}
+\proofof{ft-of-derivative}
+
+\begin{theorem}[Derivative of a Fourier transform]
+\label{thm:derivative-of-ft}
+Let $f \in L^1(\R)$ satisfy $x \mapsto x\, f(x) \in L^1(\R)$. Then
+$\hat f$ is continuously differentiable on~$\R$ and
+\[
+  (\hat f)'(\xi) \;=\; \widehat{(- i x\, f)}(\xi) \;=\; -i \int_{\R} x\, f(x)\, e^{-i \xi x}\, dx.
+\]
+More generally, if $x^j f(x) \in L^1(\R)$ for $j = 0, 1, \dots, k$,
+then $\hat f \in C^k(\R)$ and
+$(\hat f)^{(k)}(\xi) = \widehat{(-i x)^k f}(\xi)$. Faster-decaying $f$
+yields smoother $\hat f$.
+\end{theorem}
+\proofof{derivative-of-ft}
+
+\subsubsection*{Inversion (statement)}
+
+\begin{theorem}[Fourier inversion]
+\label{thm:fourier-inversion}
+Let $f \in L^1(\R)$ and assume $\hat f \in L^1(\R)$. Then for almost
+every~$x$,
+\[
+  f(x) \;=\; \frac{1}{2\pi} \int_{\R} \hat f(\xi)\, e^{i \xi x}\, d\xi,
+\]
+with equality at every point where~$f$ is continuous. We will not
+prove this theorem in this ticket — see
+\cite[Vol.~II, Ch.~XVIII, \S~3]{Zorich1981}; we rely on it only to
+interpret the examples.
+\end{theorem}
 
 \subsection*{Proofs}
-% TODO
+
+\begin{proof}[\Cref{prop:ft-bounded}]
+\proofanchor{ft-bounded}
+Triangle inequality applied to the integral:
+\[
+  |\hat f(\xi)| \;=\; \Bigl| \int_{\R} f(x)\, e^{-i \xi x}\, dx \Bigr|
+  \;\leq\; \int_{\R} |f(x)|\, |e^{-i \xi x}|\, dx
+  \;=\; \int_{\R} |f(x)|\, dx
+  \;=\; \|f\|_1.
+\]
+\end{proof}
+
+\begin{proof}[\Cref{thm:ft-continuous}]
+\proofanchor{ft-continuous}
+For $\xi, \eta \in \R$,
+\[
+  \hat f(\xi) - \hat f(\eta)
+  \;=\; \int_{\R} f(x)\, \bigl(e^{-i \xi x} - e^{-i \eta x}\bigr)\, dx,
+\]
+hence
+\[
+  |\hat f(\xi) - \hat f(\eta)|
+  \;\leq\; \int_{\R} |f(x)|\, |e^{-i \xi x} - e^{-i \eta x}|\, dx.
+\]
+The integrand is bounded above by $2 |f(x)| \in L^1(\R)$ and tends to
+zero pointwise as $|\xi - \eta| \to 0$. By Lebesgue's dominated
+convergence theorem,
+$|\hat f(\xi) - \hat f(\eta)| \to 0$ as $|\xi - \eta| \to 0$, and the
+estimate depends on $|\xi - \eta|$ only through the integrand's
+bound; hence the convergence is uniform in $\xi$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:rl-line}]
+\proofanchor{rl-line}
+First take $f = \mathbf{1}_{[a, b]}$. Direct computation gives
+\[
+  \hat f(\xi) = \int_a^b e^{-i \xi x}\, dx = \frac{e^{-i \xi a} - e^{-i \xi b}}{i \xi}, \qquad \xi \neq 0,
+\]
+so $|\hat f(\xi)| \leq 2/|\xi| \to 0$ as $|\xi| \to \infty$. By
+linearity the same holds for every step function with finitely many
+levels on a bounded interval.
+
+For general $f \in L^1(\R)$ and $\varepsilon > 0$, pick a step
+function~$\varphi$ supported on a bounded interval with
+$\|f - \varphi\|_1 < \varepsilon/2$ — possible by density of
+compactly supported step functions in $L^1(\R)$. By
+\cref{prop:ft-bounded},
+$|\hat f(\xi) - \hat \varphi(\xi)| \leq \|f - \varphi\|_1 < \varepsilon/2$.
+Pick $\Lambda > 0$ such that $|\hat \varphi(\xi)| < \varepsilon/2$
+for $|\xi| \geq \Lambda$. Then for those $\xi$,
+$|\hat f(\xi)| \leq |\hat \varphi(\xi)| + \varepsilon/2 < \varepsilon$.
+\end{proof}
+
+\begin{proof}[\Cref{prop:ft-algebra}]
+\proofanchor{ft-algebra}
+\emph{(a)} Linearity of the integral.
+
+\emph{(b)} Substitute $y = x - h$, $dy = dx$:
+\[
+  \widehat{f_h}(\xi) = \int_{\R} f(x - h)\, e^{-i \xi x}\, dx
+                     = \int_{\R} f(y)\, e^{-i \xi (y + h)}\, dy
+                     = e^{-i \xi h}\, \hat f(\xi).
+\]
+
+\emph{(c)} Direct: $\hat g(\xi) = \int e^{i \omega x} f(x) e^{-i \xi x}\, dx
+= \int f(x) e^{-i (\xi - \omega) x}\, dx = \hat f(\xi - \omega)$.
+
+\emph{(d)} Substitute $y = a x$, $dy = a\, dx$. If $a > 0$,
+\[
+  \hat g(\xi) = \int_{\R} f(a x) e^{-i \xi x}\, dx
+              = \frac{1}{a} \int_{\R} f(y) e^{-i (\xi/a) y}\, dy
+              = \frac{1}{a}\, \hat f(\xi/a).
+\]
+If $a < 0$, the substitution flips the limits of integration, leaving
+$\hat g(\xi) = -\tfrac{1}{a}\, \hat f(\xi/a) = \tfrac{1}{|a|}\, \hat f(\xi/a)$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:ft-of-derivative}]
+\proofanchor{ft-of-derivative}
+For $R > 0$, integrate by parts on $[-R, R]$ with $u = e^{-i\xi x}$,
+$dv = f'(x)\, dx$:
+\[
+  \int_{-R}^{R} f'(x) e^{-i\xi x}\, dx
+  = \bigl[f(x) e^{-i\xi x}\bigr]_{-R}^{R}
+    + i\xi \int_{-R}^{R} f(x) e^{-i\xi x}\, dx.
+\]
+The boundary term is $f(R) e^{-i\xi R} - f(-R) e^{i\xi R}$, of
+magnitude at most $|f(R)| + |f(-R)|$, which tends to~$0$ as
+$R \to \infty$ by hypothesis. Both interior integrals converge to
+$\widehat{f'}(\xi)$ and $\hat f(\xi)$ respectively (since $f, f' \in L^1$).
+Passing to the limit $R \to \infty$ gives
+$\widehat{f'}(\xi) = i\xi\, \hat f(\xi)$. Iterating yields
+$\widehat{f^{(k)}}(\xi) = (i\xi)^k \hat f(\xi)$, and
+\cref{prop:ft-bounded} applied to~$f^{(k)}$ gives
+$|\xi|^k |\hat f(\xi)| = |\widehat{f^{(k)}}(\xi)| \leq \|f^{(k)}\|_1$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:derivative-of-ft}]
+\proofanchor{derivative-of-ft}
+Define $F(\xi, x) = f(x) e^{-i \xi x}$, so that
+$\hat f(\xi) = \int_{\R} F(\xi, x)\, dx$. The partial derivative
+$\partial_\xi F(\xi, x) = -i x\, f(x)\, e^{-i \xi x}$ exists for every
+$(\xi, x)$ and is dominated by $|x f(x)|$, which is in $L^1(\R)$ by
+hypothesis. The Leibniz rule for differentiation under the integral
+sign (parameter-dependent integrals; see
+\cite[Vol.~II, Ch.~XVII]{Zorich1981}) applies and gives
+\[
+  (\hat f)'(\xi) \;=\; \int_{\R} \partial_\xi F(\xi, x)\, dx
+                 \;=\; -i \int_{\R} x\, f(x)\, e^{-i \xi x}\, dx
+                 \;=\; \widehat{(- i x\, f)}(\xi).
+\]
+The right-hand side is a Fourier transform of an $L^1$ function and
+therefore continuous in~$\xi$ by \cref{thm:ft-continuous}; hence
+$\hat f \in C^1(\R)$. The general $C^k$ case follows by induction
+under the iterated hypothesis $x^j f(x) \in L^1$.
+\end{proof}
 
 \subsection*{Examples}
-% TODO
+
+\begin{example}[Indicator of an interval]
+\label{ex:ft-indicator}
+Let $f = \mathbf{1}_{[-1, 1]}$. Then $f \in L^1$, and for $\xi \neq 0$
+\[
+  \hat f(\xi) = \int_{-1}^{1} e^{-i \xi x}\, dx
+              = \frac{e^{-i \xi} - e^{i \xi}}{-i\xi}
+              = \frac{2 \sin \xi}{\xi}.
+\]
+At $\xi = 0$, $\hat f(0) = 2 = \lim_{\xi \to 0} (2 \sin \xi)/\xi$.
+The transform is real, even, continuous, and tends to~$0$ at infinity
+— consistent with \cref{thm:ft-continuous,thm:rl-line}. Note,
+however, that $\hat f \notin L^1(\R)$ because $|2 \sin \xi / \xi|$ is
+not absolutely integrable (oscillating $1/\xi$ tail), so the inversion
+formula must be applied in the appropriate sense.
+\end{example}
+
+\begin{example}[Two-sided exponential]
+\label{ex:ft-double-exp}
+Let $f(x) = e^{-|x|}$. Then $f \in L^1$ with $\|f\|_1 = 2$, and
+\begin{align*}
+  \hat f(\xi)
+  &= \int_{-\infty}^{0} e^{x}\, e^{-i\xi x}\, dx + \int_{0}^{\infty} e^{-x}\, e^{-i\xi x}\, dx \\
+  &= \frac{1}{1 - i\xi} + \frac{1}{1 + i\xi}
+   = \frac{2}{1 + \xi^2}.
+\end{align*}
+Both $f$ and $\hat f$ are integrable; the inversion theorem
+recovers $f$ from $\hat f$ pointwise. The transform decays like
+$\xi^{-2}$ — consistent with $f$ being only $C^0$ (one weak
+derivative in $L^1$ produces an extra factor of $1/\xi$ in
+\cref{thm:ft-of-derivative}).
+\end{example}
+
+\begin{example}[Gaussian: a self-dual function]
+\label{ex:ft-gaussian}
+Let $f(x) = e^{-x^2/2}$. Then $f \in L^1$ and one shows
+$\hat f(\xi) = \sqrt{2\pi}\, e^{-\xi^2/2}$. One slick proof uses the
+differentiation rules: $f'(x) = -x f(x)$, so applying $\mathcal{F}$ to
+both sides and using
+\cref{thm:ft-of-derivative,thm:derivative-of-ft},
+\[
+  i \xi\, \hat f(\xi) \;=\; \widehat{f'}(\xi) \;=\; \widehat{-x f}(\xi) \;=\; -i\, (\hat f)'(\xi),
+\]
+i.e.\ $(\hat f)'(\xi) = -\xi\, \hat f(\xi)$. The same first-order ODE
+satisfied by~$f$ (with $\xi$ replacing $x$); hence
+$\hat f(\xi) = C\, e^{-\xi^2/2}$ for some constant~$C$. Evaluate at
+$\xi = 0$: $C = \hat f(0) = \int_{\R} e^{-x^2/2}\, dx = \sqrt{2\pi}$.
+Thus $\hat f(\xi) = \sqrt{2\pi}\, e^{-\xi^2/2}$ — the Gaussian is its
+own Fourier transform up to a constant.
+\end{example}
+
+\begin{problem}[Smoothness--decay correspondence]
+Let $f \in L^1(\R)$ be such that $f \in C^k(\R)$ with
+$f, f', \dots, f^{(k)} \in L^1(\R)$ and
+$f^{(j)}(x) \to 0$ as $|x| \to \infty$ for $j = 0, \dots, k - 1$.
+Prove that $\hat f(\xi) = o(|\xi|^{-k})$ as $|\xi| \to \infty$.
+(Hint: combine \cref{thm:ft-of-derivative} with \cref{thm:rl-line}.)
+\end{problem}
