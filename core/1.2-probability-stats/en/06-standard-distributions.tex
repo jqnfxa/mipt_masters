@@ -8,10 +8,317 @@ Distributions. Standard discrete and continuous distributions and their expectat
 \end{ticket}
 
 \subsection*{Theory}
-% TODO
+
+This section is the working zoo of distributions every candidate
+should recognise on sight, together with the analytic tool —
+characteristic functions — that organises them.
+
+\medskip
+\noindent\textbf{Discrete distributions.}
+
+\begin{definition}[Bernoulli, binomial, geometric, Poisson]
+\label{def:discrete-distributions}
+\hphantom{x}
+\begin{itemize}
+  \item $X \sim \mathrm{Bernoulli}(p)$, $p \in [0,1]$:
+        $\Prob(X = 1) = p$, $\Prob(X = 0) = 1 - p$. Then
+        $\E X = p$, $\Var X = p(1 - p)$.
+  \item $X \sim \mathrm{Bin}(n, p)$, $n \in \N$, $p \in [0, 1]$: $X$
+        takes values in $\{0, 1, \dots, n\}$ with
+        $\Prob(X = k) = \binom{n}{k} p^k (1 - p)^{n-k}$. Then
+        $\E X = np$, $\Var X = np(1 - p)$. Equivalently, $X$ is the
+        sum of $n$ i.i.d.\ $\mathrm{Bernoulli}(p)$ variables.
+  \item $X \sim \mathrm{Geom}(p)$, $p \in (0, 1]$ (``trial-count''
+        convention): $X \in \{1, 2, \dots\}$ with
+        $\Prob(X = k) = (1 - p)^{k-1} p$. Then $\E X = 1/p$,
+        $\Var X = (1 - p)/p^2$.
+  \item $X \sim \mathrm{Poisson}(\lambda)$, $\lambda > 0$:
+        $X \in \{0, 1, 2, \dots\}$ with
+        $\Prob(X = k) = e^{-\lambda} \lambda^k / k!$. Then
+        $\E X = \lambda$, $\Var X = \lambda$.
+\end{itemize}
+\end{definition}
+
+\medskip
+\noindent\textbf{Continuous distributions.}
+
+\begin{definition}[Uniform, exponential, normal]
+\label{def:continuous-distributions}
+\hphantom{x}
+\begin{itemize}
+  \item $X \sim \mathrm{Uniform}(a, b)$, $a < b$: density
+        $f_X(x) = \frac{1}{b - a}\, \mathbf{1}_{[a, b]}(x)$. Then
+        $\E X = (a + b)/2$, $\Var X = (b - a)^2 / 12$.
+  \item $X \sim \mathrm{Exp}(\lambda)$, $\lambda > 0$: density
+        $f_X(x) = \lambda e^{-\lambda x} \mathbf{1}_{\{x \geq 0\}}$. Then
+        $\E X = 1/\lambda$, $\Var X = 1/\lambda^2$.
+  \item $X \sim \mathcal{N}(\mu, \sigma^2)$, $\mu \in \R$, $\sigma > 0$:
+        density
+        \[
+          f_X(x) = \frac{1}{\sigma \sqrt{2\pi}} \exp\!\Bigl(-\frac{(x - \mu)^2}{2\sigma^2}\Bigr).
+        \]
+        Then $\E X = \mu$, $\Var X = \sigma^2$. The case $\mu = 0$,
+        $\sigma = 1$ is the \emph{standard normal}, with CDF
+        $\Phi(x) = \int_{-\infty}^{x} \tfrac{1}{\sqrt{2\pi}} e^{-t^2/2}\, dt$.
+\end{itemize}
+\end{definition}
+
+The Poisson and exponential families share a deep structural link:
+the number of arrivals in a Poisson process of rate $\lambda$ over a
+unit time interval is $\mathrm{Poisson}(\lambda)$, while the
+inter-arrival times are i.i.d.\ $\mathrm{Exp}(\lambda)$
+\cite[Ch.~II, \S~3]{Sevastyanov1982}. The geometric and exponential
+distributions are also linked through memorylessness
+(\cref{prop:memorylessness}).
+
+\begin{proposition}[Memorylessness]
+\label{prop:memorylessness}
+\hphantom{x}
+\begin{enumerate}[label=(\alph*)]
+  \item If $X \sim \mathrm{Geom}(p)$, then for every
+        $m, n \in \N$, $\Prob(X > m + n \mid X > m) = \Prob(X > n)$.
+  \item If $X \sim \mathrm{Exp}(\lambda)$, then for every
+        $s, t \geq 0$, $\Prob(X > s + t \mid X > s) = \Prob(X > t)$.
+\end{enumerate}
+Geometric and exponential are the only distributions on $\N$
+(resp.\ $[0, \infty)$) with this property.
+\end{proposition}
+\proofof{memorylessness}
+
+\medskip
+\noindent\textbf{Characteristic functions.} A unifying analytic tool
+for all of the above (and the engine of the CLT,
+\cref{thm:clt}).
+
+\begin{definition}[Characteristic function]
+\label{def:char-function}
+The \emph{characteristic function} of a random variable $X$ is
+\[
+  \varphi_X(t) \;=\; \E\, e^{itX} \;=\; \E \cos(tX) + i\, \E \sin(tX), \qquad t \in \R.
+\]
+\end{definition}
+
+The expectation is well-defined because $|e^{itX}| = 1$, so the
+integrand is bounded by~$1$ in modulus. The characteristic function
+is a complex-valued function of a real variable.
+
+\begin{proposition}[Properties of characteristic functions]
+\label{prop:char-properties}
+For any random variable $X$, the function $\varphi_X$ satisfies:
+\begin{enumerate}[label=(\alph*)]
+  \item $\varphi_X(0) = 1$ and $|\varphi_X(t)| \leq 1$ for all $t$;
+  \item $\varphi_X(-t) = \overline{\varphi_X(t)}$;
+  \item $\varphi_X$ is uniformly continuous on~$\R$;
+  \item if $\E |X|^k < \infty$, then $\varphi_X$ is $k$~times
+        differentiable at the origin and
+        $\varphi_X^{(j)}(0) = i^j \E X^j$ for $j \leq k$;
+  \item \emph{(independence multiplicativity)} if $X, Y$ are
+        independent, then $\varphi_{X + Y}(t) = \varphi_X(t)\, \varphi_Y(t)$.
+\end{enumerate}
+\end{proposition}
+\proofof{char-properties}
+
+\begin{theorem}[Uniqueness and inversion]
+\label{thm:char-uniqueness}
+The characteristic function determines the distribution: if
+$\varphi_X = \varphi_Y$ pointwise, then $X$ and $Y$ have the same
+distribution. If, in addition, $\varphi_X$ is integrable
+($\int_{\R} |\varphi_X(t)|\, dt < \infty$), then $X$ has a continuous
+density $f_X$ given by
+\[
+  f_X(x) \;=\; \frac{1}{2\pi} \int_{\R} e^{-itx} \varphi_X(t)\, dt.
+\]
+\end{theorem}
+\proofof{char-uniqueness}
+
+\begin{theorem}[Lévy's continuity theorem]
+\label{thm:levy-continuity}
+Let $(X_n)$ be a sequence of random variables with characteristic
+functions $\varphi_n$. Suppose $\varphi_n(t) \to \varphi(t)$
+pointwise for every $t \in \R$, and $\varphi$ is continuous at
+$t = 0$. Then $\varphi$ is the characteristic function of some
+random variable $X$, and $X_n \xrightarrow{d} X$.
+\end{theorem}
+\proofof{levy-continuity}
+
+\begin{remark}
+A short table of characteristic functions worth memorising:
+\[
+  \begin{array}{l|l}
+    X & \varphi_X(t) \\ \hline
+    \mathrm{Bernoulli}(p)        & 1 - p + p\, e^{it} \\
+    \mathrm{Bin}(n, p)           & (1 - p + p\, e^{it})^n \\
+    \mathrm{Poisson}(\lambda)    & \exp\!\bigl(\lambda(e^{it} - 1)\bigr) \\
+    \mathrm{Exp}(\lambda)        & \lambda / (\lambda - it) \\
+    \mathcal{N}(\mu, \sigma^2)   & \exp\!\bigl(i \mu t - \tfrac{1}{2} \sigma^2 t^2\bigr) \\
+    \mathrm{Uniform}(a, b)       & (e^{itb} - e^{ita}) / (it(b - a))
+  \end{array}
+\]
+The Poisson and normal characteristic functions in particular are
+exponentials of polynomials in~$t$, which makes
+\cref{prop:char-properties}\,(e) (multiplicativity on sums)
+especially powerful for them.
+\end{remark}
 
 \subsection*{Proofs}
-% TODO
+
+We prove the means and variances of a few representative cases and
+the headline characteristic-function statements; the rest are
+parallel calculations and we refer to \cite[Ch.~II,
+\S~3-4]{Shiryaev1989} for details.
+
+\begin{proof}[Mean and variance of $\mathrm{Bin}(n, p)$ and $\mathrm{Poisson}(\lambda)$]
+\proofanchor{discrete-distributions}
+For the binomial, write $X = X_1 + \cdots + X_n$ with $X_i$ i.i.d.\
+$\mathrm{Bernoulli}(p)$. Then $\E X = n \E X_1 = np$ by linearity,
+and by independence (\cref{cor:var-sum-indep})
+$\Var X = n \Var X_1 = n p (1 - p)$.
+
+For Poisson, $\E X = \sum_{k = 0}^{\infty} k\, e^{-\lambda} \lambda^k / k! = \lambda e^{-\lambda} \sum_{k = 1}^{\infty} \lambda^{k-1}/(k-1)! = \lambda$.
+A similar computation with $k(k - 1)$ gives
+$\E X(X-1) = \lambda^2$, so $\E X^2 = \lambda^2 + \lambda$ and
+$\Var X = \lambda^2 + \lambda - \lambda^2 = \lambda$.
+\end{proof}
+
+\begin{proof}[Mean and variance of $\mathrm{Uniform}(a, b)$ and $\mathrm{Exp}(\lambda)$]
+\proofanchor{continuous-distributions}
+For $\mathrm{Uniform}(a, b)$,
+$\E X = \int_a^b x/(b - a)\, dx = (a + b)/2$ and
+$\E X^2 = \int_a^b x^2/(b - a)\, dx = (b^3 - a^3)/(3(b - a)) = (a^2 + ab + b^2)/3$.
+After centring,
+$\Var X = (a^2 + ab + b^2)/3 - (a + b)^2/4 = (b - a)^2/12$.
+
+For $\mathrm{Exp}(\lambda)$, integrate by parts twice to obtain
+$\E X = \int_0^{\infty} x \lambda e^{-\lambda x}\, dx = 1/\lambda$
+and $\E X^2 = \int_0^{\infty} x^2 \lambda e^{-\lambda x}\, dx = 2/\lambda^2$,
+so $\Var X = 2/\lambda^2 - 1/\lambda^2 = 1/\lambda^2$.
+
+For $\mathcal{N}(\mu, \sigma^2)$, the substitution
+$z = (x - \mu)/\sigma$ reduces both moments to integrals of the
+standard Gaussian; using $\int e^{-z^2/2}\, dz = \sqrt{2\pi}$ and
+$\int z^2 e^{-z^2/2}\, dz = \sqrt{2\pi}$ (integration by parts), the
+identities $\E X = \mu$ and $\Var X = \sigma^2$ drop out.
+\end{proof}
+
+\begin{proof}[\Cref{prop:memorylessness}]
+\proofanchor{memorylessness}
+\emph{(a)} For $X \sim \mathrm{Geom}(p)$ with the trial-count
+convention, $\Prob(X > k) = (1 - p)^k$ (the first $k$ trials must
+all fail). Therefore
+$\Prob(X > m + n)/\Prob(X > m) = (1 - p)^{m + n}/(1 - p)^m = (1 - p)^n = \Prob(X > n)$.
+
+\emph{(b)} For $X \sim \mathrm{Exp}(\lambda)$,
+$\Prob(X > t) = \int_t^{\infty} \lambda e^{-\lambda x}\, dx = e^{-\lambda t}$,
+and the same algebra gives memorylessness.
+
+For uniqueness, suppose $X$ on $[0, \infty)$ satisfies
+$\Prob(X > s + t) = \Prob(X > s) \Prob(X > t)$ for all $s, t \geq 0$.
+The function $G(t) = \Prob(X > t)$ is right-continuous, decreasing,
+$G(0) = 1$, and Cauchy-multiplicative; the only such functions are
+$G(t) = e^{-\lambda t}$ for some $\lambda \geq 0$, giving exactly
+the exponential family. The discrete case is analogous.
+\end{proof}
+
+\begin{proof}[\Cref{prop:char-properties}]
+\proofanchor{char-properties}
+\emph{(a)} $\varphi_X(0) = \E e^{i \cdot 0 \cdot X} = \E 1 = 1$;
+$|\varphi_X(t)| \leq \E |e^{itX}| = 1$ by the triangle inequality
+for expectation (\cref{prop:exp-properties}\,(d)).
+
+\emph{(b)} $e^{i(-t)X} = \overline{e^{itX}}$ since the variables
+are real.
+
+\emph{(c)} For any $h \in \R$,
+$|\varphi_X(t + h) - \varphi_X(t)| \leq \E |e^{itX} (e^{ihX} - 1)| = \E |e^{ihX} - 1|$,
+which is independent of~$t$ and tends to~$0$ as $h \to 0$ by
+dominated convergence ($|e^{ihX} - 1| \leq 2$ pointwise and
+$\to 0$ a.s.).
+
+\emph{(d)} Differentiate inside the expectation, justified by
+dominated convergence with the dominating function $|X|^j$
+(integrable by hypothesis): $\varphi_X^{(j)}(t) = \E (iX)^j e^{itX}$,
+evaluated at $t = 0$ gives $i^j \E X^j$.
+
+\emph{(e)} For independent $X, Y$, the variables $e^{itX}$ and
+$e^{itY}$ are independent (Borel-measurable functions of independent
+variables), so by \cref{thm:indep-multiplicative} (extended to
+complex-valued functions by linearity over real and imaginary parts),
+$\E e^{it(X + Y)} = \E e^{itX} \E e^{itY}$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:char-uniqueness} and \Cref{thm:levy-continuity}]
+\proofanchor{char-uniqueness}
+\proofanchor{levy-continuity}
+Both are standard consequences of Fourier-analytic arguments
+on~$\R$. Uniqueness follows from the Plancherel-type identity
+\[
+  \int_{\R} e^{-\sigma^2 t^2 / 2} \varphi_X(t)\, dt = \sqrt{2\pi/\sigma^2}\; \E\, e^{-X^2/(2\sigma^2)}
+\]
+(approximating an indicator of an interval by Gaussians and letting
+$\sigma \to 0$); inversion in the integrable case is the standard
+$L^1$ Fourier inversion. Lévy's theorem combines pointwise
+convergence with Helly's selection theorem and a tightness argument
+secured by continuity of $\varphi$ at~$0$. Full proofs are in
+\cite[Ch.~II, \S~12]{Shiryaev1989} and \cite[Ch.~VIII]{Gnedenko2001}.
+\end{proof}
 
 \subsection*{Examples}
-% TODO
+
+\begin{example}[Sum of independent Poissons is Poisson]
+\label{ex:poisson-sum}
+Let $X \sim \mathrm{Poisson}(\lambda)$ and $Y \sim \mathrm{Poisson}(\mu)$
+be independent. Their characteristic functions are
+$\varphi_X(t) = \exp(\lambda(e^{it} - 1))$ and
+$\varphi_Y(t) = \exp(\mu(e^{it} - 1))$, so by
+\cref{prop:char-properties}\,(e),
+\[
+  \varphi_{X + Y}(t) = \exp\bigl((\lambda + \mu)(e^{it} - 1)\bigr),
+\]
+which is the characteristic function of $\mathrm{Poisson}(\lambda + \mu)$.
+By \cref{thm:char-uniqueness}, $X + Y \sim \mathrm{Poisson}(\lambda + \mu)$.
+\end{example}
+
+\begin{example}[Sum of independent normals is normal]
+\label{ex:normal-sum}
+If $X \sim \mathcal{N}(\mu_1, \sigma_1^2)$ and
+$Y \sim \mathcal{N}(\mu_2, \sigma_2^2)$ are independent, then
+\[
+  \varphi_{X + Y}(t) = \exp\bigl(i \mu_1 t - \tfrac{1}{2} \sigma_1^2 t^2\bigr) \exp\bigl(i \mu_2 t - \tfrac{1}{2} \sigma_2^2 t^2\bigr) = \exp\bigl(i(\mu_1 + \mu_2) t - \tfrac{1}{2}(\sigma_1^2 + \sigma_2^2) t^2\bigr),
+\]
+the characteristic function of
+$\mathcal{N}(\mu_1 + \mu_2, \sigma_1^2 + \sigma_2^2)$. So
+$X + Y \sim \mathcal{N}(\mu_1 + \mu_2, \sigma_1^2 + \sigma_2^2)$ —
+the normal family is closed under independent sums, with means and
+variances adding.
+\end{example}
+
+\begin{example}[Poisson approximation to the binomial]
+\label{ex:poisson-approx-binomial}
+Let $X_n \sim \mathrm{Bin}(n, \lambda/n)$ for fixed $\lambda > 0$ and
+large~$n$. Then
+\[
+  \varphi_{X_n}(t) = \bigl(1 - \tfrac{\lambda}{n} + \tfrac{\lambda}{n} e^{it}\bigr)^n = \Bigl(1 + \tfrac{\lambda(e^{it} - 1)}{n}\Bigr)^n \to \exp\bigl(\lambda(e^{it} - 1)\bigr),
+\]
+the characteristic function of $\mathrm{Poisson}(\lambda)$. By
+\cref{thm:levy-continuity}, $X_n \xrightarrow{d} \mathrm{Poisson}(\lambda)$ —
+the law of rare events.
+\end{example}
+
+\begin{problem}
+\label{prob:exponential-min}
+Let $X_1, \dots, X_n$ be independent with $X_i \sim \mathrm{Exp}(\lambda_i)$.
+Find the distribution of $M = \min(X_1, \dots, X_n)$.
+\end{problem}
+
+\begin{proof}[Solution]
+For $t \geq 0$, the event $\{M > t\}$ is $\{X_1 > t, \dots, X_n > t\}$,
+and by independence
+\[
+  \Prob(M > t) = \prod_{i=1}^{n} \Prob(X_i > t) = \prod_{i=1}^{n} e^{-\lambda_i t} = \exp\bigl(-(\lambda_1 + \cdots + \lambda_n) t\bigr).
+\]
+This is the survival function of $\mathrm{Exp}(\Lambda)$ with
+$\Lambda = \lambda_1 + \cdots + \lambda_n$, so
+$M \sim \mathrm{Exp}(\lambda_1 + \cdots + \lambda_n)$. The
+``competing-exponentials'' setup is the bedrock of continuous-time
+Markov chains (\cref{sec:1.2.09-markov-chains}).
+\end{proof}
