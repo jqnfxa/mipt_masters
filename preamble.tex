@@ -141,8 +141,19 @@
 % They bundle babel's language switch with proof- and cleveref-name
 % localization, so the result is the same regardless of which language
 % babel happened to pick as "main".
+% Math-house-style macros (\R, \C, …) collide with T1 fontenc accents
+% (\C, \L) and a few other packages. babel re-imposes the fontencoding
+% on every \selectlanguage, undoing the preamble overrides for those
+% names. Reapply via \def here so they survive language switches.
+\newcommand{\reapplyMathMacros}{%
+  \def\R{\mathbb{R}}\def\C{\mathbb{C}}\def\N{\mathbb{N}}%
+  \def\Z{\mathbb{Z}}\def\Q{\mathbb{Q}}\def\F{\mathbb{F}}%
+  \def\E{\mathbb{E}}\def\Prob{\mathbb{P}}%
+}
+
 \newcommand{\setupRussian}{%
   \selectlanguage{russian}%
+  \reapplyMathMacros%
   \renewcommand{\proofname}{Доказательство}%
   \crefname{theorem}{теорема}{теоремы}\Crefname{theorem}{Теорема}{Теоремы}%
   \crefname{lemma}{лемма}{леммы}\Crefname{lemma}{Лемма}{Леммы}%
@@ -158,6 +169,7 @@
 }
 \newcommand{\setupEnglish}{%
   \selectlanguage{english}%
+  \reapplyMathMacros%
   \renewcommand{\proofname}{Proof}%
   \crefname{theorem}{theorem}{theorems}\Crefname{theorem}{Theorem}{Theorems}%
   \crefname{lemma}{lemma}{lemmas}\Crefname{lemma}{Lemma}{Lemmas}%
