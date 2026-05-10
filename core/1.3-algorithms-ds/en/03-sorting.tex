@@ -8,10 +8,258 @@ Sorting. Information-theoretic lower bound for sorting. Insertion, bubble, quick
 \end{ticket}
 
 \subsection*{Theory}
-% TODO
+
+\begin{definition}[Sorting problem]
+\label{def:sorting}
+\emph{Input:} an array $A[1..n]$ of elements drawn from a totally
+ordered set $(U, \leq)$.\\
+\emph{Output:} a permutation $A'[1..n]$ of $A$ such that
+$A'[1] \leq A'[2] \leq \dots \leq A'[n]$.
+\end{definition}
+
+A sorting algorithm is \emph{comparison-based} if its only access to
+the elements is via the binary predicates $<, \leq, =$. It is
+\emph{stable} if it preserves the relative order of elements judged
+equal by the comparator. It is \emph{in-place} if it uses
+$O(1)$ extra memory beyond the input array.
+
+References: \cite[Chs.~2, 7, 8]{CLRS2013}, \cite{Skiena2014}.
+
+\subsubsection*{Information-theoretic lower bound}
+
+\begin{theorem}[Comparison-sort lower bound]
+\label{thm:comparison-lb}
+Any comparison-based sorting algorithm requires
+$\Omega(n \log n)$ comparisons in the worst case to sort $n$
+elements; more precisely, the worst-case number of comparisons is at
+least $\lceil \log_2 (n!) \rceil = n \log_2 n - n \log_2 e + O(\log n)$.
+\end{theorem}
+\proofof{comparison-lb}
+
+\subsubsection*{Insertion sort}
+
+Insertion sort processes $A$ left to right; on the $j$-th iteration it
+inserts $A[j]$ into the already-sorted prefix $A[1..j-1]$ by shifting
+larger elements one position to the right.
+
+\begin{proposition}[Insertion sort complexity]
+\label{prop:insertion-sort}
+Insertion sort runs in $\Theta(n^2)$ worst-case time, $\Theta(n)$
+best-case time (on an already-sorted array), and uses $O(1)$ extra
+memory. It is stable.
+\end{proposition}
+\proofof{insertion-sort}
+
+A complete loop-invariant correctness proof appears in
+\cref{ex:insertion-sort}.
+
+\subsubsection*{Bubble sort}
+
+Bubble sort makes repeated passes over the array; on each pass it
+compares adjacent pairs and swaps any out-of-order pair, ``bubbling''
+the largest unplaced element to the right end.
+
+\begin{proposition}[Bubble sort complexity]
+\label{prop:bubble-sort}
+Bubble sort runs in $\Theta(n^2)$ worst-case time on a reverse-sorted
+array, $\Theta(n)$ best-case time on an already-sorted array (with the
+``early-exit on no-swap'' optimisation), and uses $O(1)$ extra memory.
+It is stable.
+\end{proposition}
+\proofof{bubble-sort}
+
+\subsubsection*{Merge sort}
+
+Merge sort splits $A[1..n]$ into halves, sorts each recursively, and
+merges the sorted halves into one.
+
+\begin{proposition}[Merge sort complexity]
+\label{prop:merge-sort}
+Merge sort runs in $\Theta(n \log n)$ worst- and best-case time and
+uses $\Theta(n)$ extra memory for the merge buffer. It is stable.
+\end{proposition}
+\proofof{merge-sort}
+
+\subsubsection*{Quicksort}
+
+Quicksort picks a \emph{pivot} from the array, partitions the array
+into elements $< $ pivot, $=$ pivot, and $>$ pivot, then recurses on
+the two outer parts. Most implementations use the Lomuto or Hoare
+partition scheme and are in-place up to recursion stack.
+
+\begin{proposition}[Quicksort complexity]
+\label{prop:quicksort}
+Quicksort with Lomuto partitioning has worst-case time $\Theta(n^2)$
+(attained on an already-sorted input with the standard
+``last-element-as-pivot'' choice). With pivots chosen uniformly at
+random from the current subarray, the \emph{expected} running time is
+$\Theta(n \log n)$. It uses $O(\log n)$ stack space (recursing on the
+smaller side) and $O(1)$ extra memory in addition to the stack. It
+is in general not stable.
+\end{proposition}
+\proofof{quicksort}
+
+\begin{remark}[Comparing the four]
+At a glance:
+\[
+  \begin{array}{l|cccc}
+    \text{algorithm} & \text{worst} & \text{best} & \text{average} & \text{stable} \\
+    \hline
+    \text{insertion}  & \Theta(n^2)   & \Theta(n)         & \Theta(n^2)        & \text{yes} \\
+    \text{bubble}     & \Theta(n^2)   & \Theta(n)         & \Theta(n^2)        & \text{yes} \\
+    \text{merge}      & \Theta(n \log n) & \Theta(n \log n) & \Theta(n \log n) & \text{yes} \\
+    \text{quick (random pivot)} & \Theta(n^2) & \Theta(n \log n) & \Theta(n \log n) \text{ exp.} & \text{no}
+  \end{array}
+\]
+Merge and quick sort meet the $\Omega(n \log n)$ lower bound;
+insertion and bubble are quadratic in the worst case but competitive
+on small or nearly-sorted inputs and are commonly used as base cases
+inside hybrid sorts.
+\end{remark}
 
 \subsection*{Proofs}
-% TODO
+
+\begin{proof}[\Cref{thm:comparison-lb}]
+\proofanchor{comparison-lb}
+A comparison-based sorting algorithm is modelled by a binary
+\emph{decision tree}: each internal node corresponds to a comparison
+$A[i] : A[j]$, with left/right children for the outcomes
+$\leq$ and $>$; each leaf corresponds to a sorted output, i.e.\ to a
+permutation of the input.
+
+To sort correctly on every input, the tree must contain at least one
+leaf per permutation: $\geq n!$ leaves. A binary tree of height~$h$
+has at most $2^h$ leaves, so $2^h \geq n!$, hence
+$h \geq \lceil \log_2 (n!) \rceil$. The worst-case number of
+comparisons is exactly the height of the tree.
+
+By Stirling's formula, $\log_2(n!) = n \log_2 n - n \log_2 e + \tfrac{1}{2} \log_2(2\pi n) + O(1/n)$,
+so $\log_2(n!) = \Theta(n \log n)$.
+\end{proof}
+
+\begin{proof}[\Cref{prop:insertion-sort}]
+\proofanchor{insertion-sort}
+Correctness is the loop invariant proved in
+\cref{ex:insertion-sort}.
+
+\emph{Worst case.} On a reverse-sorted input, the inner shift loop
+processes the entire prefix $A[1..j-1]$ at iteration~$j$, doing
+$j - 1$ comparisons. Total comparisons:
+$\sum_{j=2}^{n} (j - 1) = n(n - 1)/2 = \Theta(n^2)$.
+
+\emph{Best case.} On an already-sorted input, the inner loop exits
+after the first comparison at every~$j$, giving $n - 1$ comparisons
+total: $\Theta(n)$.
+
+Stability follows because a strict $<$ comparison is used in the
+shift loop, so equal elements never swap positions.
+\end{proof}
+
+\begin{proof}[\Cref{prop:bubble-sort}]
+\proofanchor{bubble-sort}
+Outer pass~$k$ guarantees that the largest of the $n - k + 1$
+remaining elements ends in position $n - k + 1$. Hence after at
+most $n - 1$ outer passes the array is sorted (\emph{loop invariant:}
+``after pass~$k$, $A[n - k + 1 .. n]$ is sorted and contains the
+$k$ largest elements'').
+
+\emph{Worst case.} On a reverse-sorted input, every adjacent pair on
+each pass is out of order, so $\sum_{k=1}^{n-1} (n - k) = \Theta(n^2)$
+comparisons (and swaps).
+
+\emph{Best case.} On a sorted input, one pass with no swaps; with the
+``no-swap'' early-exit, total cost $\Theta(n)$.
+
+Stability: the swap is performed only on strict inversions
+($A[i] > A[i+1]$), so equal elements are never swapped.
+\end{proof}
+
+\begin{proof}[\Cref{prop:merge-sort}]
+\proofanchor{merge-sort}
+Recurrence $T(n) = 2 T(n/2) + \Theta(n)$ with base $T(1) = \Theta(1)$:
+the merge step examines each of the $n$ elements once. Apply
+\cref{thm:master} with $a = b = 2$, $\alpha = 1$, and
+$f(n) = \Theta(n) = \Theta(n^\alpha)$; case~(b) gives
+$T(n) = \Theta(n \log n)$. The merge buffer holds at most $n$
+elements, so $S(n) = \Theta(n)$.
+
+Stability holds if the merge resolves ties by preferring the element
+from the left half: equal elements then keep their original relative
+order through every merge.
+\end{proof}
+
+\begin{proof}[\Cref{prop:quicksort}]
+\proofanchor{quicksort}
+Partitioning $A[\ell..r]$ with $r - \ell + 1 = k$ elements does~$k - 1$
+comparisons. Let $T(k)$ be the running time on a $k$-element
+subarray. If the pivot ends in position~$p$ (so the left part has
+$p - \ell$ elements and the right part has $r - p$),
+$T(k) = T(p - \ell) + T(r - p) + \Theta(k)$.
+
+\emph{Worst case.} An adversary can force the pivot to always be the
+maximum of the subarray (e.g.\ already-sorted input with last-element
+pivot): then $T(n) = T(n - 1) + \Theta(n) = \Theta(n^2)$.
+
+\emph{Expected case (random pivot).} Let $X_n$ be the random number
+of comparisons. By linearity, $X_n = \sum_{i < j} \mathbf{1}_{A_{(i)} \text{ and } A_{(j)} \text{ are compared}}$,
+where $A_{(i)}$ is the $i$-th order statistic. A standard argument
+shows $\Prob[\text{$A_{(i)}$ and $A_{(j)}$ are compared}] = 2/(j - i + 1)$,
+hence
+\[
+  \E X_n = \sum_{i < j} \frac{2}{j - i + 1}
+        = \sum_{k=2}^{n} \frac{2 (n - k + 1)}{k}
+        \leq 2 n \sum_{k=2}^{n} \frac{1}{k}
+        = \Theta(n \log n).
+\]
+The lower bound $\E X_n = \Omega(n \log n)$ matches the
+information-theoretic bound (\cref{thm:comparison-lb}).
+\end{proof}
 
 \subsection*{Examples}
-% TODO
+
+\begin{example}[Trace of merge sort on \texttt{[5, 2, 4, 6, 1, 3]}]
+\label{ex:mergesort-trace}
+\[
+  \begin{array}{rcl}
+    \texttt{[5, 2, 4, 6, 1, 3]} & \to & \texttt{split} \to \texttt{[5, 2, 4]}, \texttt{[6, 1, 3]} \\
+    \texttt{[5, 2, 4]} & \to & \texttt{[5]}, \texttt{[2, 4]} \to \texttt{[5]}, \texttt{[2, 4]} \to \texttt{[2, 4, 5]} \\
+    \texttt{[6, 1, 3]} & \to & \texttt{[6]}, \texttt{[1, 3]} \to \texttt{[6]}, \texttt{[1, 3]} \to \texttt{[1, 3, 6]} \\
+    \texttt{[2, 4, 5]} \cup \texttt{[1, 3, 6]} & \to & \texttt{[1, 2, 3, 4, 5, 6]}
+  \end{array}
+\]
+The total number of merge comparisons is
+$2 + 2 + 5 = 9$ (the final merge of two 3-element halves takes at
+most $3 + 3 - 1 = 5$ comparisons).
+\end{example}
+
+\begin{example}[Quicksort worst case on a sorted input]
+\label{ex:quicksort-worst}
+With Lomuto partitioning and pivot~$A[r]$, the input $A = [1, 2, \dots, n]$
+forces the pivot to be the largest of every subarray. Each partition
+returns the pivot in position~$r$ and a left subarray of size~$r - \ell$.
+The recurrence becomes $T(n) = T(n - 1) + (n - 1)$, summing to
+$\sum_{k=1}^{n-1} k = n(n-1)/2$ comparisons. Choosing the pivot
+uniformly at random from $A[\ell..r]$ avoids this pathology with
+overwhelming probability — see \cref{prop:quicksort}.
+\end{example}
+
+\begin{example}[Lower bound is tight up to constants]
+\label{ex:lb-tight}
+For $n = 4$, $\log_2 (4!) = \log_2 24 \approx 4.585$, so any
+comparison sort needs at least~$5$ comparisons in the worst case.
+The standard \emph{merge-insertion} (Ford--Johnson) algorithm sorts
+4 elements with exactly~$5$ comparisons; merge sort does
+$5$ as well (one merge of two 2-element halves does at most~$3$
+comparisons; building each half does~$1$ each, totalling $5$). Both
+algorithms therefore achieve the information-theoretic optimum at
+$n = 4$.
+\end{example}
+
+\begin{problem}[Beating the lower bound when not comparison-based]
+Show that \emph{radix sort} sorts $n$ integers in $\{0, 1, \dots, U\}$
+in time $\Theta\bigl(n \log_b U\bigr)$ using a stable bucket sort with
+base~$b$ on each digit. In particular, when
+$U = O(n^c)$ for a constant $c$ and $b = n$, the running time becomes
+$\Theta(n)$ — beating the $\Omega(n \log n)$ lower bound. Explain
+why this does not contradict \cref{thm:comparison-lb}.
+\end{problem}
