@@ -8,10 +8,330 @@ Riemann's oscillation theorem. Trigonometric Fourier series. Conditions for poin
 \end{ticket}
 
 \subsection*{Theory}
-% TODO
+
+We work with $2\pi$-periodic functions $f \colon \R \to \R$; the
+canonical reference window is $[-\pi, \pi]$. Unless stated otherwise,
+$f$ is assumed Riemann-integrable on $[-\pi, \pi]$, so in particular
+$f \in L^1[-\pi, \pi]$. For deeper treatment see
+\cite[Vol.~II, Ch.~XVIII]{Zorich1981}.
+
+\subsubsection*{Coefficients and partial sums}
+
+\begin{definition}
+\label{def:fourier-coeffs}
+The \emph{(real) Fourier coefficients} of~$f$ are
+\[
+  a_n \;=\; \frac{1}{\pi} \int_{-\pi}^{\pi} f(x) \cos(nx)\, dx \quad (n \ge 0),
+  \qquad
+  b_n \;=\; \frac{1}{\pi} \int_{-\pi}^{\pi} f(x) \sin(nx)\, dx \quad (n \ge 1).
+\]
+The associated \emph{trigonometric Fourier series} is
+\[
+  f(x) \;\sim\; \frac{a_0}{2} + \sum_{n=1}^{\infty} \bigl(a_n \cos(nx) + b_n \sin(nx)\bigr),
+\]
+and its $N$-th partial sum is
+\[
+  S_N(x; f) \;=\; \frac{a_0}{2} + \sum_{n=1}^{N} \bigl(a_n \cos(nx) + b_n \sin(nx)\bigr).
+\]
+The symbol $\sim$ records the assignment of coefficients without
+asserting convergence.
+\end{definition}
+
+\begin{remark}
+The system
+$\bigl\{1/\sqrt{2}, \cos x, \sin x, \cos 2x, \sin 2x, \dots\bigr\}$
+is orthogonal on $[-\pi, \pi]$ with $\int \cos^2 = \int \sin^2 = \pi$
+and $\int_{-\pi}^{\pi} 1 \cdot 1\, dx = 2\pi$. The normalisations in
+\cref{def:fourier-coeffs} are exactly those that recover the
+coefficients of any finite trigonometric polynomial from the
+$L^2$-projection formula.
+\end{remark}
+
+\subsubsection*{Bessel's inequality and Riemann's oscillation theorem}
+
+\begin{theorem}[Bessel's inequality]
+\label{thm:bessel}
+For any $f \in L^2[-\pi, \pi]$,
+\[
+  \frac{a_0^2}{2} + \sum_{n=1}^{\infty} \bigl(a_n^2 + b_n^2\bigr)
+  \;\le\; \frac{1}{\pi} \int_{-\pi}^{\pi} f(x)^2\, dx.
+\]
+\end{theorem}
+\proofof{bessel}
+
+\begin{theorem}[Riemann's oscillation theorem]
+\label{thm:riemann-lebesgue}
+If $f$ is Riemann-integrable on $[a, b]$, then
+\[
+  \int_{a}^{b} f(x) \cos(\lambda x)\, dx \;\to\; 0,
+  \qquad
+  \int_{a}^{b} f(x) \sin(\lambda x)\, dx \;\to\; 0
+  \quad \text{as } \lambda \to +\infty.
+\]
+In particular the Fourier coefficients $a_n, b_n$ of any
+$2\pi$-periodic Riemann-integrable function tend to zero.
+\end{theorem}
+\proofof{riemann-lebesgue}
+
+\subsubsection*{Dirichlet kernel and the integral representation}
+
+\begin{definition}
+\label{def:dirichlet-kernel}
+The \emph{Dirichlet kernel} of order~$N$ is
+\[
+  D_N(t) \;=\; \frac{1}{2} + \sum_{n=1}^{N} \cos(nt).
+\]
+It is even, $2\pi$-periodic, $D_N(0) = N + \tfrac12$, and
+$\int_{-\pi}^{\pi} D_N(t)\, dt = \pi$.
+\end{definition}
+
+\begin{lemma}[Closed form for the Dirichlet kernel]
+\label{lem:dirichlet-closed}
+For $t \notin 2\pi\Z$,
+\[
+  D_N(t) \;=\; \frac{\sin\bigl((N + \tfrac12)\, t\bigr)}{2 \sin(t/2)}.
+\]
+\end{lemma}
+\proofof{dirichlet-closed}
+
+\begin{theorem}[Integral representation of partial sums]
+\label{thm:integral-rep}
+For every $x$,
+\[
+  S_N(x; f) \;=\; \frac{1}{\pi} \int_{-\pi}^{\pi} f(x + t)\, D_N(t)\, dt.
+\]
+Consequently
+\[
+  S_N(x; f) - f(x) \;=\; \frac{1}{\pi} \int_{-\pi}^{\pi} \bigl(f(x + t) - f(x)\bigr) D_N(t)\, dt.
+\]
+\end{theorem}
+\proofof{integral-rep}
+
+\subsubsection*{Pointwise convergence}
+
+\begin{theorem}[Dini's test]
+\label{thm:dini}
+Let~$f$ be $2\pi$-periodic and Riemann-integrable on $[-\pi, \pi]$.
+Fix~$x \in \R$ and $S \in \R$. If
+\[
+  \int_{0}^{\pi} \frac{|f(x + t) + f(x - t) - 2S|}{t}\, dt \;<\; \infty,
+\]
+then $S_N(x; f) \to S$ as $N \to \infty$.
+\end{theorem}
+\proofof{dini}
+
+\begin{corollary}[Pointwise convergence at smooth points]
+\label{cor:dini-holder}
+If $f$ is Hölder-continuous of some exponent $\alpha \in (0, 1]$ at the
+point~$x$, in particular if $f$ is differentiable at~$x$, then
+$S_N(x; f) \to f(x)$.
+\end{corollary}
+\proofof{dini-holder}
+
+\begin{corollary}[Jump discontinuities]
+\label{cor:jump}
+If $f$ has one-sided limits $f(x \pm)$ and one-sided derivatives at~$x$,
+then
+\[
+  S_N(x; f) \;\to\; \frac{f(x+) + f(x-)}{2}.
+\]
+\end{corollary}
+\proofof{jump}
+
+\subsubsection*{Uniform convergence}
+
+\begin{theorem}[Uniform convergence for $C^1$ periodic functions]
+\label{thm:uniform-c1}
+Let $f \colon \R \to \R$ be $2\pi$-periodic, continuous, and piecewise
+$C^1$ (so that $f'$ is bounded and Riemann-integrable on
+$[-\pi, \pi]$). Then $S_N(\,\cdot\,; f) \to f$ uniformly on~$\R$, and
+the Fourier series of~$f$ converges absolutely.
+\end{theorem}
+\proofof{uniform-c1}
 
 \subsection*{Proofs}
-% TODO
+
+\begin{proof}[\Cref{thm:bessel}]
+\proofanchor{bessel}
+Let $T_N$ be the trigonometric polynomial $S_N(\cdot; f)$. Direct
+expansion using orthogonality gives
+\[
+  \frac{1}{\pi} \int_{-\pi}^{\pi} T_N(x)^2\, dx
+  \;=\; \frac{a_0^2}{2} + \sum_{n=1}^{N} (a_n^2 + b_n^2),
+\]
+and a similar expansion of the cross term yields
+$\tfrac{1}{\pi} \int f \, T_N\, dx$ equal to the same quantity.
+Therefore
+\[
+  0 \;\le\; \frac{1}{\pi} \int_{-\pi}^{\pi} (f - T_N)^2\, dx
+  \;=\; \frac{1}{\pi} \int_{-\pi}^{\pi} f^2\, dx
+  - \Bigl(\frac{a_0^2}{2} + \sum_{n=1}^{N} (a_n^2 + b_n^2)\Bigr).
+\]
+Rearranging and letting $N \to \infty$ gives the claim.
+\end{proof}
+
+\begin{proof}[\Cref{thm:riemann-lebesgue}]
+\proofanchor{riemann-lebesgue}
+First take $f = \mathbf{1}_{[c, d]}$ on $[a, b]$. Then
+$\int_{a}^{b} \mathbf{1}_{[c, d]} \cos(\lambda x)\, dx = (\sin(\lambda d) - \sin(\lambda c))/\lambda \to 0$,
+and similarly for the sine integral. By linearity, the conclusion holds
+for every step function on $[a, b]$.
+
+Now let $f$ be Riemann-integrable on $[a, b]$ and fix
+$\varepsilon > 0$. By the definition of the Riemann integral, there
+exists a step function~$\varphi$ with
+$\int_a^b |f - \varphi|\, dx < \varepsilon/2$. Pick $\Lambda > 0$ such
+that $\bigl|\int_a^b \varphi(x) \cos(\lambda x)\, dx\bigr| < \varepsilon/2$
+for $\lambda \ge \Lambda$. Then for those~$\lambda$,
+\[
+  \Bigl|\int_a^b f \cos(\lambda x)\, dx\Bigr|
+  \;\le\; \int_a^b |f - \varphi|\, dx + \Bigl|\int_a^b \varphi \cos(\lambda x)\, dx\Bigr|
+  \;<\; \varepsilon.
+\]
+The same argument applies to the sine integral. The statement about
+Fourier coefficients is the special case $a = -\pi$, $b = \pi$,
+$\lambda = n \in \N$.
+\end{proof}
+
+\begin{proof}[\Cref{lem:dirichlet-closed}]
+\proofanchor{dirichlet-closed}
+Multiply $D_N(t)$ by $2\sin(t/2)$ and use the
+product-to-sum identity
+$2 \sin(t/2) \cos(nt) = \sin((n + \tfrac12) t) - \sin((n - \tfrac12) t)$.
+The sum telescopes:
+\[
+  2 \sin(t/2)\, D_N(t) = \sin(t/2) + \sum_{n=1}^{N}\bigl[\sin((n + \tfrac12)t) - \sin((n - \tfrac12) t)\bigr]
+  = \sin\bigl((N + \tfrac12)t\bigr).
+\]
+Divide by $2\sin(t/2)$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:integral-rep}]
+\proofanchor{integral-rep}
+Substitute the definitions of~$a_n, b_n$ into $S_N(x; f)$ and use the
+identity $\cos(nx)\cos(ny) + \sin(nx)\sin(ny) = \cos(n(y - x))$:
+\[
+  S_N(x; f)
+  = \frac{1}{\pi} \int_{-\pi}^{\pi} f(y) \Bigl[\frac{1}{2} + \sum_{n=1}^{N} \cos(n(y - x))\Bigr] dy
+  = \frac{1}{\pi} \int_{-\pi}^{\pi} f(y)\, D_N(y - x)\, dy.
+\]
+Substitute $t = y - x$ and use $2\pi$-periodicity to keep the window
+$[-\pi, \pi]$. The second formula follows from
+$\frac{1}{\pi} \int_{-\pi}^{\pi} D_N(t)\, dt = 1$ (definition of~$D_N$).
+\end{proof}
+
+\begin{proof}[\Cref{thm:dini}]
+\proofanchor{dini}
+By \cref{thm:integral-rep}, evenness of~$D_N$, and the change
+of variable $t \mapsto -t$ in the integral over $[-\pi, 0]$,
+\[
+  S_N(x; f) - S
+  = \frac{1}{\pi} \int_{0}^{\pi} \bigl(f(x+t) + f(x-t) - 2S\bigr) D_N(t)\, dt.
+\]
+Substitute the closed form (\cref{lem:dirichlet-closed}):
+\[
+  S_N(x; f) - S
+  = \frac{1}{\pi} \int_{0}^{\pi} \frac{f(x+t) + f(x-t) - 2S}{2\sin(t/2)} \sin\bigl((N + \tfrac12) t\bigr)\, dt.
+\]
+Set
+$g(t) = (f(x+t) + f(x-t) - 2S)/(2\sin(t/2))$. Near $t = 0$,
+$2\sin(t/2) \sim t$, so the Dini hypothesis gives $g \in L^1[0, \pi]$.
+On $[\delta, \pi]$ for any $\delta > 0$, $g$ is bounded times a Riemann
+integrable function and so itself integrable. By
+\cref{thm:riemann-lebesgue},
+$\int_0^{\pi} g(t) \sin((N + \tfrac12) t)\, dt \to 0$.
+\end{proof}
+
+\begin{proof}[\Cref{cor:dini-holder}]
+\proofanchor{dini-holder}
+With $S = f(x)$ the integrand in Dini's hypothesis is bounded by
+$|f(x+t) - f(x)|/t + |f(x-t) - f(x)|/t \le 2C\, t^{\alpha - 1}$, which
+is integrable on $[0, \pi]$ for every $\alpha > 0$. Apply
+\cref{thm:dini}.
+\end{proof}
+
+\begin{proof}[\Cref{cor:jump}]
+\proofanchor{jump}
+Set $S = (f(x+) + f(x-))/2$. The numerator splits as
+$(f(x+t) - f(x+)) + (f(x-t) - f(x-))$, each tending to zero with
+bounded one-sided difference quotient by hypothesis. Hence
+$|f(x+t) + f(x-t) - 2S|/t$ is bounded near $0$, so integrable, and
+\cref{thm:dini} gives $S_N(x; f) \to S$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:uniform-c1}]
+\proofanchor{uniform-c1}
+Integration by parts (legal because $f$ is continuous and piecewise
+$C^1$, with $f(\pi) = f(-\pi)$ by periodicity) gives, for $n \ge 1$,
+\[
+  a_n(f) = -\frac{1}{n}\, b_n(f'), \qquad b_n(f) = \frac{1}{n}\, a_n(f').
+\]
+By the Cauchy--Schwarz inequality applied to
+$\sum (1/n) \cdot |a_n(f')|$ and Bessel's inequality
+(\cref{thm:bessel}) for~$f'$,
+\[
+  \sum_{n=1}^{\infty} \bigl(|a_n(f)| + |b_n(f)|\bigr)
+  \;\le\; 2 \sum_{n=1}^{\infty} \frac{1}{n} \sqrt{a_n(f')^2 + b_n(f')^2}
+  \;\le\; 2 \Bigl(\sum \frac{1}{n^2}\Bigr)^{1/2} \Bigl(\sum (a_n(f')^2 + b_n(f')^2)\Bigr)^{1/2} < \infty.
+\]
+Hence the Fourier series of~$f$ converges absolutely and (by the
+Weierstrass $M$-test, \cref{thm:weierstrass-m}) uniformly to a
+continuous limit~$g$. By \cref{cor:dini-holder} (applicable
+because $f$ is everywhere differentiable from each side), $g(x) = f(x)$
+pointwise.
+\end{proof}
 
 \subsection*{Examples}
-% TODO
+
+\begin{example}[Sawtooth wave]
+\label{ex:sawtooth}
+Let $f(x) = x$ on $(-\pi, \pi)$ extended $2\pi$-periodically (with
+the value at $x = \pm\pi$ set arbitrarily). The function is odd, so
+$a_n = 0$. Integration by parts gives
+\[
+  b_n = \frac{1}{\pi} \int_{-\pi}^{\pi} x \sin(nx)\, dx
+       = \frac{2}{\pi} \int_{0}^{\pi} x \sin(nx)\, dx
+       = \frac{2 (-1)^{n+1}}{n}.
+\]
+Hence $x = 2 \sum_{n=1}^{\infty} \frac{(-1)^{n+1}}{n} \sin(nx)$ for
+$x \in (-\pi, \pi)$. At $x = \pm\pi$, the average $(\pi + (-\pi))/2 = 0$
+matches the half-sum prediction of \cref{cor:jump}.
+\end{example}
+
+\begin{example}[Square wave: pointwise but not uniform convergence]
+\label{ex:square}
+Let $f(x) = \operatorname{sgn}(x)$ on $(-\pi, \pi)$ extended
+periodically. Odd again, so $a_n = 0$, and
+\[
+  b_n = \frac{2}{\pi} \int_{0}^{\pi} \sin(nx)\, dx
+       = \frac{2 (1 - (-1)^n)}{\pi n}
+       = \begin{cases} 4/(\pi n) & n \text{ odd},\\ 0 & n \text{ even}. \end{cases}
+\]
+The Fourier series
+$\frac{4}{\pi} \sum_{k = 0}^{\infty} \frac{\sin((2k+1) x)}{2k+1}$
+converges to $\operatorname{sgn}(x)$ at every continuity point and to
+$0 = \tfrac12(1 + (-1))$ at $x = 0, \pm\pi$, by \cref{cor:jump}.
+Convergence is not uniform: the partial sums overshoot the jump
+at~$0$ by a fixed factor (Gibbs phenomenon). This is consistent with
+\cref{thm:uniform-c1}, whose continuity hypothesis fails here.
+\end{example}
+
+\begin{example}[A $C^0$, piecewise $C^1$ example: $x^2$]
+\label{ex:xsquared}
+Extend $f(x) = x^2$ from $[-\pi, \pi]$ periodically. The extension is
+continuous (since $\pi^2 = (-\pi)^2$) and piecewise $C^1$, so
+\cref{thm:uniform-c1} applies. The function is even, so $b_n = 0$;
+two integrations by parts give
+$a_0 = \frac{2\pi^2}{3}$ and
+$a_n = \frac{4 (-1)^n}{n^2}$ for $n \ge 1$. Hence
+\[
+  x^2 \;=\; \frac{\pi^2}{3} + 4 \sum_{n=1}^{\infty} \frac{(-1)^n}{n^2}\, \cos(nx),
+  \qquad x \in [-\pi, \pi],
+\]
+with absolute and uniform convergence.
+\end{example}
+
+\begin{problem}[Basel sum]
+Substitute $x = \pi$ in \cref{ex:xsquared} and rearrange to obtain
+$\displaystyle \sum_{n=1}^{\infty} \frac{1}{n^2} \;=\; \frac{\pi^2}{6}$.
+\end{problem}
