@@ -8,10 +8,137 @@
 \end{ticket}
 
 \subsection*{Теория}
-% TODO
+
+Имеется~$n$ зашумлённых наблюдений линейной функции от неизвестного $p$-мерного параметра, и требуется оценить этот параметр, минимизируя сумму квадратов невязок. Эта схема формализует классическую задачу подгонки кривой и служит прообразом любой линейной модели в статистике.
+
+\begin{definition}[Линейная регрессионная модель]
+\label{def:linear-regression-model}
+\emph{Линейной регрессионной моделью} (\emph{линейной измерительной моделью}) называется набор данных:
+\begin{itemize}
+  \item известная \emph{матрица плана} $\mat{X} \in \R^{n \times p}$ (\emph{регрессоры} или независимые переменные), $n \geq p$;
+  \item неизвестный вектор параметров $\vect{\beta} \in \R^p$;
+  \item вектор шума $\vect{\varepsilon} \in \R^n$ с нулевым математическим ожиданием, попарно некоррелированными компонентами и общей дисперсией: $\E \vect{\varepsilon} = \vect{0}$ и $\Cov(\vect{\varepsilon}) = \sigma^2 \mat{I}_n$ при некотором неизвестном $\sigma^2 > 0$;
+  \item наблюдения $\vect{y} = \mat{X} \vect{\beta} + \vect{\varepsilon} \in \R^n$.
+\end{itemize}
+\end{definition}
+
+\begin{definition}[МНК-оценка]
+\label{def:ols-estimator}
+\emph{Оценкой метода наименьших квадратов} (МНК-оценкой) параметра~$\vect{\beta}$ называется любая точка
+\[
+  \hat{\vect{\beta}} \;\in\; \argmin_{\vect{b} \in \R^p}\, \|\vect{y} - \mat{X} \vect{b}\|^2,
+\]
+где $\|\cdot\|$~--- евклидова норма на~$\R^n$.
+\end{definition}
+
+\begin{theorem}[Нормальные уравнения]
+\label{thm:normal-equations}
+Любая МНК-оценка~$\hat{\vect{\beta}}$ удовлетворяет \emph{нормальным уравнениям}
+\[
+  \mat{X}\T \mat{X}\, \hat{\vect{\beta}} \;=\; \mat{X}\T \vect{y}.
+\]
+Если~$\mat{X}$ имеет полный столбцовый ранг~$p$, то матрица $\mat{X}\T \mat{X}$ обратима и МНК-оценка единственна:
+\[
+  \hat{\vect{\beta}} \;=\; (\mat{X}\T \mat{X})^{-1} \mat{X}\T \vect{y}.
+\]
+\end{theorem}
+\proofof{normal-equations}
+
+Геометрический смысл нормальных уравнений: $\mat{X} \hat{\vect{\beta}}$~--- ортогональная проекция~$\vect{y}$ на образ $\im \mat{X} = \{\mat{X} \vect{b} : \vect{b} \in \R^p\}$, а вектор невязки $\vect{y} - \mat{X} \hat{\vect{\beta}}$ ортогонален каждому столбцу матрицы~$\mat{X}$.
+
+\begin{proposition}[Среднее и ковариация МНК-оценки]
+\label{prop:ols-properties}
+Пусть~$\mat{X}$ имеет полный столбцовый ранг и выполнены условия~\cref{def:linear-regression-model}. Тогда:
+\begin{enumerate}[label=(\alph*)]
+  \item $\hat{\vect{\beta}}$~--- несмещённая оценка: $\E \hat{\vect{\beta}} = \vect{\beta}$;
+  \item $\Cov(\hat{\vect{\beta}}) = \sigma^2 (\mat{X}\T \mat{X})^{-1}$;
+  \item остаточная сумма квадратов $\mathrm{RSS} = \|\vect{y} - \mat{X} \hat{\vect{\beta}}\|^2$ удовлетворяет $\E \mathrm{RSS} = (n - p) \sigma^2$.
+\end{enumerate}
+\end{proposition}
+\proofof{ols-properties}
+
+Поэтому $\hat{\sigma}^2 = \mathrm{RSS}/(n - p)$~--- несмещённая оценка дисперсии шума.
+
+\begin{theorem}[Гаусс--Марков]
+\label{thm:gauss-markov}
+В условиях~\cref{def:linear-regression-model} с матрицей~$\mat{X}$ полного столбцового ранга среди всех \emph{линейных несмещённых оценок} параметра~$\vect{\beta}$~--- то есть оценок вида $\tilde{\vect{\beta}} = \mat{C} \vect{y}$ при $\mat{C} \in \R^{p \times n}$, удовлетворяющих $\E \tilde{\vect{\beta}} = \vect{\beta}$ при всех~$\vect{\beta}$,~--- МНК-оценка~$\hat{\vect{\beta}}$ обладает минимальной ковариацией: для любой такой~$\tilde{\vect{\beta}}$
+\[
+  \Cov(\tilde{\vect{\beta}}) - \Cov(\hat{\vect{\beta}}) \quad \text{неотрицательно определена.}
+\]
+Эквивалентно, для любого линейного функционала $\vect{a}\T \vect{\beta}$ оценка $\vect{a}\T \hat{\vect{\beta}}$ является \emph{наилучшей линейной несмещённой оценкой} (BLUE) этого функционала: $\Var(\vect{a}\T \tilde{\vect{\beta}}) \geq \Var(\vect{a}\T \hat{\vect{\beta}})$ для каждой линейной несмещённой~$\tilde{\vect{\beta}}$.
+\end{theorem}
+\proofof{gauss-markov}
+
+\begin{remark}
+В условиях теоремы Гаусса--Маркова достаточно нулевого среднего, равных дисперсий и попарной некоррелированности шума~--- \emph{не} нормальности. Если шум дополнительно нормален, $\hat{\vect{\beta}}$ является и оценкой максимального правдоподобия, и достигает нижней границы Крамера--Рао~\cite[гл.~VII, \S~6]{Shiryaev1989}; в этом случае $\hat{\vect{\beta}}$ оптимальна среди \emph{всех} несмещённых оценок (в том числе нелинейных). При нетривиальной ковариационной матрице шума $\Cov(\vect{\varepsilon}) = \mat{\Sigma}$ с известной невырожденной $\mat{\Sigma}$ наилучшую линейную несмещённую оценку даёт \emph{обобщённый} МНК (GLS): $\hat{\vect{\beta}}_{\mathrm{GLS}} = (\mat{X}\T \mat{\Sigma}^{-1} \mat{X})^{-1} \mat{X}\T \mat{\Sigma}^{-1} \vect{y}$.
+\end{remark}
 
 \subsection*{Доказательства}
-% TODO
+
+\begin{proof}[\Cref{thm:normal-equations}]
+\proofanchor{normal-equations}
+Целевую функцию $L(\vect{b}) = \|\vect{y} - \mat{X} \vect{b}\|^2$ распишем как $L(\vect{b}) = \vect{y}\T \vect{y} - 2 \vect{b}\T \mat{X}\T \vect{y} + \vect{b}\T \mat{X}\T \mat{X}\, \vect{b}$. Это выпуклый квадратичный функционал по~$\vect{b}$, и градиент
+\[
+  \nabla L(\vect{b}) = -2\, \mat{X}\T \vect{y} + 2\, \mat{X}\T \mat{X}\, \vect{b}
+\]
+обращается в нуль ровно в точке минимума (для выпуклой функции стационарность~--- достаточное условие глобального минимума, см.~\cref{thm:cont-partials-diff}). Из $\nabla L(\hat{\vect{\beta}}) = \vect{0}$ получаем $\mat{X}\T \mat{X}\, \hat{\vect{\beta}} = \mat{X}\T \vect{y}$. Если~$\mat{X}$ имеет полный столбцовый ранг, то матрица $\mat{X}\T \mat{X}$ обратима (она представляет собой $p \times p$-матрицу Грама линейно независимых столбцов; ср.~\cref{sec:1.1.07-quadratic-forms}), и единственное решение~--- $(\mat{X}\T \mat{X})^{-1} \mat{X}\T \vect{y}$.
+\end{proof}
+
+\begin{proof}[\Cref{prop:ols-properties}]
+\proofanchor{ols-properties}
+Положим $\mat{H} = \mat{X} (\mat{X}\T \mat{X})^{-1} \mat{X}\T$~--- ортогональный проектор на $\im \mat{X}$. Заметим, что~$\mat{H}$ симметрична и идемпотентна: $\mat{H}\T = \mat{H}$, $\mat{H}^2 = \mat{H}$.
+
+\emph{(a)} Подставим $\vect{y} = \mat{X} \vect{\beta} + \vect{\varepsilon}$: $\hat{\vect{\beta}} = (\mat{X}\T \mat{X})^{-1} \mat{X}\T (\mat{X} \vect{\beta} + \vect{\varepsilon}) = \vect{\beta} + (\mat{X}\T \mat{X})^{-1} \mat{X}\T \vect{\varepsilon}$. Берём математическое ожидание: $\E \hat{\vect{\beta}} = \vect{\beta} + (\mat{X}\T \mat{X})^{-1} \mat{X}\T \E \vect{\varepsilon} = \vect{\beta}$.
+
+\emph{(b)} Из того же разложения $\Cov(\hat{\vect{\beta}}) = (\mat{X}\T \mat{X})^{-1} \mat{X}\T \Cov(\vect{\varepsilon}) \mat{X} (\mat{X}\T \mat{X})^{-1} = \sigma^2 (\mat{X}\T \mat{X})^{-1}$, где использовано $\Cov(\vect{\varepsilon}) = \sigma^2 \mat{I}_n$.
+
+\emph{(c)} Невязка имеет вид $\vect{y} - \mat{X} \hat{\vect{\beta}} = (\mat{I}_n - \mat{H}) \vect{y} = (\mat{I}_n - \mat{H}) \vect{\varepsilon}$ (так как $(\mat{I} - \mat{H}) \mat{X} = \mat{0}$). Поэтому $\mathrm{RSS} = \vect{\varepsilon}\T (\mat{I}_n - \mat{H}) \vect{\varepsilon}$~--- квадратичная форма от шума с нулевым средним. Берём математическое ожидание: $\E \mathrm{RSS} = \tr\bigl((\mat{I}_n - \mat{H}) \Cov(\vect{\varepsilon})\bigr) = \sigma^2 \tr(\mat{I}_n - \mat{H}) = \sigma^2 (n - \rank \mat{H}) = \sigma^2 (n - p)$, где использованы стандартное равенство $\E[\vect{\varepsilon}\T \mat{A} \vect{\varepsilon}] = \tr(\mat{A} \Cov(\vect{\varepsilon}))$ при центрированном~$\vect{\varepsilon}$ и $\rank \mat{H} = \rank \mat{X} = p$.
+\end{proof}
+
+\begin{proof}[\Cref{thm:gauss-markov}]
+\proofanchor{gauss-markov}
+Пусть $\tilde{\vect{\beta}} = \mat{C} \vect{y}$~--- линейная несмещённая оценка. Условие $\E \tilde{\vect{\beta}} = \mat{C} \mat{X} \vect{\beta} = \vect{\beta}$ для всех $\vect{\beta}$ влечёт $\mat{C} \mat{X} = \mat{I}_p$. Запишем $\mat{C} = (\mat{X}\T \mat{X})^{-1} \mat{X}\T + \mat{D}$, где $\mat{D} \in \R^{p \times n}$. Из условия следует $\mat{D} \mat{X} = \mat{0}_p$.
+
+Ковариация
+\[
+  \Cov(\tilde{\vect{\beta}}) = \mat{C}\, \Cov(\vect{\varepsilon})\, \mat{C}\T = \sigma^2\, \mat{C} \mat{C}\T.
+\]
+Раскрывая $\mat{C} \mat{C}\T = \bigl((\mat{X}\T \mat{X})^{-1} \mat{X}\T + \mat{D}\bigr)\bigl(\mat{X} (\mat{X}\T \mat{X})^{-1} + \mat{D}\T\bigr)$ и пользуясь $\mat{D} \mat{X} = \mat{0}$ (перекрёстные слагаемые обнуляются), получаем
+\[
+  \mat{C} \mat{C}\T = (\mat{X}\T \mat{X})^{-1} + \mat{D} \mat{D}\T.
+\]
+Значит, $\Cov(\tilde{\vect{\beta}}) - \Cov(\hat{\vect{\beta}}) = \sigma^2 \mat{D} \mat{D}\T$~--- неотрицательно определённая матрица (как матрица Грама). Равенство достигается тогда и только тогда, когда $\mat{D} = \mat{0}$, то есть $\tilde{\vect{\beta}} = \hat{\vect{\beta}}$.
+
+Отсюда же следует версия для линейных функционалов: при произвольном $\vect{a} \in \R^p$ выполнено $\Var(\vect{a}\T \tilde{\vect{\beta}}) - \Var(\vect{a}\T \hat{\vect{\beta}}) = \sigma^2 \vect{a}\T \mat{D} \mat{D}\T \vect{a} = \sigma^2 \|\mat{D}\T \vect{a}\|^2 \geq 0$.
+\end{proof}
 
 \subsection*{Примеры}
-% TODO
+
+\begin{example}[Простая линейная регрессия]
+\label{ex:simple-linear-regression}
+Подгоним $y_i = a + b x_i + \varepsilon_i$ для $i = 1, \dots, n$~--- случай $p = 2$ с матрицей плана $\mat{X} = \begin{pmatrix} 1 & x_1 \\ \vdots & \vdots \\ 1 & x_n \end{pmatrix}$. Полагая $\bar x = \tfrac{1}{n}\sum x_i$ и $\bar y = \tfrac{1}{n}\sum y_i$, нормальные уравнения $\mat{X}\T \mat{X} \begin{pmatrix} \hat a \\ \hat b \end{pmatrix} = \mat{X}\T \vect{y}$ дают
+\[
+  \hat b = \frac{\sum_{i} (x_i - \bar x)(y_i - \bar y)}{\sum_{i} (x_i - \bar x)^2}, \qquad
+  \hat a = \bar y - \hat b\, \bar x.
+\]
+По~\cref{prop:ols-properties}\,(b) $\Var(\hat b) = \sigma^2 / \sum_i (x_i - \bar x)^2$~--- точность тем выше, чем шире разброс значений~$x_i$.
+\end{example}
+
+\begin{example}[Численный пример]
+\label{ex:numerical-fit}
+Данные: $(x_i, y_i) = (1, 1), (2, 3), (3, 4), (4, 6), (5, 5)$. Считаем: $\bar x = 3$, $\bar y = 19/5 = 3{,}8$, $\sum (x_i - \bar x)(y_i - \bar y) = (-2)(-2{,}8) + (-1)(-0{,}8) + 0 + (1)(2{,}2) + (2)(1{,}2) = 5{,}6 + 0{,}8 + 0 + 2{,}2 + 2{,}4 = 11{,}0$, $\sum (x_i - \bar x)^2 = 4 + 1 + 0 + 1 + 4 = 10$. Следовательно $\hat b = 1{,}1$ и $\hat a = 3{,}8 - 1{,}1 \cdot 3 = 0{,}5$. Подгоночная прямая~--- $\hat y = 0{,}5 + 1{,}1 x$.
+\end{example}
+
+\begin{problem}
+\label{prob:gauss-markov-comparison}
+Для простой линейной регрессии из~\cref{ex:simple-linear-regression} с $n = 3$ наблюдениями в точках $x_1 = -1, x_2 = 0, x_3 = 1$ рассмотрите две конкурирующие оценки коэффициента~$b$:
+\begin{itemize}
+  \item МНК-оценку~$\hat b$ из нормальных уравнений;
+  \item ``двухточечную'' оценку $\tilde b = (y_3 - y_1)/(x_3 - x_1) = (y_3 - y_1)/2$.
+\end{itemize}
+Покажите, что обе они линейны и несмещены, и сравните их дисперсии.
+\end{problem}
+
+\begin{proof}[Решение]
+При $\bar x = 0$ МНК-оценка наклона упрощается: $\hat b = \sum_i x_i (y_i - \bar y)/\sum_i x_i^2 = ((-1) y_1 + 0 \cdot y_2 + 1 \cdot y_3)/2 - \bar y \cdot 0 = (y_3 - y_1)/2$. Получили: в этом малом симметричном плане две оценки \emph{совпадают}. $\hat b = \tilde b$ как линейные комбинации~$\vect{y}$, поэтому имеют одинаковые математическое ожидание и дисперсию~--- теорема Гаусса--Маркова ничего не выбирает между ними. Картина меняется, если добавить четвёртое наблюдение в точке $x_4 = 0$, которое двухточечная оценка просто игнорирует; МНК учитывает его и (немного) повышает точность за счёт уменьшения $\Var(\bar y)$, что в свою очередь сокращает невязку, влияющую на оценку наклона. Это и есть практическое содержание теоремы: МНК \emph{оптимально} использует всю доступную информацию в классе линейных несмещённых оценок.
+\end{proof}
