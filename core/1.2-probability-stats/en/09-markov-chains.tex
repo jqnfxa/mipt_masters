@@ -8,10 +8,213 @@ Markov stochastic process. Discrete Markov chain. Transition probabilities; Kolm
 \end{ticket}
 
 \subsection*{Theory}
-% TODO
+
+A Markov process is a stochastic process in which the future depends
+on the past only through the present. This is the simplest, and by
+far the most common, way to build dependent processes from a recipe
+for ``one step'' transitions.
+
+\begin{definition}[Markov property]
+\label{def:markov-property}
+A discrete-time stochastic process $(X_n)_{n \geq 0}$ taking values
+in a countable state space~$S$ has the \emph{Markov property} if for
+every $n \geq 0$, every $i_0, \dots, i_{n+1} \in S$, and whenever
+the conditioning event has positive probability,
+\[
+  \Prob(X_{n+1} = i_{n+1} \mid X_n = i_n, \dots, X_0 = i_0) \;=\; \Prob(X_{n+1} = i_{n+1} \mid X_n = i_n).
+\]
+A process satisfying this property is a \emph{(discrete-time) Markov
+chain} on~$S$.
+\end{definition}
+
+\begin{definition}[Transition probabilities; homogeneity]
+\label{def:transition-probabilities}
+The \emph{transition probability} from state~$i$ to state~$j$ at
+step~$n$ is
+\[
+  p_{ij}^{(n,n+1)} = \Prob(X_{n+1} = j \mid X_n = i).
+\]
+The chain is \emph{homogeneous} (or \emph{time-homogeneous}) if
+$p_{ij}^{(n,n+1)} = p_{ij}$ does not depend on~$n$. The
+\emph{transition matrix} is $\mat{P} = (p_{ij})_{i, j \in S}$; it is
+\emph{stochastic}, meaning $p_{ij} \geq 0$ and $\sum_j p_{ij} = 1$
+for every~$i$.
+\end{definition}
+
+By the multiplication rule (\cref{prop:multiplication-rule}), the
+joint law of $(X_0, X_1, \dots, X_n)$ on a homogeneous chain
+factorises as
+\[
+  \Prob(X_0 = i_0, X_1 = i_1, \dots, X_n = i_n) \;=\; \Prob(X_0 = i_0) \cdot p_{i_0 i_1} \cdot p_{i_1 i_2} \cdots p_{i_{n-1} i_n},
+\]
+so the initial distribution $\pi_0$ on~$S$ together with the
+transition matrix $\mat{P}$ determines all FDDs of the chain
+(\cref{def:fdd}); via Kolmogorov's existence theorem
+(\cref{thm:kolmogorov-extension}) this is enough to construct the
+chain on the path space~$S^{\N}$.
+
+\begin{definition}[$n$-step transition probabilities]
+\label{def:n-step-transition}
+For a homogeneous Markov chain, the \emph{$n$-step transition
+probability} is
+\[
+  p_{ij}^{(n)} \;=\; \Prob(X_n = j \mid X_0 = i),
+\]
+with the convention $p_{ij}^{(0)} = \delta_{ij}$ (Kronecker delta).
+The matrix $\mat{P}^{(n)} = (p_{ij}^{(n)})_{i,j \in S}$ is also
+stochastic.
+\end{definition}
+
+\begin{theorem}[Kolmogorov–Chapman equations]
+\label{thm:kolmogorov-chapman}
+For a homogeneous Markov chain and any $m, n \geq 0$,
+\[
+  p_{ij}^{(n + m)} \;=\; \sum_{k \in S} p_{ik}^{(n)}\, p_{kj}^{(m)} \qquad \text{for all } i, j \in S,
+\]
+or equivalently in matrix form,
+$\mat{P}^{(n+m)} = \mat{P}^{(n)}\, \mat{P}^{(m)}$. In particular,
+$\mat{P}^{(n)} = \mat{P}^n$ — the $n$-step transition matrix is the
+$n$-th matrix power of the one-step transition matrix.
+\end{theorem}
+\proofof{kolmogorov-chapman}
+
+\begin{corollary}[Distribution at time~$n$]
+\label{cor:distribution-at-n}
+If~$X_0$ has distribution $\pi_0 = (\pi_0(i))_{i \in S}$ (a row
+vector), then $X_n$ has distribution $\pi_n = \pi_0\, \mat{P}^n$.
+\end{corollary}
+\proofof{distribution-at-n}
+
+\medskip
+\noindent\textbf{Stationary distribution.} A probability vector
+$\pi$ on $S$ is \emph{stationary} (or \emph{invariant}) if
+$\pi = \pi\, \mat{P}$, i.e.\ $\pi(j) = \sum_i \pi(i) p_{ij}$ for every
+$j \in S$. By induction, $\pi = \pi\, \mat{P}^n$ for all
+$n \geq 0$, so a chain started in a stationary distribution remains
+in it for all time. For finite-state chains, existence of a
+stationary distribution follows from the Perron–Frobenius theorem
+applied to $\mat{P}^{\T}$; uniqueness and convergence
+$\pi_0 \mat{P}^n \to \pi$ require irreducibility and aperiodicity,
+the standard ergodic theorem for Markov chains
+\cite[Ch.~VIII]{Shiryaev1989}.
+
+\begin{remark}
+Continuous-time Markov processes — for which the transition
+mechanism is an infinitesimal generator rather than a transition
+matrix — are constructed analogously. The competing-exponentials
+problem (\cref{prob:exponential-min}) is the elementary case: the
+holding time in each state is exponential, and at the time of a
+transition the next state is selected by the chain on jumps. See
+\cite[Ch.~VIII]{Sevastyanov1982}.
+\end{remark}
 
 \subsection*{Proofs}
-% TODO
+
+\begin{proof}[\Cref{thm:kolmogorov-chapman}]
+\proofanchor{kolmogorov-chapman}
+By the law of total probability (\cref{thm:total-probability})
+applied to the partition $\{X_n = k\}_{k \in S}$,
+\[
+  \Prob(X_{n+m} = j \mid X_0 = i) = \sum_{k \in S} \Prob(X_{n+m} = j,\, X_n = k \mid X_0 = i).
+\]
+By the multiplication rule, each term equals
+$\Prob(X_n = k \mid X_0 = i) \cdot \Prob(X_{n+m} = j \mid X_n = k, X_0 = i)$.
+The Markov property collapses the second factor:
+$\Prob(X_{n+m} = j \mid X_n = k, X_0 = i) = \Prob(X_{n+m} = j \mid X_n = k) = p_{kj}^{(m)}$
+(the rightmost equality uses time-homogeneity, since the conditional
+distribution of the chain over $m$ further steps starting from
+state~$k$ at any time is the same). Combining,
+\[
+  p_{ij}^{(n+m)} = \sum_{k} p_{ik}^{(n)} p_{kj}^{(m)}, \qquad \mat{P}^{(n+m)} = \mat{P}^{(n)} \mat{P}^{(m)}.
+\]
+Setting $\mat{P}^{(0)} = \mat{I}$ and iterating from $\mat{P}^{(1)} = \mat{P}$
+gives $\mat{P}^{(n)} = \mat{P}^n$ by induction.
+\end{proof}
+
+\begin{proof}[\Cref{cor:distribution-at-n}]
+\proofanchor{distribution-at-n}
+By total probability conditioning on the initial state,
+\[
+  \pi_n(j) = \Prob(X_n = j) = \sum_{i \in S} \Prob(X_0 = i) \Prob(X_n = j \mid X_0 = i) = \sum_i \pi_0(i) p_{ij}^{(n)},
+\]
+which is the $j$-th component of the row-vector–matrix product
+$\pi_0 \mat{P}^{(n)} = \pi_0 \mat{P}^n$.
+\end{proof}
 
 \subsection*{Examples}
-% TODO
+
+\begin{example}[Two-state chain: weather]
+\label{ex:two-state-chain}
+Let $S = \{R, S\}$ (rainy, sunny) and
+\[
+  \mat{P} = \begin{pmatrix} 0.7 & 0.3 \\ 0.4 & 0.6 \end{pmatrix},
+\]
+where rows index the current state and columns the next. To find
+the probability of rain in two days given that today is sunny,
+read off $p_{SR}^{(2)} = (\mat{P}^2)_{SR}$:
+\[
+  \mat{P}^2 = \begin{pmatrix} 0.61 & 0.39 \\ 0.52 & 0.48 \end{pmatrix},
+\]
+giving $p_{SR}^{(2)} = 0.52$. The unique stationary distribution
+solves $\pi = \pi \mat{P}$ with $\pi(R) + \pi(S) = 1$:
+$0.3\, \pi(R) = 0.4\, \pi(S)$, so $\pi(R) = 4/7$ and $\pi(S) = 3/7$ —
+the long-run frequency of rainy days.
+\end{example}
+
+\begin{example}[Simple random walk on $\Z$]
+\label{ex:rw-on-Z}
+$X_{n+1} = X_n + \xi_{n+1}$ with $\xi_n$ i.i.d.\ taking $+1$ with
+probability~$p$ and $-1$ with probability~$1 - p$. The state space
+is $\Z$, the chain is homogeneous, and the transition probabilities
+are
+\[
+  p_{i, i+1} = p, \qquad p_{i, i-1} = 1 - p, \qquad p_{i, j} = 0 \text{ otherwise}.
+\]
+Two-step transitions: $p_{i, i}^{(2)} = 2 p (1 - p)$,
+$p_{i, i+2}^{(2)} = p^2$, $p_{i, i-2}^{(2)} = (1-p)^2$. The
+random walk visits any specific state with probability~$1$ when
+$p = 1/2$ (recurrence) and with probability strictly less
+than~$1$ when $p \neq 1/2$ (transience); the cleanest proof uses
+generating-function arguments \cite[Ch.~XII]{Sevastyanov1982}.
+\end{example}
+
+\begin{example}[Ehrenfest urn]
+\label{ex:ehrenfest}
+$N$~balls are distributed between two urns. At each step, one ball
+is chosen uniformly and moved to the other urn. Let $X_n$ be the
+number of balls in the first urn. Then $S = \{0, 1, \dots, N\}$
+and
+\[
+  p_{i, i-1} = \frac{i}{N}, \qquad p_{i, i+1} = \frac{N - i}{N}, \qquad p_{i, j} = 0 \text{ otherwise}.
+\]
+A direct calculation shows that the binomial distribution
+$\pi(i) = \binom{N}{i} 2^{-N}$ is stationary. The Ehrenfest model
+illustrates how a deterministic-looking deterministic-feel Boltzmann
+``equilibrium'' arises from a mixing Markov chain on a finite
+state space.
+\end{example}
+
+\begin{problem}
+\label{prob:absorbing-chain}
+A gambler with capital $i \in \{0, 1, \dots, N\}$ wins or loses
+$1$~unit per round independently with probability $1/2$ each, until
+hitting~$0$ (ruin) or~$N$ (jackpot). Compute the probability
+$h_i = \Prob(\text{hit } N \text{ before } 0 \mid X_0 = i)$.
+\end{problem}
+
+\begin{proof}[Solution]
+States $0$ and $N$ are absorbing ($p_{00} = p_{NN} = 1$). For the
+interior states the Markov property gives the linear recurrence
+$h_i = \tfrac{1}{2} h_{i+1} + \tfrac{1}{2} h_{i-1}$ for
+$1 \leq i \leq N - 1$, with boundary $h_0 = 0$ and $h_N = 1$. The
+recurrence says $h_{i+1} - h_i = h_i - h_{i-1}$, so the differences
+are constant; denote them by~$c$. Then $h_N - h_0 = N c = 1$, so
+$c = 1/N$ and
+\[
+  h_i \;=\; \frac{i}{N}.
+\]
+For asymmetric step probabilities $p \neq 1/2$, the same conditioning
+gives a non-trivial geometric solution
+$h_i = (1 - r^i)/(1 - r^N)$ with $r = (1 - p)/p$ — the classical
+\emph{gambler's ruin} formula \cite[Ch.~VI, \S~3]{Shiryaev1989}.
+\end{proof}
